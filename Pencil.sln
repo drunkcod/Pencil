@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual C# Express 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pencil.Scenarios", "Scenarios\Pencil.Scenarios.csproj", "{FB5AC86A-A4A9-4B77-B9F2-2CFD2C41DA7C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pencil.Core", "Source\Pencil.Core.csproj", "{E5228228-0A0C-481D-9E4A-808485D70385}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FB5AC86A-A4A9-4B77-B9F2-2CFD2C41DA7C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB5AC86A-A4A9-4B77-B9F2-2CFD2C41DA7C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB5AC86A-A4A9-4B77-B9F2-2CFD2C41DA7C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB5AC86A-A4A9-4B77-B9F2-2CFD2C41DA7C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E5228228-0A0C-481D-9E4A-808485D70385}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E5228228-0A0C-481D-9E4A-808485D70385}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E5228228-0A0C-481D-9E4A-808485D70385}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E5228228-0A0C-481D-9E4A-808485D70385}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -1,5 +1,8 @@
 namespace Pencil.Scenarios.Scenario1
 {
+    using System;
+    using Pencil.Core;
+
 	class PrintMethodRefrences
 	{
 		public void Run(string assemblyPath)
@@ -10,7 +13,7 @@ namespace Pencil.Scenarios.Scenario1
 					foreach(var method in type.Methods)
 					{
 						Console.WriteLine("{0} calls:", method);
-						foreach(var instruction in method.Body)
+						foreach(var instruction in method.Body.Instructions)
 							if(instruction.IsCall)
 								Console.WriteLine(instruction.Operand);
 					}
