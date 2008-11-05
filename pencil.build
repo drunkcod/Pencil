@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<project name="Pencil" default="Build">
+	<target name="Build">
+		<echo message="Stay tuned."/>
+	</target>
+</project>

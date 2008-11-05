@@ -1,0 +1,1 @@
+@Tools\nant-0.86-beta1\bin\NAnt.exe -nologo -q %*
