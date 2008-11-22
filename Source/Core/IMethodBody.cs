@@ -4,6 +4,6 @@
 
     public interface IMethodBody
     {
-        IEnumerable<IInstruction> Instructions { get; }
+        IEnumerator<IInstruction> GetEnumerator();
     }
 }

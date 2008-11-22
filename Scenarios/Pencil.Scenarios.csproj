@@ -41,12 +41,12 @@
   </Target>
   -->
   <ItemGroup>
-    <Compile Include="Scenario1PrintMethodDependencies.cs" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Source\Pencil.Core.csproj">
       <Project>{E5228228-0A0C-481D-9E4A-808485D70385}</Project>
       <Name>Pencil.Core</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="PrintMethodDependencies.cs" />
   </ItemGroup>
 </Project>

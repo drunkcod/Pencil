@@ -2,8 +2,8 @@
 {
     using System.CodeDom.Compiler;
     using System.Collections.Generic;
-    using NUnit.Framework;
     using Microsoft.CSharp;
+    using NUnit.Framework;
 
     [TestFixture]
     public class Scenario1Tests
@@ -17,7 +17,7 @@
             options.GenerateInMemory = true;
             options.ReferencedAssemblies.Add("Pencil.Core.dll");
 
-            var result = codeProvider.CompileAssemblyFromFile(options, @"..\..\Scenarios\Scenario1PrintMethodDependencies.cs");
+            var result = codeProvider.CompileAssemblyFromFile(options, @"..\..\Scenarios\PrintMethodDependencies.cs");
             Assert.AreEqual(0, result.NativeCompilerReturnValue);
         }
     }

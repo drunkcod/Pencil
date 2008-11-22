@@ -1,4 +1,4 @@
-namespace Pencil.Scenarios.Scenario1
+namespace Pencil.Scenarios
 {
     using System;
     using Pencil.Core;
@@ -13,7 +13,7 @@ namespace Pencil.Scenarios.Scenario1
 					foreach(var method in type.Methods)
 					{
 						Console.WriteLine("{0} calls:", method);
-						foreach(var instruction in method.Body.Instructions)
+						foreach(var instruction in method.Body)
 							if(instruction.IsCall)
 								Console.WriteLine(instruction.Operand);
 					}
