@@ -1,1 +1,12 @@
-@Tools\nant-0.86-beta1\bin\NAnt.exe -nologo -q %*
+@echo off
+color
+@Tools\Pencil.Build.exe Pencil.cs %*
+goto %ERRORLEVEL%
+rem Fail!, paint it red.
+:1
+	color 4F
+	goto done
+rem Success, paint it green.
+:0
+	color 2F
+:done
