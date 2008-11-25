@@ -9,58 +9,78 @@ namespace Pencil.Build
 	using System.Text;
 	using Microsoft.CSharp;
 
-	public static class Program
+	public class Program
 	{
-		const int Success = 0;
-		const int Failiure = 1;
+		public const int Success = 0;
+		public const int Failiure = 1;
 
 		public static int Main(string[] args)
 		{
-			ShowLogo(Console.Out);
-
+            var program = new Program(Console.Out);
+            program.ShowLogo();
 			var stopwatch = Stopwatch.StartNew();
-			try
-			{
-				var project = CompileBuildFile(args[0]);
-				var target = args[1];
-				if(!project.HasTarget(target))
-				{
-					Console.WriteLine("Target \"{0}\" not found.", target);
-					return Failiure;
-				}
-				Console.WriteLine("{0}:", target);
-				project.Run(target);
-				Console.WriteLine();
-				Console.WriteLine("BUILD SUCCEEDED");
-				return Success;
-			}
-			catch
-			{
-				Console.WriteLine("BUILD FAILED");
-				return Failiure;
-			}
-			finally
-			{
-				stopwatch.Stop();
-				Console.WriteLine();
-				Console.WriteLine("Total time: {0} seconds.", stopwatch.Elapsed.Seconds);
-			}
+            try
+            {
+                return program.BuildTarget(ProjectFromFile(args[0]), args[1]);
+            }
+            finally
+            {
+                stopwatch.Stop();
+                Console.WriteLine();
+                Console.WriteLine("Total time: {0} seconds.", stopwatch.Elapsed.Seconds);
+            }
 		}
 
-		class BuildFailedException : Exception
+        TextWriter output;
+
+        public Program(TextWriter output)
+        {
+            this.output = output;
+        }
+
+        public int BuildTarget(IProject project, string target)
+        {
+            try
+            {
+                if(project.HasTarget(target))
+                {
+                    output.WriteLine("{0}:", target);
+                    project.Run(target);
+                    output.WriteLine();
+                    output.WriteLine("BUILD SUCCEEDED");
+                    return Success;
+                }
+                else
+                    output.WriteLine("Target \"{0}\" not found.", target);
+            }
+            catch
+            {
+                output.WriteLine("BUILD FAILED");
+            }
+            return Failiure;
+        }
+
+		class CompilationFailedException : Exception
 		{
-			public BuildFailedException(string message): base(message){}
+			public CompilationFailedException(CompilerResults results): base(GetOutput(results)){}
+
+            static string GetOutput(CompilerResults results)
+            {
+                var message = new StringBuilder();
+                foreach(var s in results.Output)
+                    message.AppendLine(s);
+                return message.ToString();
+            }
 		}
 
-		static void ShowLogo(TextWriter writer)
+		void ShowLogo()
 		{
-
-			writer.WriteLine("Pencil.Build 0.0");
-			writer.WriteLine("Copyright (C) 2008 Torbjörn Gyllebring");
-			writer.WriteLine();
+			output.WriteLine("Pencil.Build 0.0");
+			output.WriteLine("Copyright (C) 2008 Torbjörn Gyllebring");
+			output.WriteLine();
 		}
 
-		static Project CompileBuildFile(string path)
+		static Project ProjectFromFile(string path)
 		{
 			var codeProvider = new CSharpCodeProvider(new Dictionary<string,string>(){{"CompilerVersion", "v3.5"}});
             var options = new CompilerParameters();
@@ -69,14 +89,14 @@ namespace Pencil.Build
             options.ReferencedAssemblies.Add("Tools\\Pencil.Build.exe");
 
             var result = codeProvider.CompileAssemblyFromFile(options, path);
-			if(result.NativeCompilerReturnValue == 0)
-				foreach(var t in result.CompiledAssembly.GetTypes())
-					if(typeof(Project).IsAssignableFrom(t))
-						return (Project)t.GetConstructor(Type.EmptyTypes).Invoke(null);
-			var message = new StringBuilder();
-			foreach(var s in result.Output)
-				message.AppendLine(s);
-			throw new BuildFailedException(message.ToString());
+			if(result.NativeCompilerReturnValue != Success)
+                throw new CompilationFailedException(result);
+
+			foreach(var t in result.CompiledAssembly.GetTypes())
+				if(typeof(Project).IsAssignableFrom(t))
+					return t.GetConstructor(Type.EmptyTypes).Invoke(null) as Project;
+
+            throw new InvalidOperationException(string.Format("{0} does not contain any Project."));
 		}
 	}
 }

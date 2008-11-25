@@ -4,7 +4,7 @@ namespace Pencil.Build
 	using System.Collections.Generic;
 	using System.Reflection;
 
-	public class Project
+	public class Project : IProject
 	{
 		Dictionary<string,MethodInfo> targets = new Dictionary<string,MethodInfo>();
 		public Project()

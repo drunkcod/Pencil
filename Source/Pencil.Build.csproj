@@ -5,21 +5,19 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{DE33D780-BAD0-41C7-9327-A90B50EFC5F9}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{62B094FB-4868-4824-9B31-831B71254E2C}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Pencil.Test</RootNamespace>
-    <AssemblyName>Pencil.Test</AssemblyName>
+    <RootNamespace>Pencil</RootNamespace>
+    <AssemblyName>Pencil.Build</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <StartupObject>
-    </StartupObject>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\Build\Debug\</OutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -27,7 +25,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\Build\Release\</OutputPath>
+    <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -41,29 +39,16 @@
   </Target>
   -->
   <ItemGroup>
-    <Reference Include="nunit.framework, Version=2.4.8.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Tools\NUnit-2.4.8-net-2.0\bin\nunit.framework.dll</HintPath>
-    </Reference>
+    <Compile Include="Build\IProject.cs" />
+    <Compile Include="Build\Program.cs" />
+    <Compile Include="Build\Project.cs" />
+    <Compile Include="Build\Tasks\CSharpCompilerTask.cs" />
+    <Compile Include="Build\Tasks\ExecTask.cs" />
+    <Compile Include="Build\Tasks\ExecTaskBase.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Build\ProgramTests.cs" />
-    <Compile Include="Core\ByteConverterTests.cs" />
-    <Compile Include="Core\DisassemblerTests.Decode.cs" />
-    <Compile Include="Core\DisassemblerTests.cs" />
-    <Compile Include="Scenarios\PrintMethodDependenciesTests.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Source\Pencil.Build.csproj">
-      <Project>{62B094FB-4868-4824-9B31-831B71254E2C}</Project>
-      <Name>Pencil.Build</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Source\Pencil.Core.csproj">
-      <Project>{E5228228-0A0C-481D-9E4A-808485D70385}</Project>
-      <Name>Pencil.Core</Name>
-    </ProjectReference>
   </ItemGroup>
 </Project>
