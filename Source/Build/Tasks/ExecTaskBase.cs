@@ -5,23 +5,20 @@ namespace Pencil.Build.Tasks
 
 	public abstract class ExecTaskBase
 	{
+        IExecutionEnvironment executionEnvironment;
+
+        protected ExecTaskBase(IExecutionEnvironment executionEnvironment)
+        {
+            this.executionEnvironment = executionEnvironment;
+        }
 
 		public void Execute()
 		{
-			var startInfo = new ProcessStartInfo();
-			startInfo.Arguments = GetArgumentsCore();
-			startInfo.FileName = GetProgramCore();
-			startInfo.UseShellExecute = false;
-			startInfo.RedirectStandardOutput = true;
-			var task = Process.Start(startInfo);
+            var task = executionEnvironment.Start(GetProgramCore(), GetArgumentsCore());
 			while(!task.HasExited)
-			{
 				Console.WriteLine(task.StandardOutput.ReadToEnd());
-			}
 			if(task.ExitCode != 0)
-			{
 				throw new Exception();
-			}
 		}
 
 		protected abstract string GetProgramCore();

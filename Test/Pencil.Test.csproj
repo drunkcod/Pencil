@@ -51,10 +51,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Build\ProgramTests.cs" />
+    <Compile Include="Build\Tasks\CSharpCompilerTaskTests.cs" />
     <Compile Include="Core\ByteConverterTests.cs" />
     <Compile Include="Core\DisassemblerTests.Decode.cs" />
     <Compile Include="Core\DisassemblerTests.cs" />
     <Compile Include="Scenarios\PrintMethodDependenciesTests.cs" />
+    <Compile Include="Stubs\ExecutionEnvironmentStub.cs" />
+    <Compile Include="Stubs\FileSystemStub.cs" />
+    <Compile Include="Stubs\ProcessStub.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Source\Pencil.Build.csproj">

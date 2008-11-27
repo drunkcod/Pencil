@@ -53,9 +53,9 @@ namespace Pencil.Build
                 else
                     output.WriteLine("Target \"{0}\" not found.", target);
             }
-            catch
+            catch(TargetInvocationException e)
             {
-                output.WriteLine("BUILD FAILED");
+                output.WriteLine("BUILD FAILED - {0}", e.InnerException.Message);
             }
             return Failiure;
         }
