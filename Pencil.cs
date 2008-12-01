@@ -13,7 +13,7 @@ public class PencilProject : Project
         csc.Debug = false;
         csc.Execute();
     }
-    
+
     public void Core()
 	{
 		var csc = New<CSharpCompilerTask>();
@@ -24,20 +24,23 @@ public class PencilProject : Project
 		csc.Execute();
 	}
 
+	[DependsOn("Core"), DependsOn("Build")]
 	public void Test()
 	{
 		var csc = New<CSharpCompilerTask>();
 		csc.Sources.Add(@"Test\Core\*.cs");
+		csc.Sources.Add(@"Test\Build\*.cs");
 		csc.References.Add(@"Build\Debug\Pencil.Core.dll");
+        csc.References.Add(@"Build\Debug\Pencil.Build.exe");
 		csc.References.Add(@"Tools\NUnit-2.4.8-net-2.0\bin\nunit.framework.dll");
 		csc.OutputType = OutputType.Library;
-		csc.Output = @"Build\Pencil.Test.dll";
+		csc.Output = @"Build\Debug\Pencil.Test.dll";
 		csc.Debug = true;
 		csc.Execute();
 
 		var nunit = New<ExecTask>();
 		nunit.Program = @"Tools\NUnit-2.4.8-net-2.0\bin\nunit-console.exe";
-		nunit.CommandLine = @"Build\Pencil.Test.dll";
+		nunit.CommandLine = csc.Output + " /nologo";
 		nunit.Execute();
 	}
 }

@@ -1,17 +1,18 @@
 namespace Pencil.Build
 {
 	using System;
+	using System.IO;
 	using System.Collections.Generic;
-	using System.Reflection;
 
 	public class Project : IProject
 	{
-		Dictionary<string,MethodInfo> targets = new Dictionary<string,MethodInfo>();
+		Dictionary<string,Target> targets = new Dictionary<string,Target>();
+		internal TextWriter logger;
 		public Project()
 		{
 			foreach(var m in GetType().GetMethods())
 			if(m.DeclaringType != typeof(object))
-				targets.Add(m.Name, m);
+				targets.Add(m.Name, new MethodTarget(this, m));
 		}
 
 		protected T New<T>()
@@ -26,7 +27,8 @@ namespace Pencil.Build
 
 		public void Run(string targetName)
 		{
-			targets[targetName].Invoke(this, null);
+			logger.WriteLine("{0}:", targetName);
+			targets[targetName].Execute();
 		}
 	}
 }

@@ -44,7 +44,6 @@ namespace Pencil.Build
             {
                 if(project.HasTarget(target))
                 {
-                    output.WriteLine("{0}:", target);
                     project.Run(target);
                     output.WriteLine();
                     output.WriteLine("BUILD SUCCEEDED");
@@ -75,7 +74,7 @@ namespace Pencil.Build
 
 		void ShowLogo()
 		{
-			output.WriteLine("Pencil.Build 0.0");
+			output.WriteLine("Pencil.Build {0}", Assembly.GetExecutingAssembly().GetName().Version);
 			output.WriteLine("Copyright (C) 2008 Torbjörn Gyllebring");
 			output.WriteLine();
 		}
@@ -94,7 +93,11 @@ namespace Pencil.Build
 
 			foreach(var t in result.CompiledAssembly.GetTypes())
 				if(typeof(Project).IsAssignableFrom(t))
-					return t.GetConstructor(Type.EmptyTypes).Invoke(null) as Project;
+				{
+					var project = t.GetConstructor(Type.EmptyTypes).Invoke(null) as Project;
+					project.logger = Console.Out;
+					return project;
+				}
 
             throw new InvalidOperationException(string.Format("{0} does not contain any Project."));
 		}
