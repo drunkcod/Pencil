@@ -11,19 +11,15 @@
         static internal Instruction GetNext(ITokenResolver tokenResolver, byte[] ilstream, ref int position)
         {
             var result = new Instruction();
-            result.offset = ilstream[position];
-
-            var fudge = new[] { 0xA5, 0xBA, 0xC3, 0xC6, 0xFF };
-            var sugar = new[] { 0xB3 - 0xA5 - 1, 0xC2 - 0xBA - 1, 0xC6 - 0xC3 - 1, 0xD0 - 0xC6 - 1,0};
-            var x = 0;
-            for(int i = 0; result.offset > fudge[i]; ++i)
-                x += sugar[i];
-            result.offset -= x;
-            ++position;
             var converter = new ByteConverter(ilstream, position);
-            switch(opcode[result.offset].Parameter)
+            int offset = converter.ReadByte();
+            if(offset < 0xFE)
+                result.offset = NormalizeOffset(offset);
+            else
+                result.offset = offset << 8 | converter.ReadInt8();
+            switch(result.GetOpcode().Parameter)
             {
-                case ParameterType.Int8: result.operand = (sbyte)ilstream[position++]; break;
+                case ParameterType.Int8: result.operand = converter.ReadInt8(); break;
                 case ParameterType.Int32: result.operand = converter.ReadInt32(); break;
                 case ParameterType.Int64: result.operand = converter.ReadInt64(); break;
                 case ParameterType.Float32: result.operand = converter.ReadFloat32(); break;
@@ -32,9 +28,19 @@
                 case ParameterType.Type: goto case ParameterType.Method;
                 case ParameterType.Field: goto case ParameterType.Method;
                 case ParameterType.Token: goto case ParameterType.Method;
-                case ParameterType.String: result.operand = String.Format(CultureInfo.InvariantCulture, "\"{0}\"", tokenResolver.Resolve(converter.ReadInt32())); break;
+                case ParameterType.String: result.operand = string.Format(CultureInfo.InvariantCulture, "\"{0}\"", tokenResolver.Resolve(converter.ReadInt32())); break;
             }
             return result;
+        }
+
+        static int NormalizeOffset(int offset)
+        {
+            var fudge = new[] { 0xA5, 0xBA, 0xC3, 0xC6, 0xFF };
+            var sugar = new[] { 0xB3 - 0xA5 - 1, 0xC2 - 0xBA - 1, 0xC6 - 0xC3 - 1, 0xD0 - 0xC6 - 1, 0 };
+            var x = 0;
+            for(int i = 0; offset > fudge[i]; ++i)
+                x += sugar[i];
+            return offset - x;
         }
 
         public bool IsCall
@@ -49,10 +55,17 @@
 
         public override string ToString()
         {
-            string name = opcode[offset].Name;
+            string name = GetOpcode().Name;
             if(operand == null)
                 return name;
             return string.Format(CultureInfo.InvariantCulture, "{0} {1}", name, operand);
+        }
+
+        private Opcode GetOpcode()
+        {
+            if(offset < 0xFE)
+                return opcode[offset];
+            return extended[offset & 0xFF];
         }
 
         enum ParameterType
@@ -73,7 +86,7 @@
                 Parameter = parameter;
             }
         }
-
+        #region Single Byte Opcodes
         static readonly Opcode[] opcode =
         {
             new Opcode("nop"),
@@ -271,5 +284,42 @@
             new Opcode("stind.i"),
             new Opcode("conv.u")
         };
+        #endregion
+        #region Multi Byte Opcodes
+        static readonly Opcode[] extended = 
+        {
+            new Opcode("arglist"),
+            new Opcode("ceq"),
+            new Opcode("cgt"),
+            new Opcode("cgt.un"),
+            new Opcode("clt"),
+            new Opcode("clt.un"),
+            new Opcode("ldftn", ParameterType.Method),
+            new Opcode("ldvirtftn", ParameterType.Method),
+            Opcode.Reserved,
+            new Opcode("ldarg", ParameterType.Int32),
+            new Opcode("ldarg.a", ParameterType.Int32),
+            new Opcode("starg", ParameterType.Int32),
+            new Opcode("ldloc", ParameterType.Int32),
+            new Opcode("ldloca", ParameterType.Int32), 
+            new Opcode("stloc", ParameterType.Int32),
+            new Opcode("localloc"),
+            Opcode.Reserved,
+            new Opcode("endfilter"),
+            new Opcode("unaligned."),
+            new Opcode("volatile."),
+            new Opcode("tail."),
+            new Opcode("initobj", ParameterType.Type),
+            new Opcode("constrained.", ParameterType.Type),
+            new Opcode("cpblk"),
+            new Opcode("initblk"),
+            Opcode.Reserved,
+            new Opcode("rethrow"),
+            Opcode.Reserved,
+            new Opcode("sizeof", ParameterType.Type),
+            new Opcode("refanytype"),
+            new Opcode("readonly.")
+        };
+        #endregion
     }
 }

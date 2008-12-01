@@ -13,6 +13,18 @@
             this.position = position;
         }
 
+        public byte ReadByte()
+        {
+            var value = data[position];
+            ++position;
+            return value;
+        }
+
+        public int ReadInt8()
+        {
+            return (sbyte)ReadByte();
+        }
+
         public int ReadInt16()
         {
             Int16 low = data[position];

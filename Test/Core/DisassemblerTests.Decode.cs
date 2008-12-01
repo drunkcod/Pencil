@@ -1,8 +1,7 @@
 ﻿namespace Pencil.Test.Core
 {
-    using Pencil.Core;
-    using NUnit.Framework;
     using System;
+    using NUnit.Framework;
 
     public partial class DisassemblerTests
     {

@@ -55,6 +55,7 @@
     <Compile Include="Core\ByteConverterTests.cs" />
     <Compile Include="Core\DisassemblerTests.Decode.cs" />
     <Compile Include="Core\DisassemblerTests.cs" />
+    <Compile Include="Core\DisassemblerTests.DecodeExtended.cs" />
     <Compile Include="Scenarios\PrintMethodDependenciesTests.cs" />
     <Compile Include="Stubs\ExecutionEnvironmentStub.cs" />
     <Compile Include="Stubs\FileSystemStub.cs" />
