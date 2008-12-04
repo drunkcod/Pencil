@@ -1,4 +1,4 @@
-﻿namespace Pencil.Core
+namespace Pencil.Core
 {
     using System;
 
@@ -20,28 +20,26 @@
             return value;
         }
 
-        public int ReadInt8()
+        public int ReadSByte()
         {
             return (sbyte)ReadByte();
         }
 
         public int ReadInt16()
         {
-            Int16 low = data[position];
-            Int16 hi = data[position + 1];
-            hi <<= 8;
-            position += 2;
-            return hi | low;
+			return Combine(ReadByte(), ReadByte(), 8);
         }
 
         public Int32 ReadInt32()
         {
             CheckBounds(4);
-            var low = ReadInt16();
-            int hi = ReadInt16();
-            hi <<= 16;
-            return hi | low;
+			return Combine(ReadInt16(), ReadInt16(), 16);
         }
+
+		static int Combine(int low, int high, int size)
+		{
+			return (high << size) | low;
+		}
 
         public Int64 ReadInt64()
         {
@@ -51,14 +49,14 @@
             return hi | (UInt32)low;
         }
 
-        public float ReadFloat32()
+        public float ReadSingle()
         {
             int start = position;
             position += 4;
             return BitConverter.ToSingle(data, start);
         }
 
-        public double ReadFloat64()
+        public double ReadDouble()
         {
             int start = position;
             position += 4;
@@ -70,6 +68,6 @@
             if(position + size > data.Length)
                 throw new InvalidOperationException(string.Format("Not enough data to read {0} bytes.", size));
         }
-        
+
     }
 }

@@ -7,7 +7,8 @@ namespace Pencil.Build
 	public class Project : IProject
 	{
 		Dictionary<string,Target> targets = new Dictionary<string,Target>();
-		internal TextWriter logger;
+		internal Logger logger;
+
 		public Project()
 		{
 			foreach(var m in GetType().GetMethods())
@@ -27,8 +28,9 @@ namespace Pencil.Build
 
 		public void Run(string targetName)
 		{
-			logger.WriteLine("{0}:", targetName);
-			targets[targetName].Execute();
+			logger.Write("{0}:", targetName);
+			using(logger.Indent())
+				targets[targetName].Execute();
 		}
 	}
 }

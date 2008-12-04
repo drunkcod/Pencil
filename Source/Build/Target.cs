@@ -29,7 +29,6 @@ namespace Pencil.Build
 			return new string[0];
 		}
 
-		protected virtual void ExecuteCore()
-		{}
+		protected virtual void ExecuteCore(){}
 	}
 }

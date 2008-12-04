@@ -1,8 +1,8 @@
-﻿namespace Pencil.Build
+namespace Pencil.Build
 {
     using System.Diagnostics;
 
-    class ProcessAdapter : IProcess
+    sealed class ProcessAdapter : IProcess
     {
         Process process;
 

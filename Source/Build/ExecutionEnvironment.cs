@@ -1,8 +1,8 @@
-﻿namespace Pencil.Build
+namespace Pencil.Build
 {
     using System.Diagnostics;
 
-    class ExecutionEnvironment : IExecutionEnvironment
+    sealed class ExecutionEnvironment : IExecutionEnvironment
     {
         public IProcess Start(string fileName, string arguments)
         {

@@ -14,7 +14,7 @@ namespace Pencil.Build
 		public const int Success = 0;
 		public const int Failiure = 1;
 
-		public static int Main(string[] args)
+		static int Main(string[] args)
 		{
             var program = new Program(Console.Out);
             program.ShowLogo();
@@ -75,7 +75,7 @@ namespace Pencil.Build
 		void ShowLogo()
 		{
 			output.WriteLine("Pencil.Build {0}", Assembly.GetExecutingAssembly().GetName().Version);
-			output.WriteLine("Copyright (C) 2008 Torbjörn Gyllebring");
+			output.WriteLine("Copyright (C) 2008 Torbjrn Gyllebring");
 			output.WriteLine();
 		}
 
@@ -95,7 +95,7 @@ namespace Pencil.Build
 				if(typeof(Project).IsAssignableFrom(t))
 				{
 					var project = t.GetConstructor(Type.EmptyTypes).Invoke(null) as Project;
-					project.logger = Console.Out;
+					project.logger = new Logger(Console.Out);
 					return project;
 				}
 
