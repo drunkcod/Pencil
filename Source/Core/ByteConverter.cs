@@ -13,6 +13,8 @@ namespace Pencil.Core
             this.position = position;
         }
 
+		public int Position { get { return position; } }
+
         public byte ReadByte()
         {
             var value = data[position];
@@ -59,7 +61,7 @@ namespace Pencil.Core
         public double ReadDouble()
         {
             int start = position;
-            position += 4;
+            position += 8;
             return BitConverter.ToDouble(data, start);
         }
 

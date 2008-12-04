@@ -1,7 +1,9 @@
 ﻿namespace Pencil.Core
 {
+	using System.Collections.Generic;
+
     public interface IMethod
     {
-        IMethodBody Body { get; }
+        IEnumerable<IInstruction> Body { get; }
     }
 }

@@ -1,5 +1,7 @@
 ﻿namespace Pencil.Core
 {
+	using System.Collections.Generic;
+
     public class Disassembler
     {
         ITokenResolver tokenResolver;
@@ -11,10 +13,10 @@
 
         public IInstruction[] Decode(params byte[] ilBytes)
         {
-            int position = 0;
-            IInstruction[] result = { Instruction.GetNext(tokenResolver, ilBytes, ref position)};
-
-            return result;
+			var result = new List<IInstruction>();
+			for(int position = 0; position < ilBytes.Length;)
+				result.Add(Instruction.GetNext(tokenResolver, ilBytes, ref position));
+            return result.ToArray();
         }
     }
 }

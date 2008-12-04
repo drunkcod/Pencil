@@ -24,12 +24,13 @@ namespace Pencil.Core
                 case ParameterType.Int64: result.operand = converter.ReadInt64(); break;
                 case ParameterType.Single: result.operand = converter.ReadSingle(); break;
                 case ParameterType.Double: result.operand = converter.ReadDouble(); break;
-                case ParameterType.Method: result.operand = tokenResolver.Resolve(converter.ReadInt32()); break;
-                case ParameterType.Type: goto case ParameterType.Method;
-                case ParameterType.Field: goto case ParameterType.Method;
-                case ParameterType.Token: goto case ParameterType.Method;
+                case ParameterType.Method: result.operand = tokenResolver.ResolveMethod(converter.ReadInt32()); break;
+                case ParameterType.Type: goto case ParameterType.Token;
+                case ParameterType.Field: goto case ParameterType.Token;
+                case ParameterType.Token: result.operand = tokenResolver.Resolve(converter.ReadInt32()); break;;
                 case ParameterType.String: result.operand = string.Format(CultureInfo.InvariantCulture, "\"{0}\"", tokenResolver.Resolve(converter.ReadInt32())); break;
             }
+			position = converter.Position;
             return result;
         }
 
@@ -45,7 +46,7 @@ namespace Pencil.Core
 
         public bool IsCall
         {
-            get { throw new NotImplementedException(); }
+            get { return GetOpcode().IsCall; }
         }
 
         public object Operand { get { return operand; } }
