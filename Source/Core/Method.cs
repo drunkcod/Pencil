@@ -19,13 +19,13 @@ namespace Pencil.Core
 
 		public string Name { get { return method.Name; } }
 
-		public IEnumerable<Method> Calls
+		public IEnumerable<IMethod> Calls
 		{
 			get
 			{
 				foreach(var instruction in Body)
 					if(instruction.IsCall)
-						yield return instruction.Operand as Method;
+						yield return instruction.Operand as IMethod;
 			}
 		}
 
@@ -52,7 +52,7 @@ namespace Pencil.Core
 				return null;
 			}
 
-			public object ResolveMethod(int token)
+			public IMethod ResolveMethod(int token)
 			{
 				return new Method(module.ResolveMethod(token));
 			}

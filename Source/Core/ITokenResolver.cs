@@ -3,6 +3,6 @@
     public interface ITokenResolver
     {
         object Resolve(int token);
-		object ResolveMethod(int token);
+		IMethod ResolveMethod(int token);
     }
 }

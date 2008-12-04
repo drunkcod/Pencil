@@ -4,6 +4,7 @@
 
     public interface IMethod
     {
+		string Name { get; }
         IEnumerable<IInstruction> Body { get; }
     }
 }
