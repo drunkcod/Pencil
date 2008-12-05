@@ -1,17 +1,16 @@
 namespace Pencil.Core
 {
     using System;
-    using System.Globalization;
 
     struct Instruction : IInstruction
     {
         int offset;
         object operand;
 
-		internal Instruction(int offset)
+		internal Instruction(int offset, object operand)
 		{
 			this.offset = offset;
-			this.operand = null;
+			this.operand = operand;
 		}
 
         public bool IsCall { get { return Opcode.IsCall; } }
@@ -27,17 +26,9 @@ namespace Pencil.Core
             string name = Opcode.Name;
             if(operand == null)
                 return name;
-            return string.Format(CultureInfo.InvariantCulture, "{0} {1}", name, operand);
+            return "{0} {1}".InvariantFormat(name, operand);
         }
 
-        internal Opcode Opcode
-        {
-			get
-			{
-				if(offset < 0xFE)
-					return Opcode.basic[offset];
-				return Opcode.extended[offset & 0xFF];
-			}
-        }
+        internal Opcode Opcode { get { return Opcode.FromOffset(offset); } }
     }
 }

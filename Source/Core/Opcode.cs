@@ -9,6 +9,7 @@ namespace Pencil.Core
 
 	public struct Opcode
 	{
+		internal const int MultiByteTag = 0xFE;
 		internal static Opcode Reserved = new Opcode("<reserved>");
 
 		public static Opcode FromName(string name)
@@ -19,6 +20,14 @@ namespace Pencil.Core
 				return opcode;
 			throw new NotSupportedException();
 		}
+
+		internal static Opcode FromOffset(int offset)
+		{
+			if(offset < MultiByteTag)
+				return Opcode.basic[offset];
+			return Opcode.extended[offset & 0xFF];
+		}
+
 
 		public readonly string Name;
 
@@ -36,10 +45,20 @@ namespace Pencil.Core
 			this.isCall = isCall;
 		}
 
+		internal static int NormalizeOffset(int offset)
+		{
+			var fudge = new[] { 0xA5, 0xBA, 0xC3, 0xC6, 0xFF };
+			var sugar = new[] { 0xB3 - 0xA5 - 1, 0xC2 - 0xBA - 1, 0xC6 - 0xC3 - 1, 0xD0 - 0xC6 - 1, 0 };
+			var x = 0;
+			for(int i = 0; offset > fudge[i]; ++i)
+				x += sugar[i];
+			return offset - x;
+		}
+
 		static Opcode Call(string name){ return new Opcode(name, ParameterType.Method, true); }
 
 		#region Single Byte Opcodes
-		internal static readonly Opcode[] basic =
+		static readonly Opcode[] basic =
 		{
 			new Opcode("nop"),
 			new Opcode("break"),
@@ -238,7 +257,7 @@ namespace Pencil.Core
 		};
 		#endregion
 		#region Multi Byte Opcodes
-		internal static readonly Opcode[] extended =
+		static readonly Opcode[] extended =
 		{
 			new Opcode("arglist"),
 			new Opcode("ceq"),
