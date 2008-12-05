@@ -4,18 +4,20 @@
 
     public class Disassembler
     {
-        ITokenResolver tokenResolver;
+        ITokenResolver tokens;
 
-        public Disassembler(ITokenResolver tokenResolver)
+        public Disassembler(ITokenResolver tokens)
         {
-            this.tokenResolver = tokenResolver;
+            this.tokens = tokens;
         }
 
-        public IInstruction[] Decode(params byte[] ilBytes)
+        public IInstruction[] Decode(params byte[] il)
         {
 			var result = new List<IInstruction>();
-			for(int position = 0; position < ilBytes.Length;)
-				result.Add(Instruction.GetNext(tokenResolver, ilBytes, ref position));
+			var stream = new ByteConverter(il, 0);
+			var ir = new InstructionReader(stream, tokens);
+			while(stream.Position < il.Length)
+				result.Add(ir.Next());
             return result.ToArray();
         }
     }
