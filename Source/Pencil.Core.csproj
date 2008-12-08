@@ -41,20 +41,31 @@
   </Target>
   -->
   <ItemGroup>
+    <Compile Include="Core\ArrayExtensions.cs" />
     <Compile Include="Core\AssemblyLoader.cs" />
     <Compile Include="Core\ByteConverter.cs" />
     <Compile Include="Core\Disassembler.cs" />
+    <Compile Include="Core\DotBuilder.cs" />
+    <Compile Include="Core\Edge.cs" />
     <Compile Include="Core\IAssembly.cs" />
+    <Compile Include="Core\IEnumerableExtensions.cs" />
     <Compile Include="Core\IInstruction.cs" />
     <Compile Include="Core\IMethod.cs" />
-    <Compile Include="Core\IMethodBody.cs" />
     <Compile Include="Core\IModule.cs" />
     <Compile Include="Core\Instruction.cs" />
+    <Compile Include="Core\InstructionReader.cs" />
     <Compile Include="Core\ITokenResolver.cs" />
     <Compile Include="Core\IType.cs" />
+    <Compile Include="Core\Method.cs" />
+    <Compile Include="Core\Node.cs" />
+    <Compile Include="Core\Opcode.cs" />
+    <Compile Include="Core\StringExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>

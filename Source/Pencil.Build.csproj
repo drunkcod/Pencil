@@ -46,6 +46,7 @@
     <Compile Include="Build\IFileSystem.cs" />
     <Compile Include="Build\IProcess.cs" />
     <Compile Include="Build\IProject.cs" />
+    <Compile Include="Build\Logger.cs" />
     <Compile Include="Build\MethodTarget.cs" />
     <Compile Include="Build\ProcessAdapter.cs" />
     <Compile Include="Build\Program.cs" />
@@ -54,9 +55,13 @@
     <Compile Include="Build\Tasks\CSharpCompilerTask.cs" />
     <Compile Include="Build\Tasks\ExecTask.cs" />
     <Compile Include="Build\Tasks\ExecTaskBase.cs" />
+    <Compile Include="Build\TextReaderExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>

@@ -1,9 +1,10 @@
 namespace Pencil.Test.Build
 {
-	using NUnit.Framework;
-	using NUnit.Framework.SyntaxHelpers;
-	using Pencil.Build;
-	using System.Collections.Generic;
+    using System.Collections.Generic;
+    using NUnit.Framework;
+    using NUnit.Framework.SyntaxHelpers;
+    using Pencil.Build;
+    using Pencil.Test.Stubs;
 
 	static class IEnumerableExtensions
 	{

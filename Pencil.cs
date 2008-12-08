@@ -28,9 +28,12 @@ public class PencilProject : Project
 	public void Test()
 	{
 		var csc = New<CSharpCompilerTask>();
+		csc.Sources.Add(@"Test\*.cs");
 		csc.Sources.Add(@"Test\Core\*.cs");
 		csc.Sources.Add(@"Test\Build\*.cs");
-		csc.References.Add(@"Build\Debug\Pencil.Core.dll");
+        csc.Sources.Add(@"Test\Build\Tasks\*.cs");
+        csc.Sources.Add(@"Test\Stubs\*.cs");
+        csc.References.Add(@"Build\Debug\Pencil.Core.dll");
         csc.References.Add(@"Build\Debug\Pencil.Build.exe");
 		csc.References.Add(@"Tools\NUnit-2.4.8-net-2.0\bin\nunit.framework.dll");
 		csc.OutputType = OutputType.Library;

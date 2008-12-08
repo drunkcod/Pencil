@@ -2,7 +2,7 @@ namespace Pencil.Core
 {
 	using System;
 
-	static class ArrayExtensions
+	public static class ArrayExtensions
 	{
 		public static bool TryFind<T>(this T[] items, Predicate<T> predicate, out T value)
 		{

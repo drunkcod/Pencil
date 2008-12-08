@@ -8,5 +8,10 @@ namespace Pencil.Core
 		{
 			return string.Format(CultureInfo.InvariantCulture, format, args);
 		}
+
+        public static bool IsNullOrEmpty(this string s)
+        {
+            return string.IsNullOrEmpty(s);
+        }
 	}
 }

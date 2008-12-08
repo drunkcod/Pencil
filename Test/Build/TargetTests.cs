@@ -1,37 +1,10 @@
 namespace Pencil.Test.Build
 {
-	using NUnit.Framework;
-	using System.Collections.Generic;
-	using Pencil.Build;
-	using System;
-
-	class TargetStub : Target
-	{
-		IEnumerable<string> dependencies;
-
-		public Action ExecuteHandler;
-
-		public TargetStub(IProject project, IEnumerable<string> dependencies) : base(project)
-		{
-			this.dependencies = dependencies;
-		}
-
-		public override IEnumerable<string> GetDependencies()
-		{
-			return dependencies;
-		}
-
-		protected override void ExecuteCore(){ ExecuteHandler(); }
-	}
-
-	class ProjectStub : IProject
-	{
-		public Converter<string,bool> HasTargetHandler;
-		public Action<string> RunHandler;
-
-		public bool HasTarget(string name){ return HasTargetHandler(name); }
-        public void Run(string target){ RunHandler(target); }
-	}
+    using System;
+    using System.Collections.Generic;
+    using NUnit.Framework;
+    using Pencil.Build;
+    using Pencil.Test.Stubs;
 
 	[TestFixture]
 	public class TargetTests

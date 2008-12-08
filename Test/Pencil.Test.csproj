@@ -46,20 +46,33 @@
       <HintPath>..\Tools\NUnit-2.4.8-net-2.0\bin\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Build\LoggerTests.cs" />
+    <Compile Include="Build\MethodTargetTests.cs" />
     <Compile Include="Build\ProgramTests.cs" />
+    <Compile Include="Build\TargetTests.cs" />
     <Compile Include="Build\Tasks\CSharpCompilerTaskTests.cs" />
+    <Compile Include="Core\ArrayExtensionsTests.cs" />
     <Compile Include="Core\ByteConverterTests.cs" />
     <Compile Include="Core\DisassemblerTests.Decode.cs" />
     <Compile Include="Core\DisassemblerTests.cs" />
     <Compile Include="Core\DisassemblerTests.DecodeExtended.cs" />
+    <Compile Include="Core\DotBuilderTests.cs" />
+    <Compile Include="Core\MethodTests.cs" />
+    <Compile Include="Core\OpcodeTests.cs" />
+    <Compile Include="Expect.cs" />
     <Compile Include="Scenarios\PrintMethodDependenciesTests.cs" />
     <Compile Include="Stubs\ExecutionEnvironmentStub.cs" />
     <Compile Include="Stubs\FileSystemStub.cs" />
     <Compile Include="Stubs\ProcessStub.cs" />
+    <Compile Include="Stubs\ProjectStub.cs" />
+    <Compile Include="Stubs\TargetStub.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Source\Pencil.Build.csproj">

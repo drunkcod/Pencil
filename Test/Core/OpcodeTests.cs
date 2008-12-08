@@ -1,11 +1,18 @@
 namespace Pencil.Test.Core
 {
 	using NUnit.Framework;
+	using Pencil.Test;
 	using Pencil.Core;
+	using System;
 
 	[TestFixture]
 	public class OpcodeTests
 	{
+		[Test]
+		public void FromName_should_throw_NotSupportedException_for_unknown_opcode()
+		{
+			Expect.Exception<NotSupportedException>(() => Opcode.FromName("foobar"));
+		}
 		[Test]
 		public void IsCall_should_be_true_for_call()
 		{

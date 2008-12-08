@@ -18,7 +18,6 @@ namespace Pencil.Core
         public object Operand
 		{
 			get { return operand; }
-			set { operand = value; }
 		}
 
         public override string ToString()
