@@ -42,6 +42,7 @@
   -->
   <ItemGroup>
     <Compile Include="Core\ArrayExtensions.cs" />
+    <Compile Include="Core\Assembly.cs" />
     <Compile Include="Core\AssemblyDependencyGraph.cs" />
     <Compile Include="Core\AssemblyLoader.cs" />
     <Compile Include="Core\ByteConverter.cs" />
