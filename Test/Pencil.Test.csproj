@@ -69,6 +69,7 @@
     <Compile Include="Core\OpcodeTests.cs" />
     <Compile Include="Expect.cs" />
     <Compile Include="Scenarios\PrintMethodDependenciesTests.cs" />
+    <Compile Include="Stubs\AssemblyStub.cs" />
     <Compile Include="Stubs\ExecutionEnvironmentStub.cs" />
     <Compile Include="Stubs\FileSystemStub.cs" />
     <Compile Include="Stubs\ProcessStub.cs" />

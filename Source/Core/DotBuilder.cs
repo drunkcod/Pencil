@@ -3,24 +3,16 @@ namespace Pencil.Core
 	using System.Collections.Generic;
 	using System.Text;
 
-	public class DotBuilder
+	public class DotBuilder : DirectedGraph
 	{
-		int nextNodeId;
-        List<Node> nodes = new List<Node>();
         string format = "{0}";
         StringBuilder result = new StringBuilder("digraph{");
-
-		public Node AddNode()
-		{
-            var node = new Node(nextNodeId++);
-            nodes.Add(node);
-			return node;
-		}
 
 		public override string ToString()
 		{
             Begin();
-            nodes.ForEach(Append);
+            Nodes.ForEach(Append);
+            Edges.ForEach(Append);
             return Finalize();
 		}
 
@@ -37,8 +29,6 @@ namespace Pencil.Core
 
         void Append(Node node)
         {
-            foreach(var edge in node.Edges)
-                Append(edge);
             if(node.IsEmpty)
                 return;
             Append(node.ToString());

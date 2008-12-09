@@ -5,52 +5,7 @@ namespace Pencil.Test.Core
     using NUnit.Framework;
     using NUnit.Framework.SyntaxHelpers;
     using Pencil.Core;
-
-	class GraphBuilderStub
-	{
-		public Action<string> AddNodeHandler;
-
-		public void AddNode(string label){ AddNodeHandler(label); }
-	}
-
-	class AssemblyStub : IAssembly
-	{
-		string name;
-
-		public Func<IEnumerable<IAssembly>> GetReferencedAssembliesHandler = () => new IAssembly[0];
-
-		public AssemblyStub(string name)
-		{
-			this.name = name;
-		}
-
-		public string Name { get { return name; } }
-		public IEnumerable<IAssembly> ReferencedAssemblies { get { return GetReferencedAssembliesHandler(); } }
-        public IEnumerable<IModule> Modules { get { throw new NotImplementedException(); } }
-
-	}
-
-	class AssemblyDependencyGraph
-	{
-		GraphBuilderStub graph;
-
-		public AssemblyDependencyGraph(GraphBuilderStub graph)
-		{
-			this.graph = graph;
-		}
-
-		public void Add(IAssembly assembly)
-		{
-			graph.AddNode(assembly.Name);
-			foreach(var item in assembly.ReferencedAssemblies)
-				graph.AddNode(item.Name);
-		}
-
-        public DirectedGraph Result()
-        {
-            return new DirectedGraph();
-        }
-	}
+    using Pencil.Test.Stubs;
 
 	[TestFixture]
 	public class AssemblyDependencyGraphTests
@@ -58,22 +13,18 @@ namespace Pencil.Test.Core
 		[Test]
 		public void Should_add_node_with_assembly_name_as_label()
 		{
-			var nodes = new List<string>();
-			var builder = new GraphBuilderStub();
-			builder.AddNodeHandler = nodes.Add;
-			var graph = new AssemblyDependencyGraph(builder);
+			var digraph = new DirectedGraph();
+			var graph = new AssemblyDependencyGraph(digraph);
 			var assembly = new AssemblyStub("MyAssembly");
 			graph.Add(assembly);
 
-			Assert.That(nodes, Is.EquivalentTo(new[]{ assembly.Name}));
+			Assert.That(digraph.Nodes.Map(x => x.Label).ToList(), Is.EquivalentTo(new[]{ assembly.Name}));
 		}
 		[Test]
 		public void Should_add_referenced_assemblies()
 		{
-			var nodes = new List<string>();
-			var builder = new GraphBuilderStub();
-			builder.AddNodeHandler = nodes.Add;
-			var graph = new AssemblyDependencyGraph(builder);
+            var digraph = new DirectedGraph();
+            var graph = new AssemblyDependencyGraph(digraph);
 			var root = new AssemblyStub("RootAssembly");
 			var child1 = new AssemblyStub("System");
 			var child2 = new AssemblyStub("System.Xml");
@@ -82,13 +33,13 @@ namespace Pencil.Test.Core
 
 			graph.Add(root);
 
-			Assert.That(nodes, Is.EquivalentTo(new[]{ root.Name, child1.Name, child2.Name}));
+            Assert.That(digraph.Nodes.Map(x => x.Label).ToList(), Is.EquivalentTo(new[] { root.Name, child1.Name, child2.Name }));
 		}
         [Test]
         public void Should_add_edges_from_dependant_to_dependee()
         {
-            var builder = new GraphBuilderStub();
-            var graph = new AssemblyDependencyGraph(builder);
+            var digraph = new DirectedGraph();
+            var graph = new AssemblyDependencyGraph(digraph);
             var root = new AssemblyStub("RootAssembly");
             var child1 = new AssemblyStub("System");
             var child2 = new AssemblyStub("System.Xml");
@@ -97,7 +48,24 @@ namespace Pencil.Test.Core
 
             graph.Add(root);
 
-            Assert.That(graph.Result().Edges.Map(x => x.ToString()), Is.EquivalentTo(new[] { "0->1", "0->2"}));
+            Assert.That(digraph.Edges.Map(x => x.ToString()).ToList(), Is.EquivalentTo(new[] { "0->1", "0->2" }));
+        }
+        [Test]
+        public void Should_not_add_same_assembly_twice()
+        {
+            var digraph = new DirectedGraph();
+            var graph = new AssemblyDependencyGraph(digraph);
+            var root1 = new AssemblyStub("Pencil.Build");
+            var root2 = new AssemblyStub("Pencil.Test");
+            var hub = new AssemblyStub("Pencil.Core");
+
+            root1.GetReferencedAssembliesHandler = () => new[] { hub };
+            root2.GetReferencedAssembliesHandler = () => new[] { hub };
+
+            graph.Add(root1);
+            graph.Add(root2);
+
+            Assert.That(digraph.Edges.Map(x => x.ToString()).ToList(), Is.EquivalentTo(new[] { "0->1", "2->1" }));
         }
 	}
 }

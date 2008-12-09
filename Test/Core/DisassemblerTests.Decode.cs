@@ -623,8 +623,8 @@
         [Test]
         public void Decode_ldfld()
         {
-            SetResolveToken("int32 Foo.Bar::value");
-            CheckDecode("ldfld int32 Foo.Bar::value", 0x7B, 1, 2, 3, 4);
+            SetResolveToken("int32 Foo.Bar::node");
+            CheckDecode("ldfld int32 Foo.Bar::node", 0x7B, 1, 2, 3, 4);
         }
         [Test]
         public void Decode_ldflda()
@@ -641,8 +641,8 @@
         [Test]
         public void Decode_ldsfld()
         {
-            SetResolveToken("int32 A.B::value");
-            CheckDecode("ldsfld int32 A.B::value", 0x7E, 1, 2, 3, 4);
+            SetResolveToken("int32 A.B::node");
+            CheckDecode("ldsfld int32 A.B::node", 0x7E, 1, 2, 3, 4);
         }
         [Test]
         public void Decode_ldsflda()
