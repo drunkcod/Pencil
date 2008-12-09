@@ -59,6 +59,7 @@
     <Compile Include="Build\TargetTests.cs" />
     <Compile Include="Build\Tasks\CSharpCompilerTaskTests.cs" />
     <Compile Include="Core\ArrayExtensionsTests.cs" />
+    <Compile Include="Core\AssemblyDependencyGraphTests.cs" />
     <Compile Include="Core\ByteConverterTests.cs" />
     <Compile Include="Core\DisassemblerTests.Decode.cs" />
     <Compile Include="Core\DisassemblerTests.cs" />

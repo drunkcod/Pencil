@@ -1,10 +1,10 @@
 ﻿namespace Pencil.Core
 {
-    class Edge
+    public class Edge
     {
         Node from, to;
 
-        public Edge(Node from, Node to)
+        internal Edge(Node from, Node to)
         {
             this.from = from;
             this.to = to;
