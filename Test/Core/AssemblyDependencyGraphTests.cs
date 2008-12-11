@@ -1,6 +1,7 @@
 namespace Pencil.Test.Core
 {
     using System;
+	using System.Reflection;
     using System.Collections.Generic;
     using NUnit.Framework;
     using NUnit.Framework.SyntaxHelpers;
@@ -18,7 +19,7 @@ namespace Pencil.Test.Core
 			var assembly = new AssemblyStub("MyAssembly");
 			graph.Add(assembly);
 
-			Assert.That(digraph.Nodes.Map(x => x.Label).ToList(), Is.EquivalentTo(new[]{ assembly.Name}));
+			Assert.That(digraph.Nodes.Map(x => x.Label).ToList(), Is.EquivalentTo(new[]{ assembly.Name.Name}));
 		}
 		[Test]
 		public void Should_add_referenced_assemblies()
@@ -26,14 +27,14 @@ namespace Pencil.Test.Core
             var digraph = new DirectedGraph();
             var graph = new AssemblyDependencyGraph(digraph);
 			var root = new AssemblyStub("RootAssembly");
-			var child1 = new AssemblyStub("System");
-			var child2 = new AssemblyStub("System.Xml");
+			var child1 = new AssemblyName("System");
+			var child2 = new AssemblyName("System.Xml");
 
 			root.GetReferencedAssembliesHandler = () => new []{ child1, child2};
 
 			graph.Add(root);
 
-            Assert.That(digraph.Nodes.Map(x => x.Label).ToList(), Is.EquivalentTo(new[] { root.Name, child1.Name, child2.Name }));
+            Assert.That(digraph.Nodes.Map(x => x.Label).ToList(), Is.EquivalentTo(new[] { root.Name.Name, child1.Name, child2.Name }));
 		}
         [Test]
         public void Should_add_edges_from_dependant_to_dependee()
@@ -41,8 +42,8 @@ namespace Pencil.Test.Core
             var digraph = new DirectedGraph();
             var graph = new AssemblyDependencyGraph(digraph);
             var root = new AssemblyStub("RootAssembly");
-            var child1 = new AssemblyStub("System");
-            var child2 = new AssemblyStub("System.Xml");
+            var child1 = new AssemblyName("System");
+            var child2 = new AssemblyName("System.Xml");
 
             root.GetReferencedAssembliesHandler = () => new[] { child1, child2 };
 
@@ -57,7 +58,7 @@ namespace Pencil.Test.Core
             var graph = new AssemblyDependencyGraph(digraph);
             var root1 = new AssemblyStub("Pencil.Build");
             var root2 = new AssemblyStub("Pencil.Test");
-            var hub = new AssemblyStub("Pencil.Core");
+            var hub = new AssemblyName("Pencil.Core");
 
             root1.GetReferencedAssembliesHandler = () => new[] { hub };
             root2.GetReferencedAssembliesHandler = () => new[] { hub };

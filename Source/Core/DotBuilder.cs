@@ -3,16 +3,16 @@ namespace Pencil.Core
 	using System.Collections.Generic;
 	using System.Text;
 
-	public class DotBuilder : DirectedGraph
+	public class DotBuilder
 	{
-        string format = "{0}";
-        StringBuilder result = new StringBuilder("digraph{");
+        string format;
+        StringBuilder result;
 
-		public override string ToString()
+		public string ToString(DirectedGraph graph)
 		{
             Begin();
-            Nodes.ForEach(Append);
-            Edges.ForEach(Append);
+            graph.Nodes.ForEach(Append);
+            graph.Edges.ForEach(Append);
             return Finalize();
 		}
 

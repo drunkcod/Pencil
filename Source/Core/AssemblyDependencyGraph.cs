@@ -1,11 +1,12 @@
 ﻿namespace Pencil.Core
 {
+	using System.Reflection;
     using System.Collections.Generic;
 
     public class AssemblyDependencyGraph
     {
         DirectedGraph graph;
-        Dictionary<IAssembly, Node> assemblies = new Dictionary<IAssembly, Node>();
+        Dictionary<AssemblyName, Node> assemblies = new Dictionary<AssemblyName, Node>();
 
         public AssemblyDependencyGraph(DirectedGraph graph)
         {
@@ -14,18 +15,18 @@
 
         public void Add(IAssembly assembly)
         {
-            var current = GetOrCreate(assembly);
+            var current = GetOrCreate(assembly.Name);
             foreach(var item in assembly.ReferencedAssemblies)
                 current.ConnectTo(GetOrCreate(item));
         }
 
-        Node GetOrCreate(IAssembly assembly)
+        Node GetOrCreate(AssemblyName assemblyName)
         {
             Node node;
-            if(!assemblies.TryGetValue(assembly, out node))
+            if(!assemblies.TryGetValue(assemblyName, out node))
             {
-                node = graph.AddNode(assembly.Name);
-                assemblies.Add(assembly, node);
+                node = graph.AddNode(assemblyName.Name);
+                assemblies.Add(assemblyName, node);
             }
             return node;
         }

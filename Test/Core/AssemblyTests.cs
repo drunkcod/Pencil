@@ -12,7 +12,7 @@
         {
             Assert.AreEqual(
                 ReflectionAssembly.GetExecutingAssembly().GetName().Name,
-                Assembly.GetExecutingAssembly().Name);
+                AssemblyLoader.GetExecutingAssembly().Name.Name);
         }
     }
 }

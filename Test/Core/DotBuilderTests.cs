@@ -9,32 +9,37 @@ namespace Pencil.Test.Core
 		[Test]
 		public void ToString_should_be_valid_if_empty()
 		{
-			Assert.AreEqual("digraph{}", new DotBuilder().ToString());
+			ToDot(new DirectedGraph()).ShouldEqual("digraph{}");
 		}
 		[Test]
 		public void Should_support_connecting_nodes()
 		{
-			var builder = new DotBuilder();
+			var builder = new DirectedGraph();
 			builder.AddNode().ConnectTo(builder.AddNode());
 
-			Assert.AreEqual("digraph{0->1}", builder.ToString());
+			ToDot(builder).ShouldEqual("digraph{0->1}");
 		}
         [Test]
         public void Should_render_multiple_edges_correctly()
         {
-            var builder = new DotBuilder();
+            var builder = new DirectedGraph();
             var n0 = builder.AddNode();
             n0.ConnectTo(builder.AddNode());
             n0.ConnectTo(builder.AddNode());
 
-            Assert.AreEqual("digraph{0->1 0->2}", builder.ToString());
+            ToDot(builder).ShouldEqual("digraph{0->1 0->2}");
         }
         [Test]
         public void Should_render_node_labels_correctly()
         {
-            var builder = new DotBuilder();
+            var builder = new DirectedGraph();
             builder.AddNode().Label = "Pencil.Core.dll";
-            Assert.AreEqual("digraph{0[label=\"Pencil.Core.dll\"]}", builder.ToString());
+            ToDot(builder).ShouldEqual("digraph{0[label=\"Pencil.Core.dll\"]}");
         }
+
+		static string ToDot(DirectedGraph graph)
+		{
+			return new DotBuilder().ToString(graph);
+		}
 	}
 }

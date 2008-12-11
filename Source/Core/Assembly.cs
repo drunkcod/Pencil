@@ -2,18 +2,15 @@
 {
     using System.Collections.Generic;
     using ReflectionAssembly = System.Reflection.Assembly;
+	using AssemblyName = System.Reflection.AssemblyName;
 
     public class Assembly : IAssembly
     {
         ReflectionAssembly assembly;
-        public static IAssembly GetExecutingAssembly()
-        {
-            return new Assembly(ReflectionAssembly.GetCallingAssembly());
-        }
 
-        public string Name { get { return assembly.GetName().Name; } }
+		public AssemblyName Name { get { return assembly.GetName(); } }
 
-        public IEnumerable<IAssembly> ReferencedAssemblies
+        public IEnumerable<AssemblyName> ReferencedAssemblies
         {
             get { throw new System.NotImplementedException(); }
         }
@@ -23,7 +20,7 @@
             get { throw new System.NotImplementedException(); }
         }
 
-        Assembly(ReflectionAssembly assembly)
+        internal Assembly(ReflectionAssembly assembly)
         {
             this.assembly = assembly;
         }
