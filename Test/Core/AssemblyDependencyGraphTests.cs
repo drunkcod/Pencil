@@ -11,11 +11,16 @@ namespace Pencil.Test.Core
 	[TestFixture]
 	public class AssemblyDependencyGraphTests
 	{
+		AssemblyDependencyGraph NewDependencyGraph(DirectedGraph target)
+		{
+			return new AssemblyDependencyGraph(target, new AssemblyLoaderStub());
+		}
+
 		[Test]
 		public void Should_add_node_with_assembly_name_as_label()
 		{
 			var digraph = new DirectedGraph();
-			var graph = new AssemblyDependencyGraph(digraph);
+			var graph = NewDependencyGraph(digraph);
 			var assembly = new AssemblyStub("MyAssembly");
 			graph.Add(assembly);
 
@@ -25,7 +30,7 @@ namespace Pencil.Test.Core
 		public void Should_add_referenced_assemblies()
 		{
             var digraph = new DirectedGraph();
-            var graph = new AssemblyDependencyGraph(digraph);
+            var graph = NewDependencyGraph(digraph);
 			var root = new AssemblyStub("RootAssembly");
 			var child1 = new AssemblyName("System");
 			var child2 = new AssemblyName("System.Xml");
@@ -40,7 +45,7 @@ namespace Pencil.Test.Core
         public void Should_add_edges_from_dependant_to_dependee()
         {
             var digraph = new DirectedGraph();
-            var graph = new AssemblyDependencyGraph(digraph);
+            var graph = NewDependencyGraph(digraph);
             var root = new AssemblyStub("RootAssembly");
             var child1 = new AssemblyName("System");
             var child2 = new AssemblyName("System.Xml");
@@ -55,7 +60,7 @@ namespace Pencil.Test.Core
         public void Should_not_add_same_assembly_twice()
         {
             var digraph = new DirectedGraph();
-            var graph = new AssemblyDependencyGraph(digraph);
+            var graph = NewDependencyGraph(digraph);
             var root1 = new AssemblyStub("Pencil.Build");
             var root2 = new AssemblyStub("Pencil.Test");
             var hub = new AssemblyName("Pencil.Core");
@@ -75,17 +80,15 @@ namespace Pencil.Test.Core
 			var loader = new AssemblyLoaderStub();
             var graph = new AssemblyDependencyGraph(digraph, loader);
 			var root = new AssemblyStub("RootAssembly");
-			var systemName = new AssemblyName("System");
-			var systemXmlName = new AssemblyName("System.Xml");
-			loader.AddStub(systemName);
-			loader.AddStub(systemXmlName);
+			var system = new AssemblyName("System");
+			var systemXml = new AssemblyName("System.Xml");
 			var loaded = new List<AssemblyName>();
-			loader.Loading += loaded.Add
-			root.GetReferencedAssembliesHandler = () => new []{ child1, child2};
+			loader.Loading += loaded.Add;
+			root.GetReferencedAssembliesHandler = () => new []{ system, systemXml};
 
 			graph.Add(root);
 
-			Assert.That(loaded.Map(x => x.Name).ToList(), Is.EquivalentTo(new[] { systemName.Name, systemXmlName.Name }));
+			Assert.That(loaded.Map(x => x.Name).ToList(), Is.EquivalentTo(new[] { system.Name, systemXml.Name }));
 		}
 	}
 }
