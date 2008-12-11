@@ -12,7 +12,7 @@
 
         public IEnumerable<AssemblyName> ReferencedAssemblies
         {
-            get { throw new System.NotImplementedException(); }
+            get { return assembly.GetReferencedAssemblies(); }
         }
 
         public IEnumerable<IModule> Modules

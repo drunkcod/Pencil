@@ -1,6 +1,7 @@
 namespace Pencil.Test
 {
 	using System;
+	using System.Collections;
 	using NUnit.Framework;
 
 	static class Expect
@@ -17,6 +18,12 @@ namespace Pencil.Test
 		public static void ShouldEqual(this string actual, string expected)
 		{
 			Assert.AreEqual(expected, actual);
+		}
+
+		public static void ShouldBeEmpty(this IEnumerable sequence)
+		{
+			foreach(var item in sequence)
+				Assert.Fail("Sequence not empty.");
 		}
 	}
 }

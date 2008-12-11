@@ -17,6 +17,20 @@ namespace Pencil.Test.Core
 		}
 
 		[Test]
+		public void Should_support_filter_function()
+		{
+			var digraph = new DirectedGraph();
+			var graph = new AssemblyDependencyGraph(digraph, new AssemblyLoaderStub(), x => x.Name != "System");
+			var assembly = new AssemblyStub("MyAssembly");
+			var system = new AssemblyName("System");
+
+			assembly.GetReferencedAssembliesHandler = () => new[] { system };
+			graph.Add(assembly);
+
+			Assert.That(digraph.Nodes.Map(x => x.Label).ToList(), Is.EquivalentTo(new[]{ assembly.Name.Name}));
+		}
+
+		[Test]
 		public void Should_add_node_with_assembly_name_as_label()
 		{
 			var digraph = new DirectedGraph();
@@ -55,6 +69,21 @@ namespace Pencil.Test.Core
             graph.Add(root);
 
             Assert.That(digraph.Edges.Map(x => x.ToString()).ToList(), Is.EquivalentTo(new[] { "0->1", "0->2" }));
+        }
+		[Test]
+        public void Wont_add_children_twice()
+        {
+            var digraph = new DirectedGraph();
+            var graph = NewDependencyGraph(digraph);
+            var parent = new AssemblyStub("RootAssembly");
+            var child = new AssemblyName("System");
+
+            parent.GetReferencedAssembliesHandler = () => new[] { child };
+
+            graph.Add(parent);
+            graph.Add(parent);
+
+            Assert.That(digraph.Edges.Map(x => x.ToString()).ToList(), Is.EquivalentTo(new[] { "0->1" }));
         }
         [Test]
         public void Should_not_add_same_assembly_twice()
@@ -111,5 +140,25 @@ namespace Pencil.Test.Core
 
 			Assert.That(loaded.Map(x => x.Name).ToList(), Is.EquivalentTo(new[] { system.Name, systemXml.Name.Name }));
 		}
+		[Test]
+        public void Should_handle_circular_dependencies()
+        {
+            var digraph = new DirectedGraph();
+			var loader = new AssemblyLoaderStub();
+            var graph = new AssemblyDependencyGraph(digraph, loader);
+            var system = new AssemblyStub("System");
+            var systemXml = new AssemblyStub("System.Xml");
+
+            system.GetReferencedAssembliesHandler = () => new[] { systemXml.Name };
+            systemXml.GetReferencedAssembliesHandler = () => new[] { system.Name };
+
+			loader.Add(system);
+			loader.Add(systemXml);
+
+
+            graph.Add(system);
+
+            Assert.That(digraph.Edges.Map(x => x.ToString()).ToList(), Is.EquivalentTo(new[] { "0->1", "1->0" }));
+        }
 	}
 }

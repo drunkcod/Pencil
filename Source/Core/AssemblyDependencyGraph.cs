@@ -1,5 +1,6 @@
 ﻿namespace Pencil.Core
 {
+	using System;
 	using System.Reflection;
     using System.Collections.Generic;
 
@@ -7,42 +8,62 @@
     {
         DirectedGraph graph;
 		IAssemblyLoader loader;
-        Dictionary<AssemblyName, Node> assemblies = new Dictionary<AssemblyName, Node>();
+        Dictionary<string, Node> assemblies = new Dictionary<string, Node>();
+		Predicate<AssemblyName> filter;
 
-        public AssemblyDependencyGraph(DirectedGraph graph, IAssemblyLoader loader)
+        public AssemblyDependencyGraph(DirectedGraph graph, IAssemblyLoader loader): this(graph, loader, x => true){}
+
+        public AssemblyDependencyGraph(DirectedGraph graph, IAssemblyLoader loader, Predicate<AssemblyName> filter)
         {
             this.graph = graph;
 			this.loader = loader;
+			this.filter = filter;
         }
 
         public void Add(IAssembly assembly)
         {
-            var current = GetOrCreateNoLoad(assembly.Name);
-            foreach(var item in assembly.ReferencedAssemblies)
-                current.ConnectTo(GetOrCreate(item));
+			if(!AlreadyAdded(assembly))
+				AddChildren(GetOrCreateNoLoad(assembly.Name), assembly);
         }
+
+		bool AlreadyAdded(IAssembly assembly)
+		{
+			return assemblies.ContainsKey(assembly.Name.Name);
+		}
 
         Node GetOrCreate(AssemblyName assemblyName)
         {
             Node node;
-            if(!assemblies.TryGetValue(assemblyName, out node))
-            {
-                node = graph.AddNode(assemblyName.Name);
-                assemblies.Add(assemblyName, node);
-				Add(loader.Load(assemblyName));
-            }
+            if(CreateNode(assemblyName, out node))
+				AddChildren(node, loader.Load(assemblyName));
             return node;
         }
+
+		void AddChildren(Node current, IAssembly assembly)
+		{
+            foreach(var item in assembly.ReferencedAssemblies)
+			{
+				if(filter(item))
+	                current.ConnectTo(GetOrCreate(item));
+			}
+		}
 
 		Node GetOrCreateNoLoad(AssemblyName assemblyName)
         {
             Node node;
-            if(!assemblies.TryGetValue(assemblyName, out node))
-            {
-                node = graph.AddNode(assemblyName.Name);
-                assemblies.Add(assemblyName, node);
-            }
+			CreateNode(assemblyName, out node);
             return node;
         }
+
+		bool CreateNode(AssemblyName assemblyName, out Node node)
+		{
+            if(!assemblies.TryGetValue(assemblyName.Name, out node))
+            {
+                node = graph.AddNode(assemblyName.Name);
+                assemblies.Add(assemblyName.Name, node);
+				return true;
+            }
+            return false;
+		}
     }
 }

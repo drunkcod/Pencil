@@ -1,13 +1,38 @@
 ﻿namespace Pencil.Core
 {
+	using System.Collections.Generic;
+	using System.IO;
 	using ReflectionAssembly = System.Reflection.Assembly;
+	using AssemblyName = System.Reflection.AssemblyName;
 
-	public static class AssemblyLoader
+	public class AssemblyLoader : IAssemblyLoader
     {
         public static IAssembly Load(string assemblyPath) { return null; }
 
-		public static IAssembly GetExecutingAssembly(){
+		public static IAssembly GetExecutingAssembly()
+		{
             return new Assembly(ReflectionAssembly.GetCallingAssembly());
         }
+
+		public IAssembly Load(AssemblyName assembly)
+		{
+			try
+			{
+				return new Assembly(ReflectionAssembly.Load(assembly));
+			}
+			catch(FileLoadException)
+			{
+				return new MissingAssembly();
+			}
+			catch(FileNotFoundException)
+			{
+				return new MissingAssembly();
+			}
+		}
+
+		public IAssembly LoadFrom(string path)
+		{
+			return new Assembly(ReflectionAssembly.LoadFrom(path));
+		}
     }
 }
