@@ -22,21 +22,22 @@
 
         public void Add(IAssembly assembly)
         {
-			if(!AlreadyAdded(assembly))
-				AddChildren(GetOrCreateNoLoad(assembly.Name), assembly);
+			if(ShouldAdd(assembly))
+                AddChildren(CreateNode(assembly.Name).Item, assembly);
         }
 
-		bool AlreadyAdded(IAssembly assembly)
+		bool ShouldAdd(IAssembly assembly)
 		{
-			return assemblies.ContainsKey(assembly.Name.Name);
+            var name = assembly.Name;
+            return !assemblies.ContainsKey(name.Name) && filter(name);
 		}
 
         Node GetOrCreate(AssemblyName assemblyName)
         {
-            Node node;
-            if(CreateNode(assemblyName, out node))
-				AddChildren(node, loader.Load(assemblyName));
-            return node;
+            var node = CreateNode(assemblyName);
+            if(node.Created)
+				AddChildren(node.Item, loader.Load(assemblyName));
+            return node.Item;
         }
 
 		void AddChildren(Node current, IAssembly assembly)
@@ -44,26 +45,26 @@
             foreach(var item in assembly.ReferencedAssemblies)
 			{
 				if(filter(item))
-	                current.ConnectTo(GetOrCreate(item));
+                    current.ConnectTo(GetOrCreate(item));
 			}
 		}
 
-		Node GetOrCreateNoLoad(AssemblyName assemblyName)
+        struct CreateResult
         {
-            Node node;
-			CreateNode(assemblyName, out node);
-            return node;
+            public bool Created;
+            public Node Item;
         }
 
-		bool CreateNode(AssemblyName assemblyName, out Node node)
+		CreateResult CreateNode(AssemblyName assemblyName)
 		{
-            if(!assemblies.TryGetValue(assemblyName.Name, out node))
+            var result = new CreateResult();
+            result.Created = !assemblies.TryGetValue(assemblyName.Name, out result.Item);
+            if(result.Created)
             {
-                node = graph.AddNode(assemblyName.Name);
-                assemblies.Add(assemblyName.Name, node);
-				return true;
+                result.Item = graph.AddNode(assemblyName.Name);
+                assemblies.Add(assemblyName.Name, result.Item);
             }
-            return false;
+            return result;
 		}
     }
 }

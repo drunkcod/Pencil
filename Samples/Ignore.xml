@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Ignore>
+	<Name Value="mscorlib" />
+	<Pattern Value="System.*" />
+	<Pattern Value="test" />
+</Ignore>

@@ -69,7 +69,9 @@
     <Compile Include="Core\MethodTests.cs" />
     <Compile Include="Core\OpcodeTests.cs" />
     <Compile Include="Expect.cs" />
+    <Compile Include="NMeter\IgnoreFilterConfigurationTests.cs" />
     <Compile Include="Scenarios\PrintMethodDependenciesTests.cs" />
+    <Compile Include="Stubs\AssemblyLoaderStub.cs" />
     <Compile Include="Stubs\AssemblyStub.cs" />
     <Compile Include="Stubs\ExecutionEnvironmentStub.cs" />
     <Compile Include="Stubs\FileSystemStub.cs" />

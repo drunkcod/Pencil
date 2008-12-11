@@ -29,6 +29,16 @@ namespace Pencil.Test.Core
 
 			Assert.That(digraph.Nodes.Map(x => x.Label).ToList(), Is.EquivalentTo(new[]{ assembly.Name.Name}));
 		}
+        [Test]
+        public void Add_should_obey_filtering()
+        {
+            var digraph = new DirectedGraph();
+            var graph = new AssemblyDependencyGraph(digraph, new AssemblyLoaderStub(), x => false);
+            var assembly = new AssemblyStub("MyAssembly");
+            graph.Add(assembly);
+
+            digraph.Nodes.ShouldBeEmpty();
+        }
 
 		[Test]
 		public void Should_add_node_with_assembly_name_as_label()

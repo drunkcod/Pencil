@@ -9,7 +9,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Pencil</RootNamespace>
-    <AssemblyName>Pencil.Core</AssemblyName>
+    <AssemblyName>Pencil</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <StartupObject>
@@ -51,6 +51,7 @@
     <Compile Include="Core\DotBuilder.cs" />
     <Compile Include="Core\Edge.cs" />
     <Compile Include="Core\IAssembly.cs" />
+    <Compile Include="Core\IAssemblyLoader.cs" />
     <Compile Include="Core\IEnumerableExtensions.cs" />
     <Compile Include="Core\IInstruction.cs" />
     <Compile Include="Core\IMethod.cs" />
@@ -60,9 +61,12 @@
     <Compile Include="Core\ITokenResolver.cs" />
     <Compile Include="Core\IType.cs" />
     <Compile Include="Core\Method.cs" />
+    <Compile Include="Core\MissingAssembly.cs" />
     <Compile Include="Core\Node.cs" />
     <Compile Include="Core\Opcode.cs" />
     <Compile Include="Core\StringExtensions.cs" />
+    <Compile Include="NMeter\IgnoreFilter.cs" />
+    <Compile Include="NMeter\IgnoreFilterConfiguration.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

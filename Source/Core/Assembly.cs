@@ -7,7 +7,7 @@
     public class Assembly : IAssembly
     {
         ReflectionAssembly assembly;
-
+         
 		public AssemblyName Name { get { return assembly.GetName(); } }
 
         public IEnumerable<AssemblyName> ReferencedAssemblies
