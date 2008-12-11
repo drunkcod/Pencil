@@ -15,7 +15,7 @@
             var options = new CompilerParameters();
             options.GenerateExecutable = false;
             options.GenerateInMemory = true;
-            options.ReferencedAssemblies.Add("Pencil.Core.dll");
+            options.ReferencedAssemblies.Add("Pencil.dll");
 
             var result = codeProvider.CompileAssemblyFromFile(options, @"..\..\Scenarios\PrintMethodDependencies.cs");
             Assert.AreEqual(0, result.NativeCompilerReturnValue);
