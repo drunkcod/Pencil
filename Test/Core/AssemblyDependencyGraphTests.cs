@@ -68,5 +68,24 @@ namespace Pencil.Test.Core
 
             Assert.That(digraph.Edges.Map(x => x.ToString()).ToList(), Is.EquivalentTo(new[] { "0->1", "2->1" }));
         }
+		[Test]
+		public void Should_load_referenced_assemblies()
+		{
+			var digraph = new DirectedGraph();
+			var loader = new AssemblyLoaderStub();
+            var graph = new AssemblyDependencyGraph(digraph, loader);
+			var root = new AssemblyStub("RootAssembly");
+			var systemName = new AssemblyName("System");
+			var systemXmlName = new AssemblyName("System.Xml");
+			loader.AddStub(systemName);
+			loader.AddStub(systemXmlName);
+			var loaded = new List<AssemblyName>();
+			loader.Loading += loaded.Add
+			root.GetReferencedAssembliesHandler = () => new []{ child1, child2};
+
+			graph.Add(root);
+
+			Assert.That(loaded.Map(x => x.Name).ToList(), Is.EquivalentTo(new[] { systemName.Name, systemXmlName.Name }));
+		}
 	}
 }
