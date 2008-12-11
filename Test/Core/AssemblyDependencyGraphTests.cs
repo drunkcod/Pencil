@@ -90,5 +90,26 @@ namespace Pencil.Test.Core
 
 			Assert.That(loaded.Map(x => x.Name).ToList(), Is.EquivalentTo(new[] { system.Name, systemXml.Name }));
 		}
+		[Test]
+		public void Should_follow_dependency_chain()
+		{
+			var digraph = new DirectedGraph();
+			var loader = new AssemblyLoaderStub();
+            var graph = new AssemblyDependencyGraph(digraph, loader);
+			var root = new AssemblyStub("RootAssembly");
+			var systemXml = new AssemblyStub("System.Xml");
+			var system = new AssemblyName("System");
+			var loaded = new List<AssemblyName>();
+
+			loader.Loading += loaded.Add;
+			loader.Add(systemXml);
+
+			root.GetReferencedAssembliesHandler = () => new []{ systemXml.Name };
+			systemXml.GetReferencedAssembliesHandler = () => new []{ system };
+
+			graph.Add(root);
+
+			Assert.That(loaded.Map(x => x.Name).ToList(), Is.EquivalentTo(new[] { system.Name, systemXml.Name.Name }));
+		}
 	}
 }

@@ -7,11 +7,21 @@ namespace Pencil.Test.Stubs
 
 	class AssemblyLoaderStub : IAssemblyLoader
 	{
+		Dictionary<string, IAssembly> assemblies = new Dictionary<string, IAssembly>();
+
 		public Action<AssemblyName> Loading = DoNothing;
+
+		public void Add(IAssembly assembly)
+		{
+			assemblies.Add(assembly.Name.Name, assembly);
+		}
 
 		public IAssembly Load(AssemblyName name)
 		{
 			Loading(name);
+			IAssembly assembly;
+			if(assemblies.TryGetValue(name.Name, out assembly))
+				return assembly;
 			return new AssemblyStub(name);
 		}
 

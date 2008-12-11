@@ -28,8 +28,8 @@
             if(!assemblies.TryGetValue(assemblyName, out node))
             {
                 node = graph.AddNode(assemblyName.Name);
-				loader.Load(assemblyName);
                 assemblies.Add(assemblyName, node);
+				Add(loader.Load(assemblyName));
             }
             return node;
         }
