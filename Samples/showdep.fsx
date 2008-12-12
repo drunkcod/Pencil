@@ -4,14 +4,13 @@
 
 open System
 open System.IO
-open System.Xml.Serialization
 open Pencil.Core
 open Pencil.NMeter
 
 let ignoreFilter =
     let path = Path.Combine(__SOURCE_DIRECTORY__, "Ignore.xml")
-    let configuration = XmlSerializer(typeof<IgnoreFilterConfiguration>).Deserialize(File.OpenRead(path)) :?> IgnoreFilterConfiguration
-    Predicate(IgnoreFilter.From(configuration).Include)
+    let configuration = IgnoreFilterConfiguration.FromFile(path)
+    IgnoreFilter.From(configuration)
 
 let IsAssembly fileName =
     let ext = Path.GetExtension(fileName)

@@ -9,11 +9,14 @@
         DirectedGraph graph;
 		IAssemblyLoader loader;
         Dictionary<string, Node> assemblies = new Dictionary<string, Node>();
-		Predicate<AssemblyName> filter;
+		IFilter<AssemblyName> filter;
 
         public AssemblyDependencyGraph(DirectedGraph graph, IAssemblyLoader loader): this(graph, loader, x => true){}
 
-        public AssemblyDependencyGraph(DirectedGraph graph, IAssemblyLoader loader, Predicate<AssemblyName> filter)
+        public AssemblyDependencyGraph(DirectedGraph graph, IAssemblyLoader loader, Predicate<AssemblyName> filter):
+			this(graph, loader, Filter.From(filter)){}
+
+		public AssemblyDependencyGraph(DirectedGraph graph, IAssemblyLoader loader, IFilter<AssemblyName> filter)
         {
             this.graph = graph;
 			this.loader = loader;
@@ -29,7 +32,7 @@
 		bool ShouldAdd(IAssembly assembly)
 		{
             var name = assembly.Name;
-            return !assemblies.ContainsKey(name.Name) && filter(name);
+            return !assemblies.ContainsKey(name.Name) && Include(name);
 		}
 
         Node GetOrCreate(AssemblyName assemblyName)
@@ -44,10 +47,12 @@
 		{
             foreach(var item in assembly.ReferencedAssemblies)
 			{
-				if(filter(item))
+				if(Include(item))
                     current.ConnectTo(GetOrCreate(item));
 			}
 		}
+
+		bool Include(AssemblyName assemblyName){ return filter.Include(assemblyName); }
 
         struct CreateResult
         {

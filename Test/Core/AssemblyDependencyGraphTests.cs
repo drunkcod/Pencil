@@ -21,14 +21,32 @@ namespace Pencil.Test.Core
 		{
 			var digraph = new DirectedGraph();
 			var graph = new AssemblyDependencyGraph(digraph, new AssemblyLoaderStub(), x => x.Name != "System");
-			var assembly = new AssemblyStub("MyAssembly");
-			var system = new AssemblyName("System");
+			var assembly = GetAssemblyDependingOnSystem();
 
-			assembly.GetReferencedAssembliesHandler = () => new[] { system };
 			graph.Add(assembly);
 
 			Assert.That(digraph.Nodes.Map(x => x.Label).ToList(), Is.EquivalentTo(new[]{ assembly.Name.Name}));
 		}
+		[Test]
+		public void Should_support_filter()
+		{
+			var digraph = new DirectedGraph();
+			var filter = Filter.From<AssemblyName>(x => x.Name != "System");
+			var graph = new AssemblyDependencyGraph(digraph, new AssemblyLoaderStub(), filter);
+			var assembly = GetAssemblyDependingOnSystem();
+			graph.Add(assembly);
+
+			Assert.That(digraph.Nodes.Map(x => x.Label).ToList(), Is.EquivalentTo(new[]{ assembly.Name.Name}));
+		}
+
+		IAssembly GetAssemblyDependingOnSystem()
+		{
+			var assembly = new AssemblyStub("MyAssembly");
+			var system = new AssemblyName("System");
+			assembly.GetReferencedAssembliesHandler = () => new[] { system };
+			return assembly;
+		}
+
         [Test]
         public void Add_should_obey_filtering()
         {

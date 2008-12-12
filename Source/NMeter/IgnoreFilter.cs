@@ -2,9 +2,10 @@
 {
     using System.Reflection;
     using System.Text.RegularExpressions;
-using System.Collections.Generic;
+	using System.Collections.Generic;
+	using Pencil.Core;
 
-    public class IgnoreFilter
+    public class IgnoreFilter : IFilter<AssemblyName>
     {
         IgnoreFilterConfiguration configuration;
         Dictionary<string, bool> names = new Dictionary<string, bool>();
