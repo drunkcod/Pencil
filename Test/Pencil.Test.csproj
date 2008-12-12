@@ -70,6 +70,7 @@
     <Compile Include="Core\OpcodeTests.cs" />
     <Compile Include="Expect.cs" />
     <Compile Include="NMeter\IgnoreFilterConfigurationTests.cs" />
+    <Compile Include="NMeter\ProjectConfigurationTests.cs" />
     <Compile Include="Scenarios\PrintMethodDependenciesTests.cs" />
     <Compile Include="Stubs\AssemblyLoaderStub.cs" />
     <Compile Include="Stubs\AssemblyStub.cs" />
@@ -88,5 +89,10 @@
       <Project>{E5228228-0A0C-481D-9E4A-808485D70385}</Project>
       <Name>Pencil.Core</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="SampleProject.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 </Project>

@@ -50,6 +50,7 @@
     <Compile Include="Core\Disassembler.cs" />
     <Compile Include="Core\DotBuilder.cs" />
     <Compile Include="Core\Edge.cs" />
+    <Compile Include="Core\Filter.cs" />
     <Compile Include="Core\IAssembly.cs" />
     <Compile Include="Core\IAssemblyLoader.cs" />
     <Compile Include="Core\IEnumerableExtensions.cs" />
@@ -65,8 +66,10 @@
     <Compile Include="Core\Node.cs" />
     <Compile Include="Core\Opcode.cs" />
     <Compile Include="Core\StringExtensions.cs" />
+    <Compile Include="NMeter\ConfigurationItem.cs" />
     <Compile Include="NMeter\IgnoreFilter.cs" />
     <Compile Include="NMeter\IgnoreFilterConfiguration.cs" />
+    <Compile Include="NMeter\ProjectConfiguration.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

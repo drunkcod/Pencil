@@ -4,17 +4,6 @@
     using System.Xml.Serialization;
     using System.Collections.Generic;
 
-    public struct IgnoreItem
-    {
-        [XmlAttribute("Value")]
-        public string Value;
-
-        public IgnoreItem(string value)
-        {
-            Value = value;
-        }
-    }
-
     [XmlRoot("Ignore")]
     public class IgnoreFilterConfiguration
     {

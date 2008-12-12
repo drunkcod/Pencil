@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Project>
+  <BinPath>Build</BinPath>
+  <IgnoreAssemblies>
+    <Name Value="mscorlib"/>
+    <Pattern Value="^System.*"/>
+  </IgnoreAssemblies>
+</Project>
