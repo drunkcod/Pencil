@@ -60,6 +60,7 @@
     <Compile Include="Build\Tasks\CSharpCompilerTaskTests.cs" />
     <Compile Include="Core\ArrayExtensionsTests.cs" />
     <Compile Include="Core\AssemblyDependencyGraphTests.cs" />
+    <Compile Include="Core\AssemblyReaderTests.cs" />
     <Compile Include="Core\AssemblyTests.cs" />
     <Compile Include="Core\ByteConverterTests.cs" />
     <Compile Include="Core\DisassemblerTests.Decode.cs" />
@@ -68,6 +69,7 @@
     <Compile Include="Core\DotBuilderTests.cs" />
     <Compile Include="Core\MethodTests.cs" />
     <Compile Include="Core\OpcodeTests.cs" />
+    <Compile Include="Core\StaticAssemblyLoaderTests.cs" />
     <Compile Include="Expect.cs" />
     <Compile Include="NMeter\IgnoreFilterConfigurationTests.cs" />
     <Compile Include="NMeter\ProjectConfigurationTests.cs" />
@@ -76,9 +78,13 @@
     <Compile Include="Stubs\AssemblyStub.cs" />
     <Compile Include="Stubs\ExecutionEnvironmentStub.cs" />
     <Compile Include="Stubs\FileSystemStub.cs" />
+    <Compile Include="Stubs\HandlerStub.cs" />
+    <Compile Include="Stubs\MethodStub.cs" />
+    <Compile Include="Stubs\ModuleStub.cs" />
     <Compile Include="Stubs\ProcessStub.cs" />
     <Compile Include="Stubs\ProjectStub.cs" />
     <Compile Include="Stubs\TargetStub.cs" />
+    <Compile Include="Stubs\TypeStub.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Source\Pencil.Build.csproj">

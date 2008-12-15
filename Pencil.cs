@@ -46,6 +46,7 @@ public class PencilProject : Project
 		csc.Sources.Add(@"Test\Core\*.cs");
 		csc.Sources.Add(@"Test\Build\*.cs");
         csc.Sources.Add(@"Test\Build\Tasks\*.cs");
+        csc.Sources.Add(@"Test\NMeter\*.cs");
         csc.Sources.Add(@"Test\Stubs\*.cs");
         csc.References.Add(@"Build\Debug\Pencil.dll");
         csc.References.Add(@"Build\Debug\Pencil.Build.exe");

@@ -4,6 +4,7 @@
 
     public interface IType
     {
+        string Name { get; }
         IEnumerable<IMethod> Methods { get; }
     }
 }

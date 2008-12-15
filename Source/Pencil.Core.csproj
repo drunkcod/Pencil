@@ -45,6 +45,7 @@
     <Compile Include="Core\Assembly.cs" />
     <Compile Include="Core\AssemblyDependencyGraph.cs" />
     <Compile Include="Core\AssemblyLoader.cs" />
+    <Compile Include="Core\AssemblyReader.cs" />
     <Compile Include="Core\ByteConverter.cs" />
     <Compile Include="Core\DirectedGraph.cs" />
     <Compile Include="Core\Disassembler.cs" />
@@ -54,6 +55,7 @@
     <Compile Include="Core\IAssembly.cs" />
     <Compile Include="Core\IAssemblyLoader.cs" />
     <Compile Include="Core\IEnumerableExtensions.cs" />
+    <Compile Include="Core\IHandler.cs" />
     <Compile Include="Core\IInstruction.cs" />
     <Compile Include="Core\IMethod.cs" />
     <Compile Include="Core\IModule.cs" />
@@ -65,6 +67,7 @@
     <Compile Include="Core\MissingAssembly.cs" />
     <Compile Include="Core\Node.cs" />
     <Compile Include="Core\Opcode.cs" />
+    <Compile Include="Core\StaticAssemblyLoader.cs" />
     <Compile Include="Core\StringExtensions.cs" />
     <Compile Include="NMeter\ConfigurationItem.cs" />
     <Compile Include="NMeter\IgnoreFilter.cs" />
