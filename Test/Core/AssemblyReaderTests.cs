@@ -44,7 +44,7 @@ namespace Pencil.Test.Core
         static IAssembly GetAssemblyWithTypes(params IType[] types)
         {
             var assembly = new AssemblyStub("Test.Assembly.dll");
-            var module = new ModuleStub();
+            var module = new ModuleStub("Module1");
             assembly.GetModulesHandler = () => new[] { module };
             module.GetTypesHandler = () => types;
             return assembly;

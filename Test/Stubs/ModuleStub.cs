@@ -6,7 +6,15 @@ namespace Pencil.Test.Stubs
 
 	public class ModuleStub : IModule
 	{
+        string name;
+
+        public ModuleStub(string name)
+        {
+            this.name = name;
+        }
+
 		public Func<IEnumerable<IType>> GetTypesHandler = () => new IType[0];
-		public IEnumerable<IType> Types { get { return GetTypesHandler(); } }
+        public string Name { get { return name; } }
+        public IEnumerable<IType> Types { get { return GetTypesHandler(); } }
 	}
 }

@@ -68,8 +68,10 @@
     <Compile Include="Core\DisassemblerTests.DecodeExtended.cs" />
     <Compile Include="Core\DotBuilderTests.cs" />
     <Compile Include="Core\MethodTests.cs" />
+    <Compile Include="Core\ModuleTests.cs" />
     <Compile Include="Core\OpcodeTests.cs" />
     <Compile Include="Core\StaticAssemblyLoaderTests.cs" />
+    <Compile Include="Core\TypeTests.cs" />
     <Compile Include="Expect.cs" />
     <Compile Include="NMeter\IgnoreFilterConfigurationTests.cs" />
     <Compile Include="NMeter\ProjectConfigurationTests.cs" />

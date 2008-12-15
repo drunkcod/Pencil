@@ -4,6 +4,7 @@
 
     public interface IModule
     {
+        string Name { get; }
         IEnumerable<IType> Types { get; }
     }
 }

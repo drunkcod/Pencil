@@ -65,10 +65,12 @@
     <Compile Include="Core\IType.cs" />
     <Compile Include="Core\Method.cs" />
     <Compile Include="Core\MissingAssembly.cs" />
+    <Compile Include="Core\Module.cs" />
     <Compile Include="Core\Node.cs" />
     <Compile Include="Core\Opcode.cs" />
     <Compile Include="Core\StaticAssemblyLoader.cs" />
     <Compile Include="Core\StringExtensions.cs" />
+    <Compile Include="Core\Type.cs" />
     <Compile Include="NMeter\ConfigurationItem.cs" />
     <Compile Include="NMeter\IgnoreFilter.cs" />
     <Compile Include="NMeter\IgnoreFilterConfiguration.cs" />

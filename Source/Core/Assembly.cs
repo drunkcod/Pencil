@@ -17,7 +17,11 @@
 
         public IEnumerable<IModule> Modules
         {
-            get { throw new System.NotImplementedException(); }
+            get 
+            {
+                foreach(var module in assembly.GetModules())
+                    yield return new Module(module);
+            }
         }
 
 		public bool IsMissing { get { return false; } }

@@ -20,7 +20,7 @@ namespace Pencil.Test.Core
 		[Test]
 		public void Calls_should_contain_called_methods()
 		{
-			var method = Method.From(GetType().GetMethod("MyMethod"));
+			var method = Method.Wrap(GetType().GetMethod("MyMethod"));
 			Assert.That(method.Calls.Map(x => x.Name).ToList(),
 				Is.EquivalentTo(new []{ "DoStuff", "get_Now", "AddDays", "WriteLine" }));
 		}

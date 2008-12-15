@@ -2,17 +2,18 @@ namespace Pencil.Core
 {
 	using System.Collections.Generic;
 	using System.Reflection;
+    using ReflectionModule = System.Reflection.Module;
 
 	public class Method : IMethod
 	{
-		public static Method From(MethodInfo method)
+		public static Method Wrap(MethodInfo method)
 		{
 			return new Method(method);
 		}
 
 		MethodBase method;
 
-		private Method(MethodBase method)
+		internal Method(MethodBase method)
 		{
 			this.method = method;
 		}
@@ -33,28 +34,8 @@ namespace Pencil.Core
 		{
 			get
 			{
-				var dissassembler = new Disassembler(new ReflectionTokenResolver(method.Module));
+				var dissassembler = new Disassembler(new Module(method.Module));
 				return dissassembler.Decode(method.GetMethodBody().GetILAsByteArray());
-			}
-		}
-
-		class ReflectionTokenResolver : ITokenResolver
-		{
-			Module module;
-
-			public ReflectionTokenResolver(Module module)
-			{
-				this.module = module;
-			}
-
-			public object Resolve(int token)
-			{
-				return null;
-			}
-
-			public IMethod ResolveMethod(int token)
-			{
-				return new Method(module.ResolveMethod(token));
 			}
 		}
 	}
