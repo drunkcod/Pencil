@@ -8,5 +8,6 @@
         AssemblyName Name { get; }
         IEnumerable<AssemblyName> ReferencedAssemblies { get; }
         IEnumerable<IModule> Modules { get; }
+		bool IsMissing { get; }
     }
 }

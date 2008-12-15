@@ -5,7 +5,16 @@ namespace Pencil.Core
 
 	public class MissingAssembly : IAssembly
 	{
-		public AssemblyName Name { get { return new AssemblyName("Missing.Assembly"); } }
+		AssemblyName name;
+
+		public MissingAssembly(): this(new AssemblyName("Missing.Assembly")){}
+
+		public MissingAssembly(AssemblyName name)
+		{
+			this.name = name;
+		}
+
+		public AssemblyName Name { get { return name; } }
 
 		public IEnumerable<AssemblyName> ReferencedAssemblies
 		{
@@ -16,5 +25,7 @@ namespace Pencil.Core
 		{
 			get { return new IModule[0]; }
 		}
+
+		public bool IsMissing { get { return true; } }
 	}
 }

@@ -12,18 +12,16 @@ let ignoreFilter =
     let configuration = IgnoreFilterConfiguration.FromFile(path)
     IgnoreFilter.From(configuration)
 
-let IsAssembly fileName =
-    let ext = Path.GetExtension(fileName)
-    let file = Path.GetFileName(fileName)
-    ext = ".dll" || ext = ".exe"
-
 let digraph = DirectedGraph()
 let loader = AssemblyLoader()
 let dependencies = AssemblyDependencyGraph(digraph, loader, ignoreFilter)
 
+let IsAssembly fileName =
+    let ext = Path.GetExtension(fileName)
+    ext = ".dll" || ext = ".exe"
+
 Directory.GetFiles(".", "*.*")
 |> Seq.filter IsAssembly
-|> Seq.filter (fun x -> not (x.Contains("tests")))
-|> Seq.iter (fun file -> dependencies.Add(loader.LoadFrom(file)))
+|> Seq.iter (fun file -> dependencies.Add(AssemblyLoader.LoadFrom(file)))
 
 Console.WriteLine(DotBuilder().ToString(digraph))

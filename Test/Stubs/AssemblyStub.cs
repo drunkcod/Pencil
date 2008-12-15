@@ -20,5 +20,6 @@
         public AssemblyName Name { get { return name; } }
         public IEnumerable<AssemblyName> ReferencedAssemblies { get { return GetReferencedAssembliesHandler(); } }
         public IEnumerable<IModule> Modules { get { throw new NotImplementedException(); } }
+		public bool IsMissing { get { return false; } }
     }
 }

@@ -15,6 +15,16 @@ namespace Pencil.Test
 			catch(T){}
 		}
 
+		public static void ShouldBe(this bool actual, bool expected)
+		{
+			Assert.AreEqual(actual, expected);
+		}
+
+		public static void ShouldBeSameAs(this object actual, object expected)
+		{
+			Assert.AreSame(expected, actual);
+		}
+
 		public static void ShouldEqual(this string actual, string expected)
 		{
 			Assert.AreEqual(expected, actual);

@@ -1,3 +1,4 @@
+using System.IO;
 using Pencil.Build;
 using Pencil.Build.Tasks;
 
@@ -25,6 +26,18 @@ public class PencilProject : Project
 		csc.Execute();
 	}
 
+	[DependsOn("Core")]
+	public void Console()
+	{
+		var csc = New<CSharpCompilerTask>();
+		csc.Sources.Add(@"Source\NMeter\Console\*.cs");
+		csc.References.Add(@"Build\Debug\Pencil.dll");
+		csc.OutputType = OutputType.Application;
+		csc.Output = @"Build\Debug\NMeter.Console.exe";
+		csc.Debug = true;
+		csc.Execute();
+	}
+
 	[DependsOn("Core"), DependsOn("Build")]
 	public void Test()
 	{
@@ -46,5 +59,11 @@ public class PencilProject : Project
 		nunit.Program = @"Tools\NUnit-2.4.8-net-2.0\bin\nunit-console.exe";
 		nunit.CommandLine = csc.Output + " /nologo";
 		nunit.Execute();
+	}
+
+	public void Clean()
+	{
+		foreach(var file in Directory.GetFiles(".", "*.bak", SearchOption.AllDirectories))
+			File.Delete(file);
 	}
 }
