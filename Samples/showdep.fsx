@@ -22,6 +22,6 @@ let IsAssembly fileName =
 
 Directory.GetFiles(".", "*.*")
 |> Seq.filter IsAssembly
-|> Seq.iter (fun file -> dependencies.Add(AssemblyLoader.LoadFrom(file)))
+|> Seq.iter (AssemblyLoader.LoadFrom >> dependencies.Add)
 
-Console.WriteLine(DotBuilder().ToString(digraph))
+DotBuilder(Console.Out).Write(digraph)

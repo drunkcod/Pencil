@@ -14,18 +14,17 @@ namespace Pencil.NMeter.Console
 
 			var loader = new StaticAssemblyLoader();
 			var assemblies = new List<IAssembly>();
-			foreach(var path in Directory.GetFiles(config.BinPath, "*.*"))
-				if(IsAssembly(path))
-				{
-					var assembly = AssemblyLoader.LoadFrom(path);
-					loader.Register(assembly);
-					assemblies.Add(assembly);
-				}
-
+			Directory.GetFiles(config.BinPath, "*.*")
+			.ForEach(IsAssembly, path =>
+			{
+				var assembly = AssemblyLoader.LoadFrom(path);
+				loader.Register(assembly);
+				assemblies.Add(assembly);
+			});
 			var digraph = new DirectedGraph();
 			var dependencies = new AssemblyDependencyGraph(digraph, loader, IgnoreFilter.From(config.IgnoreAssemblies));
 			assemblies.ForEach(dependencies.Add);
-			Console.WriteLine(new DotBuilder().ToString(digraph));
+			new DotBuilder(Console.Out).Write(digraph);
 			return;
 		}
 

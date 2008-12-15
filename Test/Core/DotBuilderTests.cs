@@ -1,5 +1,6 @@
 namespace Pencil.Test.Core
 {
+	using System.IO;
 	using NUnit.Framework;
 	using Pencil.Core;
 
@@ -39,7 +40,7 @@ namespace Pencil.Test.Core
 
 		static string ToDot(DirectedGraph graph)
 		{
-			return new DotBuilder().ToString(graph);
+			return new DotBuilder(new StringWriter()).Write(graph).Target.ToString();
 		}
 	}
 }

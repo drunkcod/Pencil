@@ -1,24 +1,32 @@
 namespace Pencil.Core
 {
 	using System.Collections.Generic;
-	using System.Text;
+	using System.IO;
 
 	public class DotBuilder
 	{
         string format;
-        StringBuilder result;
+        TextWriter target;
 
-		public string ToString(DirectedGraph graph)
+		public DotBuilder(TextWriter target)
+		{
+			this.target = target;
+		}
+
+		public TextWriter Target { get { return target; } }
+
+		public DotBuilder Write(DirectedGraph graph)
 		{
             Begin();
             graph.Nodes.ForEach(Append);
             graph.Edges.ForEach(Append);
-            return Finalize();
+            End();
+			return this;
 		}
 
         void Begin()
         {
-            result = new StringBuilder("digraph{");
+			target.Write("digraph{");
             format = "{0}";
         }
 
@@ -36,14 +44,13 @@ namespace Pencil.Core
 
         void Append(string value)
         {
-            result.AppendFormat(format, value);
+            target.Write(format, value);
             format = " {0}";
         }
 
-        string Finalize()
+        void End()
         {
-            result.Append('}');
-            return result.ToString();
+            target.Write('}');
         }
 	}
 }

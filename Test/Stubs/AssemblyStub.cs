@@ -10,6 +10,7 @@
         AssemblyName name;
 
         public Func<IEnumerable<AssemblyName>> GetReferencedAssembliesHandler = () => new AssemblyName[0];
+		public Func<IEnumerable<IModule>> GetModulesHandler = () => new IModule[0];
 
 		public AssemblyStub(string name): this(new AssemblyName(name)){}
         public AssemblyStub(AssemblyName name)
@@ -19,7 +20,7 @@
 
         public AssemblyName Name { get { return name; } }
         public IEnumerable<AssemblyName> ReferencedAssemblies { get { return GetReferencedAssembliesHandler(); } }
-        public IEnumerable<IModule> Modules { get { throw new NotImplementedException(); } }
+        public IEnumerable<IModule> Modules { get { return GetModulesHandler(); } }
 		public bool IsMissing { get { return false; } }
     }
 }
