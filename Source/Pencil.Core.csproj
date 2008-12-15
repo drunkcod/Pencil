@@ -58,12 +58,14 @@
     <Compile Include="Core\IHandler.cs" />
     <Compile Include="Core\IInstruction.cs" />
     <Compile Include="Core\IMethod.cs" />
+    <Compile Include="Core\IMethodArgument.cs" />
     <Compile Include="Core\IModule.cs" />
     <Compile Include="Core\Instruction.cs" />
     <Compile Include="Core\InstructionReader.cs" />
     <Compile Include="Core\ITokenResolver.cs" />
     <Compile Include="Core\IType.cs" />
     <Compile Include="Core\Method.cs" />
+    <Compile Include="Core\MethodArgument.cs" />
     <Compile Include="Core\MissingAssembly.cs" />
     <Compile Include="Core\Module.cs" />
     <Compile Include="Core\Node.cs" />

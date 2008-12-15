@@ -5,6 +5,7 @@
 	using NUnit.Framework.SyntaxHelpers;
     using System;
 	using System.Collections.Generic;
+    using Pencil.Test.Stubs;
 
     [TestFixture]
     public partial class DisassemblerTests : ITokenResolver
@@ -39,20 +40,6 @@
             return new MethodStub(resolveTokenResult);
         }
 
-		class MethodStub : IMethod
-		{
-			string name;
-			public MethodStub(string name)
-			{
-				this.name = name;
-			}
-
-			public string Name { get { return name; } }
-			public IEnumerable<IInstruction> Body { get { yield break; } }
-
-			public override string ToString(){ return Name; }
-		}
         string resolveTokenResult;
-
     }
 }

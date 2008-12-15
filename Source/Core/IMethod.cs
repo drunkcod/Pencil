@@ -6,5 +6,6 @@
     {
 		string Name { get; }
         IEnumerable<IInstruction> Body { get; }
+        ICollection<IMethodArgument> Arguments { get; }
     }
 }

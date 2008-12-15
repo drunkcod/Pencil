@@ -6,12 +6,12 @@ namespace Pencil.Core
 
 	public class Method : IMethod
 	{
-		public static Method Wrap(MethodInfo method)
+        MethodBase method;
+        
+        public static Method Wrap(MethodInfo method)
 		{
 			return new Method(method);
 		}
-
-		MethodBase method;
 
 		internal Method(MethodBase method)
 		{
@@ -29,6 +29,11 @@ namespace Pencil.Core
 						yield return instruction.Operand as IMethod;
 			}
 		}
+
+        public ICollection<IMethodArgument> Arguments
+        {
+            get { return method.GetParameters().Map<ParameterInfo, IMethodArgument>(MethodArgument.Wrap).ToList(); }
+        }
 
 		public IEnumerable<IInstruction> Body
 		{
