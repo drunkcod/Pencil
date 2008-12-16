@@ -17,6 +17,14 @@
         private static void StaticPrivateMethod() { }
     }
 
+	[System.Runtime.CompilerServices.CompilerGenerated]
+	class GeneratedType
+	{
+		public static System.Type GetNestedType(){ return typeof(InnerType); }
+		public class InnerType{}
+	}
+
+
     [TestFixture]
     public class TypeTests
     {
@@ -30,5 +38,25 @@
 
             Assert.That(Type.Wrap(typeof(SampleType)).Methods.Map(x => x.Name).ToList(), Is.EquivalentTo(viaReflection));
         }
+		[Test]
+		public void Should_have_readable_ToString()
+		{
+			Type.Wrap(typeof(SampleType)).ToString().ShouldEqual("SampleType");
+		}
+		[Test]
+		public void IsGenerated_should_be_false_for_undecorated_Type()
+		{
+			Type.Wrap(typeof(SampleType)).IsGenerated.ShouldBe(false);
+		}
+		[Test]
+		public void IsGenerated_should_be_true_for_Type_with_CompilerGeneratedAttribute()
+		{
+			Type.Wrap(typeof(GeneratedType)).IsGenerated.ShouldBe(true);
+		}
+		[Test]
+		public void IsGenerated_should_be_true_for_class_nested_inside_generated_type()
+		{
+			Type.Wrap(GeneratedType.GetNestedType()).IsGenerated.ShouldBe(true);
+		}
     }
 }

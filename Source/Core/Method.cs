@@ -7,7 +7,7 @@ namespace Pencil.Core
 	public class Method : IMethod
 	{
         MethodBase method;
-        
+
         public static Method Wrap(MethodInfo method)
 		{
 			return new Method(method);
@@ -19,6 +19,8 @@ namespace Pencil.Core
 		}
 
 		public string Name { get { return method.Name; } }
+
+		public IType DeclaringType { get { return Type.Wrap(method.DeclaringType); } }
 
 		public IEnumerable<IMethod> Calls
 		{
@@ -43,5 +45,8 @@ namespace Pencil.Core
 				return dissassembler.Decode(method.GetMethodBody().GetILAsByteArray());
 			}
 		}
+
+		public bool IsGenerated { get { return method.IsGenerated(); } }
+		public bool IsSpecialName { get { return method.IsSpecialName; } }
 	}
 }

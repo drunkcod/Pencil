@@ -8,20 +8,10 @@ namespace Pencil.Test.Core
 	[TestFixture]
 	public class MethodTests
 	{
-		public void MyMethod()
-		{
-			DoStuff();
-			var tomorrow = DateTime.Now.AddDays(1);
-			Console.WriteLine(tomorrow);
-		}
-
-		void DoStuff(){}
-        public void DoStuff(int value, string s){}
-
 		[Test]
 		public void Calls_should_contain_called_methods()
 		{
-			var method = Method.Wrap(GetType().GetMethod("MyMethod"));
+			var method = GetMyMethod();
 			Assert.That(method.Calls.Map(x => x.Name).ToList(),
 				Is.EquivalentTo(new []{ "DoStuff", "get_Now", "AddDays", "WriteLine" }));
 		}
@@ -32,5 +22,54 @@ namespace Pencil.Test.Core
             Assert.That(method.Arguments.Map(x => x.Type.Name).ToList(),
                 Is.EquivalentTo(new[]{ "Int32", "String" }));
         }
+		[Test]
+		public void Should_have_proper_DeclaringMethod()
+		{
+			var method = GetMyMethod();
+
+			method.DeclaringType.ShouldEqual(Pencil.Core.Type.Wrap(GetType()));
+		}
+		[Test]
+		public void IsGenerated_should_be_false_for_undecorated_method()
+		{
+			GetMyMethod().IsGenerated.ShouldBe(false);
+		}
+		[Test]
+		public void IsGenerated_should_be_true_if_method_has_CompilerGeneratedAttribute()
+		{
+			var method = Method.Wrap(GetType().GetMethod("CompilerGeneratedMethod"));
+			method.IsGenerated.ShouldBe(true);
+		}
+		[Test]
+		public void IsSpecialName_should_be_false_for_normal_method()
+		{
+			GetMyMethod().IsSpecialName.ShouldBe(false);
+		}
+		[Test]
+		public void IsSpecialName_should_be_true_for_property()
+		{
+			Method.Wrap(GetType().GetProperty("MyProperty").GetGetMethod()).IsSpecialName.ShouldBe(true);
+		}
+
+		Method GetMyMethod()
+		{
+			return Method.Wrap(GetType().GetMethod("MyMethod"));
+		}
+
+		public void MyMethod()
+		{
+			DoStuff();
+			var tomorrow = DateTime.Now.AddDays(1);
+			Console.WriteLine(tomorrow);
+		}
+
+		[System.Runtime.CompilerServices.CompilerGenerated]
+		public void CompilerGeneratedMethod(){}
+
+		void DoStuff(){}
+
+        public void DoStuff(int value, string s){}
+
+		public bool MyProperty { get { return true; } }
 	}
 }

@@ -16,5 +16,6 @@ namespace Pencil.Test.Stubs
 
 		public Func<IEnumerable<IMethod>> GetMethodsHandler = () => new IMethod[0];
 		public IEnumerable<IMethod> Methods { get { return GetMethodsHandler(); } }
+		public bool IsGenerated { get { return false; } }
 	}
 }

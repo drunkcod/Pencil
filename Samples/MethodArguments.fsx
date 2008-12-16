@@ -5,19 +5,19 @@
 open System
 open Pencil.Core
 
-let handler = { 
-    new obj() 
-        interface IHandler with
-            member self.BeginAssembly x = ()
-            member self.EndAssembly() = ()
-            member self.BeginModule x = ()
-            member self.EndModule() = ()
-            member self.BeginType x = ()
-            member self.EndType() = ()
-            member self.BeginMethod x = Console.WriteLine("{0}", x.Name)
-            member self.EndMethod() = ()
- }
-    
-let reader = AssemblyReader(handler)
+type CustomHandler() =
+    inherit DefaultHandler()
+    member x.InUserMethod =
+        let m = x.Method
+        not (x.Type.IsGenerated || m.IsSpecialName || m.IsGenerated) && m.DeclaringType = x.Type
 
-reader.Read(AssemblyLoader.LoadFrom("..\Build\Debug\Pencil.dll"))
+    override x.BeginTypeCore() =
+        if not x.Type.IsGenerated then
+            Console.WriteLine("{0}", x.Type.Name)
+
+    override x.BeginMethodCore() =
+        let m = x.Method;
+        if x.InUserMethod then
+            Console.WriteLine("\t{0}({1})", m.Name, m.Arguments.Count)
+
+AssemblyReader(CustomHandler()).Read(AssemblyLoader.LoadFrom("..\Build\Debug\Pencil.dll"))

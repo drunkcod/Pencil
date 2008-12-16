@@ -6,5 +6,6 @@
     {
         string Name { get; }
         IEnumerable<IMethod> Methods { get; }
+		bool IsGenerated { get; }
     }
 }
