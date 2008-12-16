@@ -56,6 +56,8 @@ public class PencilProject : Project
 		csc.Debug = true;
 		csc.Execute();
 
+		File.Copy(@"Test\SampleProject.xml", @"Build\Debug\SampleProject.xml", true);
+
 		var nunit = New<ExecTask>();
 		nunit.Program = @"Tools\NUnit-2.4.8-net-2.0\bin\nunit-console.exe";
 		nunit.CommandLine = csc.Output + " /nologo";

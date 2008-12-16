@@ -3,21 +3,30 @@
 #r "..\Build\Debug\Pencil.dll"
 
 open System
+open System.IO
 open Pencil.Core
 
-type CustomHandler() =
+type CustomHandler(threshold:int) =
     inherit DefaultHandler()
+
     member x.InUserMethod =
         let m = x.Method
-        not (x.Type.IsGenerated || m.IsSpecialName || m.IsGenerated) && m.DeclaringType = x.Type
-
-    override x.BeginTypeCore() =
-        if not x.Type.IsGenerated then
-            Console.WriteLine("{0}", x.Type.Name)
+        let ignore = x.Type.IsGenerated || m.IsSpecialName || m.IsGenerated
+        not ignore && m.DeclaringType = x.Type
 
     override x.BeginMethodCore() =
         let m = x.Method;
-        if x.InUserMethod then
-            Console.WriteLine("\t{0}({1})", m.Name, m.Arguments.Count)
+        if x.InUserMethod && m.Arguments.Count > threshold then
+            Console.WriteLine("\t{0}.{1}({2})", x.Type.Name, m.Name, m.Arguments.Count)
 
-AssemblyReader(CustomHandler()).Read(AssemblyLoader.LoadFrom("..\Build\Debug\Pencil.dll"))
+let IsAssembly fileName =
+    let ext = Path.GetExtension(fileName)
+    ext = ".dll" || ext = ".exe"
+
+let read = AssemblyLoader.LoadFrom >> AssemblyReader(CustomHandler(4)).Read
+
+Directory.GetFiles(".", "*.*")
+|> Seq.filter IsAssembly
+|> Seq.filter (fun x -> not (x.Contains("Test")))
+|> Seq.map (fun x -> Console.WriteLine("Checking {0}", x); x)
+|> Seq.iter read
