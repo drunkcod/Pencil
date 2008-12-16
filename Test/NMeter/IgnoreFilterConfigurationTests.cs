@@ -20,7 +20,7 @@
         {
             var ignore = new IgnoreFilterConfiguration();
             var name = new AssemblyName("Foo.Bar.Core");
-            ignore.Names.Add(new IgnoreItem(name.Name));
+            ignore.Names.Add(new ConfigurationItem(name.Name));
             Assert.IsFalse(IgnoreFilter.From(ignore).Include(name));
         }
         [Test]
@@ -28,7 +28,7 @@
         {
             var ignore = new IgnoreFilterConfiguration();
             var name = new AssemblyName("Foo.Bar.Core");
-            ignore.Patterns.Add(new IgnoreItem(".*ar"));
+            ignore.Patterns.Add(new ConfigurationItem(".*ar"));
             Assert.IsFalse(IgnoreFilter.From(ignore).Include(name));
         }
     }

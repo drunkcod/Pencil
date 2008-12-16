@@ -30,6 +30,11 @@ namespace Pencil.Test
 			Assert.AreEqual(expected, actual);
 		}
 
+        public static void ShouldEqual(this int actual, int expected)
+        {
+            Assert.AreEqual(expected, actual);
+        }
+
         public static void ShouldEqual<T>(this T actual, T expected)
         {
             Assert.AreEqual(expected, actual);

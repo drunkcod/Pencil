@@ -3,13 +3,14 @@
     using NUnit.Framework;
     using NUnit.Framework.SyntaxHelpers;
     using Pencil.NMeter;
+    using Pencil.Core;
 
     [TestFixture]
     public class ProjectConfigurationTests
     {
         ProjectConfiguration ReadSampleProject()
         {
-            return ProjectConfiguration.FromFile("SampleProject.xml");
+            return XmlConfiguration.FromFile("SampleProject.xml").Read<ProjectConfiguration>();
         }
 
         [Test,Category("Fileystem")]
@@ -21,7 +22,7 @@
         public void Should_match_format_of_sample_project_file_for_ignored_assembly_names()
         {
             var ignored = new IgnoreFilterConfiguration();
-            ignored.Names.Add(new IgnoreItem("mscorlib"));
+            ignored.Names.Add(new ConfigurationItem("mscorlib"));
 
             Assert.That(ReadSampleProject().IgnoreAssemblies.Names, Is.EquivalentTo(ignored.Names));
         }
@@ -29,7 +30,7 @@
         public void Should_match_format_of_sample_project_file_for_ignored_assembly_patterns()
         {
             var ignored = new IgnoreFilterConfiguration();
-            ignored.Patterns.Add(new IgnoreItem("^System.*"));
+            ignored.Patterns.Add(new ConfigurationItem("^System.*"));
 
             Assert.That(ReadSampleProject().IgnoreAssemblies.Patterns, Is.EquivalentTo(ignored.Patterns));
         }

@@ -47,6 +47,7 @@
     <Compile Include="Core\AssemblyLoader.cs" />
     <Compile Include="Core\AssemblyReader.cs" />
     <Compile Include="Core\ByteConverter.cs" />
+    <Compile Include="Core\DefaultHandler.cs" />
     <Compile Include="Core\DirectedGraph.cs" />
     <Compile Include="Core\Disassembler.cs" />
     <Compile Include="Core\DotBuilder.cs" />
@@ -64,6 +65,7 @@
     <Compile Include="Core\InstructionReader.cs" />
     <Compile Include="Core\ITokenResolver.cs" />
     <Compile Include="Core\IType.cs" />
+    <Compile Include="Core\MemberInfoExtensions.cs" />
     <Compile Include="Core\Method.cs" />
     <Compile Include="Core\MethodArgument.cs" />
     <Compile Include="Core\MissingAssembly.cs" />
@@ -73,6 +75,7 @@
     <Compile Include="Core\StaticAssemblyLoader.cs" />
     <Compile Include="Core\StringExtensions.cs" />
     <Compile Include="Core\Type.cs" />
+    <Compile Include="Core\XmlConfiguration.cs" />
     <Compile Include="NMeter\ConfigurationItem.cs" />
     <Compile Include="NMeter\IgnoreFilter.cs" />
     <Compile Include="NMeter\IgnoreFilterConfiguration.cs" />

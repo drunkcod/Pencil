@@ -9,7 +9,7 @@ open Pencil.NMeter
 
 let ignoreFilter =
     let path = Path.Combine(__SOURCE_DIRECTORY__, "Ignore.xml")
-    let configuration = IgnoreFilterConfiguration.FromFile(path)
+    let configuration = XmlConfiguration.FromFile(path).Read<IgnoreFilterConfiguration>()
     IgnoreFilter.From(configuration)
 
 let digraph = DirectedGraph()

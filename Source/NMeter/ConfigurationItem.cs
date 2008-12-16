@@ -2,12 +2,13 @@
 {
     using System.Xml.Serialization;
 
-    public struct IgnoreItem
+    [XmlRoot("Item")]
+    public struct ConfigurationItem
     {
         [XmlAttribute("Value")]
         public string Value;
 
-        public IgnoreItem(string value)
+        public ConfigurationItem(string value)
         {
             Value = value;
         }

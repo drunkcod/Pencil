@@ -63,6 +63,7 @@
     <Compile Include="Core\AssemblyReaderTests.cs" />
     <Compile Include="Core\AssemblyTests.cs" />
     <Compile Include="Core\ByteConverterTests.cs" />
+    <Compile Include="Core\DefaultHandlerTests.cs" />
     <Compile Include="Core\DisassemblerTests.Decode.cs" />
     <Compile Include="Core\DisassemblerTests.cs" />
     <Compile Include="Core\DisassemblerTests.DecodeExtended.cs" />
@@ -72,6 +73,7 @@
     <Compile Include="Core\OpcodeTests.cs" />
     <Compile Include="Core\StaticAssemblyLoaderTests.cs" />
     <Compile Include="Core\TypeTests.cs" />
+    <Compile Include="Core\XmlConfigurationTests.cs" />
     <Compile Include="Expect.cs" />
     <Compile Include="NMeter\IgnoreFilterConfigurationTests.cs" />
     <Compile Include="NMeter\ProjectConfigurationTests.cs" />
