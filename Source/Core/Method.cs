@@ -7,15 +7,22 @@ namespace Pencil.Core
 	public class Method : IMethod
 	{
         MethodBase method;
+		IType returnType;
 
         public static Method Wrap(MethodInfo method)
 		{
-			return new Method(method);
+			return new Method(method, method.ReturnType);
 		}
 
-		internal Method(MethodBase method)
+        public static Method Wrap(ConstructorInfo ctor)
+		{
+			return new Method(ctor, ctor.DeclaringType);
+		}
+
+		Method(MethodBase method, System.Type returnType)
 		{
 			this.method = method;
+			this.returnType = Type.Wrap(returnType);
 		}
 
 		public string Name { get { return method.Name; } }
@@ -37,16 +44,27 @@ namespace Pencil.Core
             get { return method.GetParameters().Map<ParameterInfo, IMethodArgument>(MethodArgument.Wrap).ToList(); }
         }
 
+		public IType ReturnType { get { return returnType; } }
+
 		public IEnumerable<IInstruction> Body
 		{
 			get
 			{
 				var dissassembler = new Disassembler(new Module(method.Module));
-				return dissassembler.Decode(method.GetMethodBody().GetILAsByteArray());
+				return dissassembler.Decode(GetIL());
 			}
+		}
+
+		byte[] GetIL()
+		{
+			var body = method.GetMethodBody();
+			if(body == null)
+				return new byte[0];
+			return body.GetILAsByteArray();
 		}
 
 		public bool IsGenerated { get { return method.IsGenerated(); } }
 		public bool IsSpecialName { get { return method.IsSpecialName; } }
+		public bool IsConstructor { get { return method.IsConstructor; } }
 	}
 }

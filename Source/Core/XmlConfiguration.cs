@@ -4,6 +4,7 @@
     using System.Xml;
     using System.Xml.XPath;
     using System.Xml.Serialization;
+	using System.Reflection;
 
     public class XmlConfiguration
     {
@@ -23,26 +24,26 @@
 
         public T Read<T>()
         {
-            return Deserialize<T>(ReadSubtree(string.Empty, typeof(T)));
+            return (T)Deserialize(string.Empty, typeof(T));
         }
 
         public T ReadSection<T>()
         {
-            return Deserialize<T>(ReadSubtree("*/", typeof(T)));
+            return (T)Deserialize("*/", typeof(T));
         }
 
-        static T Deserialize<T>(XmlReader reader)
+        object Deserialize(string prefix, System.Type type)
         {
-            var serializer = new XmlSerializer(typeof(T));
-            return (T)serializer.Deserialize(reader);
+            var serializer = new XmlSerializer(type);
+            return serializer.Deserialize(ReadSubtree(prefix, type));
         }
 
-        XmlReader ReadSubtree(string prefix, System.Type type)
+        XmlReader ReadSubtree(string prefix, MemberInfo type)
         {
             return navigator.SelectSingleNode(prefix + GetRootElement(type)).ReadSubtree();
         }
 
-        string GetRootElement(System.Type type)
+        string GetRootElement(MemberInfo type)
         {
             var rootAttribute = type.GetCustomAttributes(typeof(XmlRootAttribute), false);
             if(rootAttribute.Length == 0)
@@ -50,5 +51,4 @@
             return ((XmlRootAttribute)rootAttribute[0]).ElementName;
         }
     }
-
 }

@@ -6,6 +6,8 @@ namespace Pencil.Test.Stubs
 
 	public class TypeStub : IType
 	{
+		public Func<ICollection<IType>> GetDependsOnHandler = () => new IType[0];
+
         string name;
         public TypeStub(string name)
         {
@@ -16,6 +18,7 @@ namespace Pencil.Test.Stubs
 
 		public Func<IEnumerable<IMethod>> GetMethodsHandler = () => new IMethod[0];
 		public IEnumerable<IMethod> Methods { get { return GetMethodsHandler(); } }
+		public ICollection<IType> DependsOn { get { return GetDependsOnHandler(); } }
 		public bool IsGenerated { get { return false; } }
 	}
 }

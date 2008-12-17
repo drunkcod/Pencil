@@ -23,6 +23,11 @@ namespace Pencil.Test.Core
                 Is.EquivalentTo(new[]{ "Int32", "String" }));
         }
 		[Test]
+		public void ReturnType_should_return_correct_type()
+		{
+			GetMyMethod().ReturnType.Equals(typeof(int)).ShouldBe(true);
+		}
+		[Test]
 		public void Should_have_proper_DeclaringMethod()
 		{
 			var method = GetMyMethod();
@@ -50,17 +55,28 @@ namespace Pencil.Test.Core
 		{
 			Method.Wrap(GetType().GetProperty("MyProperty").GetGetMethod()).IsSpecialName.ShouldBe(true);
 		}
+		[Test]
+		public void IsConstructor_should_be_false_for_plain_method()
+		{
+			GetMyMethod().IsConstructor.ShouldBe(false);
+		}
+		[Test]
+		public void IsConstructor_should_be_true_for_ctor()
+		{
+			Method.Wrap(GetType().GetConstructor(System.Type.EmptyTypes)).IsConstructor.ShouldBe(true);
+		}
 
 		Method GetMyMethod()
 		{
 			return Method.Wrap(GetType().GetMethod("MyMethod"));
 		}
 
-		public void MyMethod()
+		public int MyMethod()
 		{
 			DoStuff();
 			var tomorrow = DateTime.Now.AddDays(1);
 			Console.WriteLine(tomorrow);
+			return 42;
 		}
 
 		[System.Runtime.CompilerServices.CompilerGenerated]

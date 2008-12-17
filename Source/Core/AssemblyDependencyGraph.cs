@@ -4,11 +4,9 @@
 	using System.Reflection;
     using System.Collections.Generic;
 
-    public class AssemblyDependencyGraph
+    public class AssemblyDependencyGraph : DependencyGraph<IAssembly>
     {
-        DirectedGraph graph;
 		IAssemblyLoader loader;
-        Dictionary<string, Node> assemblies = new Dictionary<string, Node>();
 		IFilter<AssemblyName> filter;
 
         public AssemblyDependencyGraph(DirectedGraph graph, IAssemblyLoader loader): this(graph, loader, x => true){}
@@ -16,60 +14,27 @@
         public AssemblyDependencyGraph(DirectedGraph graph, IAssemblyLoader loader, Predicate<AssemblyName> filter):
 			this(graph, loader, Filter.From(filter)){}
 
-		public AssemblyDependencyGraph(DirectedGraph graph, IAssemblyLoader loader, IFilter<AssemblyName> filter)
+		public AssemblyDependencyGraph(DirectedGraph graph, IAssemblyLoader loader, IFilter<AssemblyName> filter): base(graph)
         {
-            this.graph = graph;
 			this.loader = loader;
 			this.filter = filter;
         }
 
-        public void Add(IAssembly assembly)
-        {
-			if(ShouldAdd(assembly))
-                AddChildren(CreateNode(assembly.Name).Item, assembly);
-        }
-
-		bool ShouldAdd(IAssembly assembly)
+		protected override bool ShouldAdd(IAssembly item)
 		{
-            var name = assembly.Name;
-            return !assemblies.ContainsKey(name.Name) && Include(name);
+            return base.ShouldAdd(item) && Include(item.Name);
 		}
 
-        Node GetOrCreate(AssemblyName assemblyName)
-        {
-            var node = CreateNode(assemblyName);
-            if(node.Created)
-				AddChildren(node.Item, loader.Load(assemblyName));
-            return node.Item;
-        }
+		protected override string GetLabel(IAssembly item){ return item.Name.Name; }
 
-		void AddChildren(Node current, IAssembly assembly)
+		protected override IEnumerable<IAssembly> GetDependencies(IAssembly item)
 		{
-            foreach(var item in assembly.ReferencedAssemblies)
-			{
-				if(Include(item))
-                    current.ConnectTo(GetOrCreate(item));
-			}
+            foreach(var reference in item.ReferencedAssemblies)
+				if(Include(reference))
+                   yield return loader.Load(reference);
 		}
+
 
 		bool Include(AssemblyName assemblyName){ return filter.Include(assemblyName); }
-
-        struct CreateResult
-        {
-            public bool Created;
-            public Node Item;
-        }
-
-		CreateResult CreateNode(AssemblyName assemblyName)
-		{
-            var result = new CreateResult();
-            result.Created = !assemblies.TryGetValue(assemblyName.Name, out result.Item);
-            if(result.Created)
-            {
-                result.Item = graph.AddNode(assemblyName.Name);
-                assemblies.Add(assemblyName.Name, result.Item);
-            }
-            return result;
-		}
     }
 }

@@ -28,5 +28,14 @@ namespace Pencil.Core
 		{
 			return new List<T>(sequence);
 		}
+
+		public static int Count<T>(this IEnumerable<T> sequence, Predicate<T> predicate)
+		{
+			int count = 0;
+			foreach(var item in sequence)
+				if(predicate(item))
+					++count;
+			return count;
+		}
 	}
 }

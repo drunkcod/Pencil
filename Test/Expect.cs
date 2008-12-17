@@ -2,7 +2,10 @@ namespace Pencil.Test
 {
 	using System;
 	using System.Collections;
+	using System.Collections.Generic;
 	using NUnit.Framework;
+	using NUnit.Framework.SyntaxHelpers;
+	using Pencil.Core;
 
 	static class Expect
 	{
@@ -35,15 +38,25 @@ namespace Pencil.Test
             Assert.AreEqual(expected, actual);
         }
 
-        public static void ShouldEqual<T>(this T actual, T expected)
-        {
-            Assert.AreEqual(expected, actual);
-        }
+		public static void ShouldEqual(this object actual, object expected)
+		{
+			Assert.AreEqual(expected, actual);
+		}
 
 		public static void ShouldBeEmpty(this IEnumerable sequence)
 		{
 			foreach(var item in sequence)
-				Assert.Fail("Sequence not empty.");
+				Assert.Fail("Sequence not empty {0}.", item);
+		}
+
+		public static void ShouldContain<T>(this IEnumerable<T> sequence, params T[] items)
+		{
+			(sequence.ToList() as ICollection).ShouldContain(items);
+		}
+
+		public static void ShouldContain<T>(this ICollection collection, params T[] items)
+		{
+			Assert.That(items, Is.SubsetOf(collection));
 		}
 	}
 }
