@@ -13,7 +13,9 @@ let ignore = { new IFilter<IType> with
         not (
             t.Equals(typeof<bool>)
             || t.Equals(typeof<int>)
-            || t.Equals(typeof<string>))
+            || t.Equals(typeof<string>)
+            || t.Equals(typeof<Type>)
+            || t.Name = "List`1")
 }
 let dependencies = TypeDependencyGraph(digraph, ignore)
 

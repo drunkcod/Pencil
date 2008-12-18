@@ -20,17 +20,18 @@
 				this.parent = parent;
 			}
 
-			public void Add(IType type)
+			public void Add(IType item)
 			{
-				if(type.Equals(parent)
-				|| type.Equals(typeof(object))
-				|| type.Equals(typeof(void))
-				|| type.IsGenericParameter
-				|| type.Equals(typeof(System.Runtime.InteropServices._Attribute)))
+				var element = item.ElementType;
+				if(item.Equals(parent)
+				|| element.Equals(typeof(object))
+				|| element.Equals(typeof(void))
+				|| element.IsGenericParameter
+				|| element.Equals(typeof(System.Runtime.InteropServices._Attribute)))
 					return;
-				var key = type.Name;
+				var key = item.Name;
 				if(!types.ContainsKey(key))
-					types.Add(key, type);
+					types.Add(key, item);
 			}
 
 			public ICollection<IType> Types { get { return types.Values; } }
@@ -43,10 +44,20 @@
 
         private Type(SystemType type)
         {
+			if(type == null)
+				throw new ArgumentNullException();
             this.type = type;
         }
 
         public string Name { get { return type.Name; } }
+        public IType ElementType
+		{
+			get
+			{
+				var elementType = type.GetElementType();
+				return elementType == null ? this : Type.Wrap(elementType);
+			}
+		}
         public IEnumerable<IMethod> Methods { get { return type.GetMethods(AllMethods).Map<MethodInfo, IMethod>(Method.Wrap); } }
 		public ICollection<IType> DependsOn
 		{
@@ -55,7 +66,9 @@
 				if(type.IsEnum)
 					return new IType[0];
 				var dependsOn = new DependencyCollection(this);
-				dependsOn.Add(Type.Wrap(type.BaseType));
+				var baseType = type.BaseType;
+				if(baseType != null)
+					dependsOn.Add(Type.Wrap(baseType));
 				type.GetInterfaces().ForEach(x => dependsOn.Add(Type.Wrap(x)));
 				EachOwnMethod(m => m.Arguments.Map(a => a.Type).ForEach(dependsOn.Add));
 				EachOwnMethod(m => dependsOn.Add(m.ReturnType));

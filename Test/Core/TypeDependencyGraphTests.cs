@@ -68,5 +68,19 @@ namespace Pencil.Test.Core
 
 			digraph.Nodes.ShouldBeEmpty();
 		}
+
+		class MyType
+		{
+			public System.DateTime[] Foo(){ return null; }
+		}
+
+		[Test]
+		public void Should_use_element_type_for_arrays()
+		{
+			var digraph = new DirectedGraph();
+			var graph = new TypeDependencyGraph(digraph);
+			graph.Add(Type.Wrap(typeof(MyType)));
+			Assert.That(digraph.Nodes.Map(x => x.Label).ToList(), Is.EquivalentTo(new[]{ "MyType", "DateTime" }));
+		}
 	}
 }

@@ -9,16 +9,18 @@ namespace Pencil.Test.Stubs
 		public Func<ICollection<IType>> GetDependsOnHandler = () => new IType[0];
 		public Func<bool> GetIsGeneratedHandler = () => false;
 		public Func<bool> GetIsGenericParameterHandler = () => false;
+		public Func<IType> GetElementTypeHandler;
+		public Func<IEnumerable<IMethod>> GetMethodsHandler = () => new IMethod[0];
 
         string name;
         public TypeStub(string name)
         {
             this.name = name;
+			this.GetElementTypeHandler = () => this;
         }
 
         public string Name { get { return name; } }
-
-		public Func<IEnumerable<IMethod>> GetMethodsHandler = () => new IMethod[0];
+		public IType ElementType { get { return GetElementTypeHandler(); } }
 		public IEnumerable<IMethod> Methods { get { return GetMethodsHandler(); } }
 		public ICollection<IType> DependsOn { get { return GetDependsOnHandler(); } }
 		public bool IsGenerated { get { return GetIsGeneratedHandler(); } }

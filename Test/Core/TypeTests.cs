@@ -145,5 +145,15 @@
 		{
 			Type.Wrap(typeof(EmptyAttribute)).DependsOn.All(x => x.Equals(typeof(Attribute))).ShouldBe(true);
 		}
+		[Test]
+		public void ElementType_should_be_same_as_type_for_normal_type()
+		{
+			DependentType.ElementType.ShouldBeSameAs(DependentType);
+		}
+		[Test]
+		public void ElementType_should_be_item_type_for_array()
+		{
+			Type.Wrap(typeof(object[])).ElementType.Equals(typeof(object)).ShouldBe(true);
+		}
     }
 }
