@@ -12,11 +12,21 @@
 
 		class DependencyCollection
 		{
+			IType parent;
 			Dictionary<string, IType> types = new Dictionary<string, IType>();
+
+			public DependencyCollection(IType parent)
+			{
+				this.parent = parent;
+			}
 
 			public void Add(IType type)
 			{
-				if(type.Equals(typeof(object)) || type.Equals(typeof(void)))
+				if(type.Equals(parent)
+				|| type.Equals(typeof(object))
+				|| type.Equals(typeof(void))
+				|| type.IsGenericParameter
+				|| type.Equals(typeof(System.Runtime.InteropServices._Attribute)))
 					return;
 				var key = type.Name;
 				if(!types.ContainsKey(key))
@@ -42,18 +52,22 @@
 		{
 			get
 			{
-				var dependsOn = new DependencyCollection();
-				EachNonObjectMethod(m => m.Arguments.Map(a => a.Type).ForEach(dependsOn.Add));
-				EachNonObjectMethod(m => dependsOn.Add(m.ReturnType));
-				EachNonObjectMethod(m => m.Calls.ForEach(x =>{ dependsOn.Add(x.DeclaringType);}));
+				if(type.IsEnum)
+					return new IType[0];
+				var dependsOn = new DependencyCollection(this);
+				dependsOn.Add(Type.Wrap(type.BaseType));
+				type.GetInterfaces().ForEach(x => dependsOn.Add(Type.Wrap(x)));
+				EachOwnMethod(m => m.Arguments.Map(a => a.Type).ForEach(dependsOn.Add));
+				EachOwnMethod(m => dependsOn.Add(m.ReturnType));
+				EachOwnMethod(m => m.Calls.ForEach(x =>{ dependsOn.Add(x.DeclaringType);}));
 				return dependsOn.Types;
 			}
 		}
 
-		void EachNonObjectMethod(Action<IMethod> action)
+		void EachOwnMethod(Action<IMethod> action)
 		{
 			foreach(var method in Methods)
-				if(!method.DeclaringType.Equals(typeof(object)))
+				if(method.DeclaringType.Equals(type))
 					action(method);
 		}
 
@@ -65,6 +79,8 @@
 				return type.IsGenerated() || (parent != null && parent.IsGenerated());
 			}
 		}
+
+		public bool IsGenericParameter { get { return type.IsGenericParameter; } }
 
 		public override string ToString(){ return Name; }
 

@@ -8,13 +8,22 @@ open Pencil.Core
 open Pencil.NMeter
 
 let digraph = DirectedGraph()
-let dependencies = TypeDependencyGraph(digraph)
+let ignore = { new IFilter<IType> with
+    member x.Include t =
+        not (
+            t.Equals(typeof<bool>)
+            || t.Equals(typeof<int>)
+            || t.Equals(typeof<string>))
+}
+let dependencies = TypeDependencyGraph(digraph, ignore)
 
 let IsAssembly fileName =
     let ext = Path.GetExtension(fileName)
     ext = ".dll" || ext = ".exe"
 
-AssemblyLoader.LoadFrom("Pencil.Build.exe").Modules
-|> Seq.iter (fun x -> x.Types |> Seq.iter (dependencies.Add))
-
+fsi.CommandLineArgs
+|> Seq.filter IsAssembly
+|> Seq.iter (fun file ->
+    AssemblyLoader.LoadFrom(file).Modules
+    |> Seq.iter (fun x -> x.Types |> Seq.iter (dependencies.Add)))
 DotBuilder(Console.Out).Write(digraph)

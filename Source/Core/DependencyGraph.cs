@@ -27,18 +27,21 @@ namespace Pencil.Core
 		void AddChildren(Node current, T parent)
 		{
 			foreach(var item in GetDependencies(parent))
-			{
-				var node = CreateNode(item);
-				current.ConnectTo(node.Item);
-				if(node.Created && Recursive)
-					AddChildren(node.Item, item);
-			}
+				if(ShouldAddCore(item))
+				{
+					var node = CreateNode(item);
+					current.ConnectTo(node.Item);
+					if(node.Created && Recursive)
+						AddChildren(node.Item, item);
+				}
 		}
+
+		bool ShouldAdd(T item){ return !nodes.ContainsKey(GetLabel(item)) && ShouldAddCore(item); }
 
 		protected virtual bool Recursive { get { return true; } }
 		protected abstract string GetLabel(T item);
 		protected abstract IEnumerable<T> GetDependencies(T item);
-		protected virtual bool ShouldAdd(T item){ return !nodes.ContainsKey(GetLabel(item)); }
+		protected abstract bool ShouldAddCore(T item);
 
 		struct CreateResult
         {

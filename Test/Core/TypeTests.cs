@@ -21,13 +21,20 @@
         private static void StaticPrivateMethod() { }
     }
 
-	class DependentType
+	interface ISampleInterface {}
+	class DependentType : ISampleInterface
 	{
 		public SampleType DoStuff(){ return new SampleType(); }
 		protected void WriteStuff(TextWriter writer){}
 		void ReadStuff(TextReader reader){}
 		void HiddenConstruction(){ new StringBuilder(); }
 		void HiddenStaticCall(){ var foo = DateTime.Now; }
+		void CallSelf(){ CallSelf(); }
+	}
+
+	class GenericSample
+	{
+		public T DoStuff<T>(){ return default(T); }
 	}
 
 	[System.Runtime.CompilerServices.CompilerGenerated]
@@ -98,14 +105,45 @@
 			DependentType.DependsOn.Map(x => x.Name).ShouldContain("DateTime");
 		}
 		[Test]
-		public void DependsOn_should_not_have_duplicates()
+		public void DependsOn_should_contain_implemented_interface()
+		{
+			DependentType.DependsOn.Map(x => x.Name).ShouldContain("ISampleInterface");
+		}
+		[Test]
+		public void DependsOn_wont_have_duplicates()
 		{
 			DependentType.DependsOn.Count(x => x.Equals(typeof(SampleType))).ShouldEqual(1);
+		}
+		[Test]
+		public void DependsOn_wont_contain_self()
+		{
+			DependentType.DependsOn.Count(x => x.Equals(typeof(DependentType))).ShouldEqual(0);
+		}
+		[Test]
+		public void DependsOn_wont_contain_generic_parameters()
+		{
+			Type.Wrap(typeof(GenericSample)).DependsOn.Any(x => x.Name.StartsWith("T")).ShouldBe(false);
 		}
 		[Test]
 		public void Should_support_Equals_with_System_Type()
 		{
 			Type.Wrap(typeof(object)).Equals(typeof(object)).ShouldBe(true);
+		}
+
+		enum MyEnum { None }
+
+		[Test]
+		public void DependsOn_should_be_empty_for_Enum_type()
+		{
+			Type.Wrap(typeof(MyEnum)).DependsOn.ShouldBeEmpty();
+		}
+
+		class EmptyAttribute : Attribute {}
+
+		[Test]
+		public void EmptyAttribute_should_only_depend_on_Attribute()
+		{
+			Type.Wrap(typeof(EmptyAttribute)).DependsOn.All(x => x.Equals(typeof(Attribute))).ShouldBe(true);
 		}
     }
 }

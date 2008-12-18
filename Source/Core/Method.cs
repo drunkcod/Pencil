@@ -50,7 +50,7 @@ namespace Pencil.Core
 		{
 			get
 			{
-				var dissassembler = new Disassembler(new Module(method.Module));
+				var dissassembler = new Disassembler(new TokenResolver(method.Module, method.DeclaringType, method));
 				return dissassembler.Decode(GetIL());
 			}
 		}

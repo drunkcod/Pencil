@@ -8,5 +8,6 @@
         IEnumerable<IMethod> Methods { get; }
 		ICollection<IType> DependsOn { get; }
 		bool IsGenerated { get; }
+		bool IsGenericParameter { get; }
     }
 }

@@ -5,6 +5,7 @@ namespace Pencil.Core
 	public interface IFilter<T>
 	{
 		bool Include(T item);
+
 	}
 
 	public class Filter

@@ -20,9 +20,9 @@
 			this.filter = filter;
         }
 
-		protected override bool ShouldAdd(IAssembly item)
+		protected override bool ShouldAddCore(IAssembly item)
 		{
-            return base.ShouldAdd(item) && Include(item.Name);
+            return Include(item.Name);
 		}
 
 		protected override string GetLabel(IAssembly item){ return item.Name.Name; }
