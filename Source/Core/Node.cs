@@ -24,7 +24,11 @@
 
         public string Label { get; set; }
 
-        public void ConnectTo(Node to) { edges.Add(to); }
+        public void ConnectTo(Node to) 
+        {
+            if(!edges.Contains(to))
+                edges.Add(to); 
+        }
 
         internal bool IsEmpty { get { return Label.IsNullOrEmpty(); } }
 

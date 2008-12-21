@@ -72,6 +72,7 @@
     <Compile Include="Core\ModuleTests.cs" />
     <Compile Include="Core\OpcodeTests.cs" />
     <Compile Include="Core\StaticAssemblyLoaderTests.cs" />
+    <Compile Include="Core\TypeDependencyGraphTests.cs" />
     <Compile Include="Core\TypeTests.cs" />
     <Compile Include="Core\XmlConfigurationTests.cs" />
     <Compile Include="Expect.cs" />

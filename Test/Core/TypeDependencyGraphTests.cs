@@ -82,5 +82,19 @@ namespace Pencil.Test.Core
 			graph.Add(Type.Wrap(typeof(MyType)));
 			Assert.That(digraph.Nodes.Map(x => x.Label).ToList(), Is.EquivalentTo(new[]{ "MyType", "DateTime" }));
 		}
+
+        class TypeWithArray
+        {
+            System.DateTime[] dates = new System.DateTime[0];
+            public System.DateTime Today() { return System.DateTime.Now; }
+        }
+        [Test]
+        public void Should_not_add_duplicate_edge_for_type_and_type_array()
+        {
+            var digraph = new DirectedGraph();
+            var graph = new TypeDependencyGraph(digraph);
+            graph.Add(Type.Wrap(typeof(TypeWithArray)));
+            Assert.That(digraph.Edges.Map(x => x.ToString()).ToList(), Is.EquivalentTo(new[] { "0->1" }));
+        }
 	}
 }

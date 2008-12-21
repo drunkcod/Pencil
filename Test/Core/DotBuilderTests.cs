@@ -37,10 +37,36 @@ namespace Pencil.Test.Core
             builder.AddNode().Label = "Pencil.Core.dll";
             ToDot(builder).ShouldEqual("digraph{0[label=\"Pencil.Core.dll\"]}");
         }
-
-		static string ToDot(DirectedGraph graph)
+        [Test]
+        public void Should_support_setting_FontSize()
+        {
+            var dot = new DotBuilder(new StringWriter());
+            dot.FontSize = 8;
+            WriteEmpty(dot).ShouldEqual("digraph{node[fontsize=8]}");
+        }
+        [Test]
+        public void Should_support_setting_RankSeparation()
+        {
+            var dot = new DotBuilder(new StringWriter());
+            dot.RankSeparation = 0.12;
+            WriteEmpty(dot).ShouldEqual("digraph{ranksep=0.12}");
+        }
+        [Test]
+        public void Should_support_setting_NodeSeparation()
+        {
+            var dot = new DotBuilder(new StringWriter());
+            dot.NodeSeparation = 0.12;
+            WriteEmpty(dot).ShouldEqual("digraph{nodesep=0.12}");
+        }
+		
+        static string ToDot(DirectedGraph graph)
 		{
 			return new DotBuilder(new StringWriter()).Write(graph).Target.ToString();
 		}
+
+        static string WriteEmpty(DotBuilder dot)
+        {
+            return dot.Write(new DirectedGraph()).Target.ToString();
+        }
 	}
 }

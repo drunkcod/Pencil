@@ -23,7 +23,7 @@
 			public void Add(IType item)
 			{
 				var element = item.ElementType;
-				if(item.Equals(parent)
+				if(element.Equals(parent)
 				|| element.Equals(typeof(object))
 				|| element.Equals(typeof(void))
 				|| element.IsGenericParameter
@@ -70,6 +70,7 @@
 				if(baseType != null)
 					dependsOn.Add(Type.Wrap(baseType));
 				type.GetInterfaces().ForEach(x => dependsOn.Add(Type.Wrap(x)));
+                type.GetFields(AllMethods).ForEach(x => { if(x.DeclaringType == type) dependsOn.Add(Type.Wrap(x.FieldType)); });
 				EachOwnMethod(m => m.Arguments.Map(a => a.Type).ForEach(dependsOn.Add));
 				EachOwnMethod(m => dependsOn.Add(m.ReturnType));
 				EachOwnMethod(m => m.Calls.ForEach(x =>{ dependsOn.Add(x.DeclaringType);}));
@@ -82,6 +83,8 @@
 			foreach(var method in Methods)
 				if(method.DeclaringType.Equals(type))
 					action(method);
+            foreach(var ctor in type.GetConstructors(AllMethods))
+                action(Method.Wrap(ctor));
 		}
 
 		public bool IsGenerated

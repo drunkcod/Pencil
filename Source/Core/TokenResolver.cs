@@ -15,7 +15,8 @@ namespace Pencil.Core
 		{
 			this.module = module;
 			this.typeArguments = type.GetGenericArguments();
-			this.methodArguments = method.GetGenericArguments();
+            if(!(method.IsConstructor || method.IsSpecialName))
+                this.methodArguments = method.GetGenericArguments();
 		}
 
 		public object Resolve(int token)

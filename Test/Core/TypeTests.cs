@@ -30,6 +30,8 @@
 		void HiddenConstruction(){ new StringBuilder(); }
 		void HiddenStaticCall(){ var foo = DateTime.Now; }
 		void CallSelf(){ CallSelf(); }
+
+        DependentType[] selfField = new DependentType[0];
 	}
 
 	class GenericSample
@@ -117,13 +119,24 @@
 		[Test]
 		public void DependsOn_wont_contain_self()
 		{
-			DependentType.DependsOn.Count(x => x.Equals(typeof(DependentType))).ShouldEqual(0);
+			DependentType.DependsOn.Count(x => x.Name.StartsWith("DependentType")).ShouldEqual(0);
 		}
 		[Test]
 		public void DependsOn_wont_contain_generic_parameters()
 		{
 			Type.Wrap(typeof(GenericSample)).DependsOn.Any(x => x.Name.StartsWith("T")).ShouldBe(false);
 		}
+
+        class WithInitializer
+        {
+            IList<int> list = new List<int>();
+        }
+
+        [Test]
+        public void DependsOn_should_handle_automaticliy_initilized_members()
+        {
+            Assert.That(Type.Wrap(typeof(WithInitializer)).DependsOn.Map(x => x.Name).ToList(), Is.EquivalentTo(new[] { "IList`1", "List`1" }));
+        }
 		[Test]
 		public void Should_support_Equals_with_System_Type()
 		{
