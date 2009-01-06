@@ -18,7 +18,7 @@ namespace Pencil.Test.Build.Tasks
 
             var compiler = new CSharpCompilerTask(fileSystem, environment);
 			var outDir = new Path("Build").Combine("Debug");
-            compiler.Output = outDir.Combine("Pencil.Build.dll").ToString();
+            compiler.Output = outDir.Combine("Pencil.Build.dll");
             string createdDirectory = string.Empty;
 
             fileSystem.DirectoryExistsHandler = x => false;
@@ -36,8 +36,8 @@ namespace Pencil.Test.Build.Tasks
 
             var compiler = new CSharpCompilerTask(fileSystem, environment);
 			var outDir = new Path("Build");
-            compiler.Output = outDir.Combine("Bar.dll").ToString();
-            compiler.References.Add("Foo.dll");
+            compiler.Output = outDir.Combine("Bar.dll");
+            compiler.References.Add(new Path("Foo.dll"));
 
             fileSystem.DirectoryExistsHandler = x => true;
             fileSystem.FileExistsHandler = x => false;
@@ -60,8 +60,8 @@ namespace Pencil.Test.Build.Tasks
             environment.StartHandler = (fileName, arguments) => new ProcessStub();
 
             var compiler = new CSharpCompilerTask(fileSystem, environment);
-            compiler.Output = @"Build\Bar.dll";
-            compiler.References.Add("Foo.dll");
+            compiler.Output = new Path("Build").Combine("Bar.dll");
+            compiler.References.Add(new Path("Foo.dll"));
 
             fileSystem.DirectoryExistsHandler = x => true;
             fileSystem.FileExistsHandler = x => true;

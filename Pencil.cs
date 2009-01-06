@@ -3,14 +3,16 @@ using Pencil.Build.Tasks;
 
 public class PencilProject : Project
 {
-    public void Build()
+	readonly Path outdir = new Path("Build") + "Debug";
+    
+	public void Build()
     {
         var csc = New<CSharpCompilerTask>();
-		var source = new Path("Source").Combine("Build");
-        csc.Sources.Add(source.Combine("*.cs").ToString());
-        csc.Sources.Add(source.Combine("Tasks").Combine("*.cs").ToString());
+		var source = new Path("Source") + "Build";
+        csc.Sources.Add(source + "*.cs");
+        csc.Sources.Add(source + "Tasks" + "*.cs");
         csc.OutputType = OutputType.Application;
-        csc.Output = new Path("Build").Combine("Debug").Combine("Pencil.Build.exe").ToString();
+        csc.Output = outdir + "Pencil.Build.exe";
         csc.Debug = false;
         csc.Execute();
     }
@@ -18,10 +20,11 @@ public class PencilProject : Project
     public void Core()
 	{
 		var csc = New<CSharpCompilerTask>();
-		csc.Sources.Add(@"Source\Core\*.cs");
-		csc.Sources.Add(@"Source\NMeter\*.cs");
+		var source = new Path("Source");
+		csc.Sources.Add(source + "Core" + "*.cs");
+		csc.Sources.Add(source + "NMeter" + "*.cs");
 		csc.OutputType = OutputType.Library;
-		csc.Output = @"Build\Debug\Pencil.dll";
+		csc.Output = outdir + "Pencil.dll";
 		csc.Debug = true;
 		csc.Execute();
 	}
@@ -30,10 +33,10 @@ public class PencilProject : Project
 	public void Console()
 	{
 		var csc = New<CSharpCompilerTask>();
-		csc.Sources.Add(@"Source\NMeter\Console\*.cs");
-		csc.References.Add(@"Build\Debug\Pencil.dll");
+		csc.Sources.Add(new Path("Source") + "NMeter" + "Console" + "*.cs");
+		csc.References.Add(outdir + "Pencil.dll");
 		csc.OutputType = OutputType.Application;
-		csc.Output = @"Build\Debug\NMeter.Console.exe";
+		csc.Output = outdir + "NMeter.Console.exe";
 		csc.Debug = true;
 		csc.Execute();
 	}
@@ -42,25 +45,28 @@ public class PencilProject : Project
 	public void Test()
 	{
 		var csc = New<CSharpCompilerTask>();
-		csc.Sources.Add(@"Test\*.cs");
-		csc.Sources.Add(@"Test\Core\*.cs");
-		csc.Sources.Add(@"Test\Build\*.cs");
-        csc.Sources.Add(@"Test\Build\Tasks\*.cs");
-        csc.Sources.Add(@"Test\NMeter\*.cs");
-        csc.Sources.Add(@"Test\Stubs\*.cs");
-        csc.References.Add(@"Build\Debug\Pencil.dll");
-        csc.References.Add(@"Build\Debug\Pencil.Build.exe");
-		csc.References.Add(@"Tools\NUnit-2.4.8-net-2.0\bin\nunit.framework.dll");
+		var test = new Path("Test");
+		var nunitDir = new Path("Tools") + "NUnit-2.4.8-net-2.0" + "bin";
+		
+		csc.Sources.Add(test + "*.cs");
+		csc.Sources.Add(test + "Core" + "*.cs");
+		csc.Sources.Add(test + "Build" + "*.cs");
+        csc.Sources.Add(test + "Build" + "Tasks" + "*.cs");
+        csc.Sources.Add(test + "NMeter" + "*.cs");
+        csc.Sources.Add(test + "Stubs" + "*.cs");
+        csc.References.Add(outdir + "Pencil.dll");
+        csc.References.Add(outdir + "Pencil.Build.exe");
+		csc.References.Add(nunitDir + "nunit.framework.dll");
 		csc.OutputType = OutputType.Library;
-		csc.Output = @"Build\Debug\Pencil.Test.dll";
+		csc.Output = outdir + "Pencil.Test.dll";
 		csc.Debug = true;
 		csc.Execute();
 
-		FileSystem.CopyFile(@"Test\SampleProject.xml", @"Build\Debug\SampleProject.xml");
+		FileSystem.CopyFile(test.Combine("SampleProject.xml").ToString(), outdir.Combine("SampleProject.xml").ToString());
 
 		var nunit = New<ExecTask>();
-		nunit.Program = @"Tools\NUnit-2.4.8-net-2.0\bin\nunit-console.exe";
-		nunit.CommandLine = csc.Output + " /nologo";
+		nunit.Program = nunitDir.Combine("nunit-console.exe").ToString();
+		nunit.CommandLine = csc.Output.ToString() + " /nologo";
 		nunit.Execute();
 	}
 

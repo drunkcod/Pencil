@@ -2,7 +2,6 @@ namespace Pencil.Build.Tasks
 {
 	using System;
     using System.Collections.Generic;
-    using System.IO;
     using System.Runtime.InteropServices;
     using System.Text;
 
@@ -13,14 +12,14 @@ namespace Pencil.Build.Tasks
 
 	public class CSharpCompilerTask : ExecTaskBase
 	{
-		List<string> sources = new List<string>();
-		List<string> references = new List<string>();
+		List<Path> sources = new List<Path>();
+		List<Path> references = new List<Path>();
         IFileSystem fileSystem;
 
-		public List<string> Sources { get { return sources; } }
-		public List<string> References { get { return references; } }
+		public List<Path> Sources { get { return sources; } }
+		public List<Path> References { get { return references; } }
 		public OutputType OutputType { get; set; }
-		public string Output { get; set; }
+		public Path Output { get; set; }
 		public bool Debug { get; set; }
 
         public CSharpCompilerTask() : this(new FileSystem(), new ExecutionEnvironment()) { }
@@ -32,9 +31,10 @@ namespace Pencil.Build.Tasks
 
 		protected override string GetProgramCore()
 		{
+			var runtime = new Path(RuntimeEnvironment.GetRuntimeDirectory());
 			if(RunningOnMono)
-				return Path.Combine(RuntimeEnvironment.GetRuntimeDirectory(), "gmcs.exe");
-			return Path.Combine(Path.Combine(RuntimeEnvironment.GetRuntimeDirectory(), ".."), "v3.5\\csc.exe");
+				return runtime.Combine("gmcs.exe").ToString();
+			return runtime.Combine("..").Combine("v3.5").Combine("csc.exe").ToString();
 		}
 
 		static bool RunningOnMono { get { return Type.GetType("Mono.Runtime") != null; } }
@@ -48,7 +48,7 @@ namespace Pencil.Build.Tasks
 
         void EnsureOutputDirectory()
         {
-            string outputDirectory = Path.GetDirectoryName(Output);
+            string outputDirectory = Output.GetDirectoryName();
             if(!fileSystem.DirectoryExists(outputDirectory))
                 fileSystem.CreateDirectory(outputDirectory);
         }
@@ -57,10 +57,10 @@ namespace Pencil.Build.Tasks
         {
             References.ForEach(file =>
             {
-                var target = Path.Combine(Path.GetDirectoryName(Output), Path.GetFileName(file));
+                var target = Output.GetDirectory().Combine(file.GetFileName()).ToString();
                 if(fileSystem.FileExists(target))
                     return;
-                fileSystem.CopyFile(file, target);
+                fileSystem.CopyFile(file.ToString(), target);
             });
         }
 
