@@ -1,4 +1,3 @@
-using System.IO;
 using Pencil.Build;
 using Pencil.Build.Tasks;
 
@@ -7,10 +6,11 @@ public class PencilProject : Project
     public void Build()
     {
         var csc = New<CSharpCompilerTask>();
-        csc.Sources.Add(@"Source\Build\*.cs");
-        csc.Sources.Add(@"Source\Build\Tasks\*.cs");
+		var source = new Path("Source").Combine("Build");
+        csc.Sources.Add(source.Combine("*.cs").ToString());
+        csc.Sources.Add(source.Combine("Tasks").Combine("*.cs").ToString());
         csc.OutputType = OutputType.Application;
-        csc.Output = @"Build\Debug\Pencil.Build.exe";
+        csc.Output = new Path("Build").Combine("Debug").Combine("Pencil.Build.exe").ToString();
         csc.Debug = false;
         csc.Execute();
     }
@@ -56,7 +56,7 @@ public class PencilProject : Project
 		csc.Debug = true;
 		csc.Execute();
 
-		File.Copy(@"Test\SampleProject.xml", @"Build\Debug\SampleProject.xml", true);
+		FileSystem.CopyFile(@"Test\SampleProject.xml", @"Build\Debug\SampleProject.xml");
 
 		var nunit = New<ExecTask>();
 		nunit.Program = @"Tools\NUnit-2.4.8-net-2.0\bin\nunit-console.exe";
@@ -66,7 +66,7 @@ public class PencilProject : Project
 
 	public void Clean()
 	{
-		foreach(var file in Directory.GetFiles(".", "*.bak", SearchOption.AllDirectories))
-			File.Delete(file);
+		foreach(var file in FileSystem.GetFilesRecursive(".", "*.bak"))
+			FileSystem.DeleteFile(file);
 	}
 }

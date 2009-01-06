@@ -1,5 +1,6 @@
 namespace Pencil.Build.Tasks
 {
+	using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Runtime.InteropServices;
@@ -23,15 +24,20 @@ namespace Pencil.Build.Tasks
 		public bool Debug { get; set; }
 
         public CSharpCompilerTask() : this(new FileSystem(), new ExecutionEnvironment()) { }
-        public CSharpCompilerTask(IFileSystem fileSystem, IExecutionEnvironment executionEnvironment) : base(executionEnvironment)
+        public CSharpCompilerTask(IFileSystem fileSystem, IExecutionEnvironment executionEnvironment):
+			base(executionEnvironment)
         {
             this.fileSystem = fileSystem;
         }
 
 		protected override string GetProgramCore()
 		{
+			if(RunningOnMono)
+				return Path.Combine(RuntimeEnvironment.GetRuntimeDirectory(), "gmcs.exe");
 			return Path.Combine(Path.Combine(RuntimeEnvironment.GetRuntimeDirectory(), ".."), "v3.5\\csc.exe");
 		}
+
+		static bool RunningOnMono { get { return Type.GetType("Mono.Runtime") != null; } }
 
 		protected override string GetArgumentsCore()
 		{

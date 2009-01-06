@@ -1,4 +1,4 @@
-﻿namespace Pencil.Build
+namespace Pencil.Build
 {
     public interface IFileSystem
     {
@@ -6,5 +6,7 @@
         void CreateDirectory(string path);
         bool FileExists(string path);
         void CopyFile(string from, string to);
+		void DeleteFile(string path);
+		string[] GetFilesRecursive(string root, string pattern);
     }
 }

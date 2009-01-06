@@ -17,7 +17,7 @@ namespace Pencil.Test.Build
 			using(logger.Indent())
 				logger.Write("2");
 			logger.Write("3");
-			Assert.AreEqual("1\r\n\t2\r\n3\r\n", output.ToString());
+			Assert.AreEqual(string.Format("1{0}\t2{0}3{0}", output.NewLine), output.ToString());
 		}
 		[Test]
 		public void Write_should_support_formatting()
@@ -25,7 +25,7 @@ namespace Pencil.Test.Build
 			var output = new StringWriter();
 			var logger = new Logger(output);
 			logger.Write("{0}+{1}", 1, 2);
-			Assert.AreEqual("1+2\r\n", output.ToString());
+			Assert.AreEqual("1+2" + output.NewLine, output.ToString());
 		}
 	}
 }

@@ -1,4 +1,4 @@
-﻿namespace Pencil.Test.Core
+namespace Pencil.Test.Core
 {
 	using System;
 	using System.IO;
@@ -12,12 +12,12 @@
 
     class SampleType
     {
-        public void PublicMethod() { }
-        protected void ProtectedMethod() { }
+        public void PublicMethod() { ProtectedMethod();}
+        protected void ProtectedMethod() { PrivateMethod();}
         private void PrivateMethod() { }
 
-        public static void StaticPublicMethod() { }
-        protected static void StaticProtectedMethod() { }
+        public static void StaticPublicMethod() { StaticProtectedMethod(); }
+        protected static void StaticProtectedMethod() { StaticPrivateMethod(); }
         private static void StaticPrivateMethod() { }
     }
 
@@ -26,7 +26,7 @@
 	{
 		public SampleType DoStuff(){ return new SampleType(); }
 		protected void WriteStuff(TextWriter writer){}
-		void ReadStuff(TextReader reader){}
+		void ReadStuff(TextReader reader){ reader.GetType();}
 		void HiddenConstruction(){ new StringBuilder(); }
 		void HiddenStaticCall(){ var foo = DateTime.Now; }
 		void CallSelf(){ CallSelf(); }

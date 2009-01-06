@@ -85,8 +85,8 @@ namespace Pencil.Test.Core
 
         class TypeWithArray
         {
-            System.DateTime[] dates = new System.DateTime[0];
-            public System.DateTime Today() { return System.DateTime.Now; }
+            System.DateTime[] dates = new System.DateTime[]{ System.DateTime.Now };
+            public System.DateTime Today() { return dates[0]; }
         }
         [Test]
         public void Should_not_add_duplicate_edge_for_type_and_type_array()

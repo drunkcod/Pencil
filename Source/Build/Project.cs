@@ -7,13 +7,16 @@ namespace Pencil.Build
 	public class Project : IProject
 	{
 		Dictionary<string,Target> targets = new Dictionary<string,Target>();
+		IFileSystem fileSystem;
 		internal Logger logger;
+		
 
 		public Project()
 		{
 			foreach(var m in GetType().GetMethods())
 			if(m.DeclaringType != typeof(object))
 				targets.Add(m.Name, new MethodTarget(this, m));
+			fileSystem = new FileSystem();
 		}
 
 		protected T New<T>()
@@ -32,5 +35,7 @@ namespace Pencil.Build
 			using(logger.Indent())
 				targets[targetName].Execute();
 		}
+
+		public IFileSystem FileSystem { get { return fileSystem; } }
 	}
 }

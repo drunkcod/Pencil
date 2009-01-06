@@ -16,9 +16,9 @@ namespace Pencil.Build
 
 		static int Main(string[] args)
 		{
-            var program = new Program(Console.Out);
-            program.ShowLogo();
-			var stopwatch = Stopwatch.StartNew();
+				var program = new Program(Console.Out);
+				program.ShowLogo();
+				var stopwatch = Stopwatch.StartNew();
             try
             {
                 return program.BuildTarget(ProjectFromFile(args[0]), args[1]);
@@ -31,15 +31,15 @@ namespace Pencil.Build
             }
 		}
 
-        TextWriter output;
+		TextWriter output;
 
-        public Program(TextWriter output)
-        {
-            this.output = output;
-        }
+ 		public Program(TextWriter output)
+		{
+			this.output = output;
+		}
 
-        public int BuildTarget(IProject project, string target)
-        {
+		public int BuildTarget(IProject project, string target)
+		{
             try
             {
                 if(project.HasTarget(target))
@@ -55,6 +55,7 @@ namespace Pencil.Build
             catch(TargetInvocationException e)
             {
                 output.WriteLine("BUILD FAILED - {0}", e.InnerException.Message);
+				output.WriteLine(e.InnerException.StackTrace);
             }
             return Failiure;
         }
@@ -75,7 +76,7 @@ namespace Pencil.Build
 		void ShowLogo()
 		{
 			output.WriteLine("Pencil.Build {0}", Assembly.GetExecutingAssembly().GetName().Version);
-			output.WriteLine("Copyright (C) 2008 Torbjrn Gyllebring");
+			output.WriteLine("Copyright (C) 2008 Torbjörn Gyllebring");
 			output.WriteLine();
 		}
 
@@ -85,7 +86,7 @@ namespace Pencil.Build
             var options = new CompilerParameters();
             options.GenerateExecutable = false;
             options.GenerateInMemory = true;
-            options.ReferencedAssemblies.Add("Tools\\Pencil.Build.exe");
+            options.ReferencedAssemblies.Add(new Path("Tools").Combine("Pencil.Build.exe").ToString());
 
             var result = codeProvider.CompileAssemblyFromFile(options, path);
 			if(result.NativeCompilerReturnValue != Success)

@@ -1,4 +1,4 @@
-﻿namespace Pencil.Test.Build.Tasks
+namespace Pencil.Test.Build.Tasks
 {
     using System;
     using NUnit.Framework;
@@ -17,14 +17,15 @@
             environment.StartHandler = (fileName, arguments) => new ProcessStub();
 
             var compiler = new CSharpCompilerTask(fileSystem, environment);
-            compiler.Output = @"Build\Debug\Pencil.Build.dll";
+			var outDir = new Path("Build").Combine("Debug");
+            compiler.Output = outDir.Combine("Pencil.Build.dll").ToString();
             string createdDirectory = string.Empty;
 
             fileSystem.DirectoryExistsHandler = x => false;
             fileSystem.CreateDirectoryHandler = x => createdDirectory = x;
             compiler.Execute();
 
-            Assert.AreEqual(@"Build\Debug", createdDirectory);
+            Assert.AreEqual(outDir.ToString(), createdDirectory);
         }
         [Test]
         public void Should_copy_referenced_assemblies()
@@ -34,7 +35,8 @@
             environment.StartHandler = (fileName, arguments) => new ProcessStub();
 
             var compiler = new CSharpCompilerTask(fileSystem, environment);
-            compiler.Output = @"Build\Bar.dll";
+			var outDir = new Path("Build");
+            compiler.Output = outDir.Combine("Bar.dll").ToString();
             compiler.References.Add("Foo.dll");
 
             fileSystem.DirectoryExistsHandler = x => true;
@@ -43,7 +45,7 @@
             fileSystem.CopyFileHandler = (from, to) => 
             {
                 Assert.AreEqual("Foo.dll", from);
-                Assert.AreEqual(@"Build\Foo.dll", to);
+                Assert.AreEqual(outDir.Combine("Foo.dll").ToString(), to);
                 copied = true;
             };
             compiler.Execute();
