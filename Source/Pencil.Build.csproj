@@ -57,6 +57,8 @@
     <Compile Include="Build\Tasks\ExecTaskBase.cs" />
     <Compile Include="Build\TextReaderExtensions.cs" />
     <Compile Include="Build\Path.cs" />
+    <Compile Include="Build\TargetFailedException.cs" />
+    <Compile Include="CompilationFailedException.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

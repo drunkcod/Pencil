@@ -3,10 +3,8 @@ namespace Pencil.Build
 	using System;
 	using System.Collections.Generic;
 	using System.CodeDom.Compiler;
-	using System.Reflection;
 	using System.Diagnostics;
 	using System.IO;
-	using System.Text;
 	using Microsoft.CSharp;
 
 	public class Program
@@ -16,9 +14,9 @@ namespace Pencil.Build
 
 		static int Main(string[] args)
 		{
-				var program = new Program(Console.Out);
-				program.ShowLogo();
-				var stopwatch = Stopwatch.StartNew();
+			var program = new Program(Console.Out);
+			program.ShowLogo();
+			var stopwatch = Stopwatch.StartNew();
             try
             {
                 return program.BuildTarget(ProjectFromFile(args[0]), args[1]);
@@ -52,30 +50,18 @@ namespace Pencil.Build
                 else
                     output.WriteLine("Target \"{0}\" not found.", target);
             }
-            catch(TargetInvocationException e)
+            catch(TargetFailedException e)
             {
-                output.WriteLine("BUILD FAILED - {0}", e.InnerException.Message);
-				output.WriteLine(e.InnerException.StackTrace);
+				var error = e.InnerException;
+                output.WriteLine("BUILD FAILED - {0}", error.Message);
+				output.WriteLine(error.StackTrace);
             }
             return Failiure;
         }
 
-		class CompilationFailedException : Exception
-		{
-			public CompilationFailedException(CompilerResults results): base(GetOutput(results)){}
-
-            static string GetOutput(CompilerResults results)
-            {
-                var message = new StringBuilder();
-                foreach(var s in results.Output)
-                    message.AppendLine(s);
-                return message.ToString();
-            }
-		}
-
 		void ShowLogo()
 		{
-			output.WriteLine("Pencil.Build {0}", Assembly.GetExecutingAssembly().GetName().Version);
+			output.WriteLine("Pencil.Build {0}", GetType().Assembly.GetName().Version);
 			output.WriteLine("Copyright (C) 2008 Torbjörn Gyllebring");
 			output.WriteLine();
 		}
@@ -83,19 +69,27 @@ namespace Pencil.Build
 		static Project ProjectFromFile(string path)
 		{
 			var codeProvider = new CSharpCodeProvider(new Dictionary<string,string>(){{"CompilerVersion", "v3.5"}});
+            var result = codeProvider.CompileAssemblyFromFile(GetCompilerParameters(), path);
+			if(result.NativeCompilerReturnValue == Success)
+				return GetProject(result.CompiledAssembly.GetTypes());
+			throw new CompilationFailedException(result);
+		}
+
+		static CompilerParameters GetCompilerParameters()
+		{
             var options = new CompilerParameters();
             options.GenerateExecutable = false;
             options.GenerateInMemory = true;
             options.ReferencedAssemblies.Add(new Path("Tools").Combine("Pencil.Build.exe").ToString());
+			return options;
+		}
 
-            var result = codeProvider.CompileAssemblyFromFile(options, path);
-			if(result.NativeCompilerReturnValue != Success)
-                throw new CompilationFailedException(result);
-
-			foreach(var t in result.CompiledAssembly.GetTypes())
-				if(typeof(Project).IsAssignableFrom(t))
+		static Project GetProject(Type[] types)
+		{
+			foreach(var item in types)
+				if(typeof(Project).IsAssignableFrom(item))
 				{
-					var project = t.GetConstructor(Type.EmptyTypes).Invoke(null) as Project;
+					var project = item.GetConstructor(Type.EmptyTypes).Invoke(null) as Project;
 					project.logger = new Logger(Console.Out);
 					return project;
 				}

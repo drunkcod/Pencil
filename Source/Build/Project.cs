@@ -10,7 +10,6 @@ namespace Pencil.Build
 		IFileSystem fileSystem;
 		internal Logger logger;
 		
-
 		public Project()
 		{
 			foreach(var m in GetType().GetMethods())
