@@ -58,6 +58,20 @@ namespace Pencil.Test.Core
             dot.NodeSeparation = 0.12;
             WriteEmpty(dot).ShouldEqual("digraph{nodesep=0.12}");
         }
+        [Test]
+        public void Should_support_box_shaped_nodes()
+        {
+            var dot = new DotBuilder(new StringWriter());
+            dot.NodeShape = NodeShape.Box;
+            WriteEmpty(dot).ShouldEqual("digraph{node[shape=box]}");
+        }
+        [Test]
+        public void Should_support_setting_node_height()
+        {
+            var dot = new DotBuilder(new StringWriter());
+            dot.NodeHeight = 0.1;
+            WriteEmpty(dot).ShouldEqual("digraph{node[height=0.1]}");
+        }
 		
         static string ToDot(DirectedGraph graph)
 		{

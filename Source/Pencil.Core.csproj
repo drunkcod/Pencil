@@ -72,6 +72,7 @@
     <Compile Include="Core\MissingAssembly.cs" />
     <Compile Include="Core\Module.cs" />
     <Compile Include="Core\Node.cs" />
+    <Compile Include="Core\NodeShape.cs" />
     <Compile Include="Core\NullFilter.cs" />
     <Compile Include="Core\Opcode.cs" />
     <Compile Include="Core\StaticAssemblyLoader.cs" />

@@ -43,5 +43,7 @@ let dot = DotBuilder(Console.Out)
 dot.FontSize <- 8
 dot.RankSeparation <- 0.07
 dot.NodeSeparation <- 0.1
+dot.NodeShape <- NodeShape.Box
+dot.NodeHeight <- 0.1
 
 dot.Write(digraph)
