@@ -9,5 +9,8 @@
 
         public bool HasTarget(string name) { return false; }
         public void Run(string target) { RunHandler(target); }
+
+		public IFileSystem FileSystem { get; set; }
+		public IExecutionEnvironment ExecutionEnvironment { get; set; }
     }
 }

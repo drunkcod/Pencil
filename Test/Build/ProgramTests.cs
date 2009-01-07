@@ -14,9 +14,12 @@
 
             public bool HasTarget(string name) { return HasTargetReturns; }
             public void Run(string target) { }
+
+			public IFileSystem FileSystem { get; set; }
+			public IExecutionEnvironment ExecutionEnvironment { get; set; }
         }
 
-        public Program Program { get { return new Program(new StreamWriter(Stream.Null)); } }
+        public Program Program { get { return new Program(new Logger(new StreamWriter(Stream.Null))); } }
 
         [Test]
         public void BuildTarget_should_return_Failiure_if_target_not_in_Project()

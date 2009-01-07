@@ -4,9 +4,9 @@ namespace Pencil.Build
 	using System.Collections.Generic;
 	class ZeptoContainer
 	{
-		Dictionary<Type, object> things = new Dictionary<Type, object>();
+		Dictionary<Type, Func<object>> things = new Dictionary<Type, Func<object>>();
 
-		public void Register(Type type, object instance){ things.Add(type, instance); }
+		public void Register(Type type, Func<object> resolve){ things.Add(type, resolve); }
 		public T Get<T>()
 		{
 			foreach(var ctor in typeof(T).GetConstructors())
@@ -22,9 +22,10 @@ namespace Pencil.Build
 
 		object Resolve(Type type)
 		{
-			object thing;
-			things.TryGetValue(type, out thing);
-			return thing;
+			Func<object> resolve;
+			if(things.TryGetValue(type, out resolve))
+				return resolve();
+			return null;
 		}
 	}
 }

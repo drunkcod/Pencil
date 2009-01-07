@@ -11,25 +11,28 @@ namespace Pencil.Build
 
 		static int Main(string[] args)
 		{
-			var program = new Program(Console.Out);
+			var logger = new Logger(Console.Out);
+			var program = new Program(logger);
 			program.ShowLogo();
 			var stopwatch = Stopwatch.StartNew();
             try
             {
-				var compiler = new ProjectCompiler();
-                return program.BuildTarget(compiler.ProjectFromFile(args[0]), args[1]);
+				var compiler = new ProjectCompiler(logger);
+				var project = compiler.ProjectFromFile(args[0]);
+				project.FileSystem = new FileSystem();
+				project.ExecutionEnvironment = new ExecutionEnvironment();
+                return program.BuildTarget(project, args[1]);
             }
             finally
             {
                 stopwatch.Stop();
-                Console.WriteLine();
                 Console.WriteLine("Total time: {0} seconds.", stopwatch.Elapsed.Seconds);
             }
 		}
 
-		TextWriter output;
+		Logger output;
 
- 		public Program(TextWriter output)
+ 		public Program(Logger output)
 		{
 			this.output = output;
 		}
@@ -41,27 +44,25 @@ namespace Pencil.Build
                 if(project.HasTarget(target))
                 {
                     project.Run(target);
-                    output.WriteLine();
-                    output.WriteLine("BUILD SUCCEEDED");
+                    output.Write("BUILD SUCCEEDED");
                     return Success;
                 }
                 else
-                    output.WriteLine("Target \"{0}\" not found.", target);
+                    output.Write("Target \"{0}\" not found.", target);
             }
             catch(TargetFailedException e)
             {
 				var error = e.InnerException;
-                output.WriteLine("BUILD FAILED - {0}", error.Message);
-				output.WriteLine(error.StackTrace);
+                output.Write("BUILD FAILED - {0}", error.Message);
+				output.Write(error.StackTrace);
             }
             return Failiure;
         }
 
 		void ShowLogo()
 		{
-			output.WriteLine("Pencil.Build {0}", GetType().Assembly.GetName().Version);
-			output.WriteLine("Copyright (C) 2008 Torbjörn Gyllebring");
-			output.WriteLine();
+			output.Write("Pencil.Build {0}", GetType().Assembly.GetName().Version);
+			output.Write("Copyright (C) 2008 Torbjörn Gyllebring");
 		}
 	}
 }

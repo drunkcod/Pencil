@@ -89,7 +89,7 @@ namespace Pencil.Test.Core
             public System.DateTime Today() { return dates[0]; }
         }
         [Test]
-        public void Should_not_add_duplicate_edge_for_type_and_type_array()
+        public void Wont_add_duplicate_edge_for_type_and_type_array()
         {
             var digraph = new DirectedGraph();
             var graph = new TypeDependencyGraph(digraph);

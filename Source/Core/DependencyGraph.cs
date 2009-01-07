@@ -27,7 +27,7 @@ namespace Pencil.Core
 		void AddChildren(Node current, T parent)
 		{
 			foreach(var item in GetDependencies(parent))
-				if(ShouldAddCore(item))
+				if(ShouldAdd(item))
 				{
 					var node = CreateNode(item);
 					current.ConnectTo(node.Item);

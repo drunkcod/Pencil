@@ -18,8 +18,12 @@ let ignore = { new IFilter<IType> with
             || t.Equals(typeof<Single>)
             || t.Equals(typeof<Double>)
             || t.Equals(typeof<string>)
-            || t.Equals(typeof<Type>)
+            || t.Equals(typeof<System.Type>)
             || t.Equals(typeof<ValueType>)
+            || t.Equals(typeof<Exception>)
+            || t.Equals(typeof<IDisposable>)
+            || t.Equals(typeof<System.Runtime.Serialization.ISerializable>)
+            || t.Equals(typeof<System.Text.StringBuilder>)
             || t.Name = "List`1"
             || t.Name = "IEnumerable`1"
             || t.Name = "IEnumerator"

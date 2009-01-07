@@ -1,5 +1,7 @@
 namespace Pencil.Build
 {
+	using System;
+	using System.IO;
     using System.Diagnostics;
 
     sealed class ExecutionEnvironment : IExecutionEnvironment
@@ -13,5 +15,7 @@ namespace Pencil.Build
             startInfo.RedirectStandardOutput = true;
             return new ProcessAdapter(Process.Start(startInfo));
         }
+
+		public TextWriter StandardOut { get { return Console.Out; } }
     }
 }

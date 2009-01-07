@@ -8,8 +8,14 @@ namespace Pencil.Build
 	class ProjectCompiler
 	{
 		readonly CodeDomProvider codeProvider = new CSharpCodeProvider(new Dictionary<string,string>(){{"CompilerVersion", "v3.5"}});
+		readonly Logger logger;
 
-		public Project ProjectFromFile(string path)
+		public ProjectCompiler(Logger logger)
+		{
+			this.logger = logger;
+		}
+
+		public IProject ProjectFromFile(string path)
 		{
 			var result = codeProvider.CompileAssemblyFromFile(GetCompilerParameters(), path);
 			if(result.NativeCompilerReturnValue == 0)
@@ -26,13 +32,13 @@ namespace Pencil.Build
 			return options;
 		}
 
-		static Project GetProject(Type[] types)
+		IProject GetProject(Type[] types)
 		{
 			foreach(var item in types)
-				if(typeof(Project).IsAssignableFrom(item))
+				if(typeof(IProject).IsAssignableFrom(item))
 				{
 					var project = item.GetConstructor(Type.EmptyTypes).Invoke(null) as Project;
-					project.logger = new Logger(Console.Out);
+					project.logger = logger;
 					return project;
 				}
 			throw new InvalidOperationException(string.Format("{0} does not contain any Project."));

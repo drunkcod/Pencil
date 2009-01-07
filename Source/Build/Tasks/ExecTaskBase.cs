@@ -16,7 +16,7 @@ namespace Pencil.Build.Tasks
 		{
             var task = executionEnvironment.Start(GetProgramCore().ToString(), GetArgumentsCore());
 			while(!task.HasExited)
-				task.StandardOutput.CopyTo(Console.Out);
+				task.StandardOutput.CopyTo(executionEnvironment.StandardOut);
 			if(task.ExitCode != 0)
 				throw new Exception();
 		}
