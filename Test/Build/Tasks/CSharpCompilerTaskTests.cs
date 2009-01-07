@@ -42,10 +42,10 @@ namespace Pencil.Test.Build.Tasks
             fileSystem.DirectoryExistsHandler = x => true;
             fileSystem.FileExistsHandler = x => false;
             bool copied = false;
-            fileSystem.CopyFileHandler = (from, to) => 
+            fileSystem.CopyFileHandler = (from, to, overwrite) =>
             {
-                Assert.AreEqual("Foo.dll", from);
-                Assert.AreEqual(outDir.Combine("Foo.dll").ToString(), to);
+                Assert.AreEqual(new Path("Foo.dll"), from);
+                Assert.AreEqual(outDir + "Foo.dll", to);
                 copied = true;
             };
             compiler.Execute();
@@ -65,7 +65,7 @@ namespace Pencil.Test.Build.Tasks
 
             fileSystem.DirectoryExistsHandler = x => true;
             fileSystem.FileExistsHandler = x => true;
-            fileSystem.CopyFileHandler = (from, to) =>
+            fileSystem.CopyFileHandler = (from, to, overwrite) =>
             {
                 Assert.Fail("Should not try to copy file already present.");
             };

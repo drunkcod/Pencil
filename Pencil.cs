@@ -4,7 +4,7 @@ using Pencil.Build.Tasks;
 public class PencilProject : Project
 {
 	readonly Path outdir = new Path("Build") + "Debug";
-    
+
 	public void Build()
     {
         var csc = New<CSharpCompilerTask>();
@@ -47,7 +47,7 @@ public class PencilProject : Project
 		var csc = New<CSharpCompilerTask>();
 		var test = new Path("Test");
 		var nunitDir = new Path("Tools") + "NUnit-2.4.8-net-2.0" + "bin";
-		
+
 		csc.Sources.Add(test + "*.cs");
 		csc.Sources.Add(test + "Core" + "*.cs");
 		csc.Sources.Add(test + "Build" + "*.cs");
@@ -62,7 +62,7 @@ public class PencilProject : Project
 		csc.Debug = true;
 		csc.Execute();
 
-		FileSystem.CopyFile(test.Combine("SampleProject.xml").ToString(), outdir.Combine("SampleProject.xml").ToString());
+		FileSystem.CopyFile(test + "SampleProject.xml", outdir + "SampleProject.xml", true);
 
 		var nunit = New<ExecTask>();
 		nunit.Program = nunitDir + "nunit-console.exe";
@@ -72,7 +72,7 @@ public class PencilProject : Project
 
 	public void Clean()
 	{
-		foreach(var file in FileSystem.GetFilesRecursive(".", "*.bak"))
+		foreach(var file in FileSystem.GetFilesRecursive(new Path("."), "*.bak"))
 			FileSystem.DeleteFile(file);
 	}
 }

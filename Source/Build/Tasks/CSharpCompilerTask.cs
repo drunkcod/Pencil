@@ -57,10 +57,10 @@ namespace Pencil.Build.Tasks
         {
             References.ForEach(file =>
             {
-                var target = Output.GetDirectory().Combine(file.GetFileName()).ToString();
+                var target = Output.GetDirectory() + file.GetFileName();
                 if(fileSystem.FileExists(target))
                     return;
-                fileSystem.CopyFile(file.ToString(), target);
+                fileSystem.CopyFile(file, target, true);
             });
         }
 
