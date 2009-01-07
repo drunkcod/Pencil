@@ -22,7 +22,6 @@ namespace Pencil.Build.Tasks
 		public Path Output { get; set; }
 		public bool Debug { get; set; }
 
-        public CSharpCompilerTask() : this(new FileSystem(), new ExecutionEnvironment()) { }
         public CSharpCompilerTask(IFileSystem fileSystem, IExecutionEnvironment executionEnvironment):
 			base(executionEnvironment)
         {

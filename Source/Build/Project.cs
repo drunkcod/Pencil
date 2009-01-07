@@ -7,20 +7,37 @@ namespace Pencil.Build
 	public class Project : IProject
 	{
 		Dictionary<string,Target> targets = new Dictionary<string,Target>();
-		IFileSystem fileSystem;
+		readonly IFileSystem fileSystem = new FileSystem();
+		readonly IExecutionEnvironment environment = new ExecutionEnvironment();
 		internal Logger logger;
-		
+
 		public Project()
 		{
 			foreach(var m in GetType().GetMethods())
 			if(m.DeclaringType != typeof(object))
 				targets.Add(m.Name, new MethodTarget(this, m));
-			fileSystem = new FileSystem();
 		}
 
-		protected T New<T>()
+		public T New<T>()
 		{
-			return (T)typeof(T).GetConstructor(Type.EmptyTypes).Invoke(null);
+			foreach(var ctor in typeof(T).GetConstructors())
+			{
+				var parameters = ctor.GetParameters();
+				var args = new object[parameters.Length];
+				for(int i = 0; i != parameters.Length; ++i)
+					args[i] = Resolve(parameters[i].ParameterType);
+				return (T)ctor.Invoke(args);
+			}
+			return default(T);
+		}
+
+		object Resolve(Type type)
+		{
+			if(type == typeof(IFileSystem))
+				return FileSystem;
+			if(type == typeof(IExecutionEnvironment))
+				return environment;
+			return null;
 		}
 
 		public bool HasTarget(string name)
