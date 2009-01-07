@@ -10,34 +10,20 @@ namespace Pencil.Build
 		readonly IFileSystem fileSystem = new FileSystem();
 		readonly IExecutionEnvironment environment = new ExecutionEnvironment();
 		internal Logger logger;
+		readonly ZeptoContainer container = new ZeptoContainer();
 
 		public Project()
 		{
 			foreach(var m in GetType().GetMethods())
 			if(m.DeclaringType != typeof(object))
 				targets.Add(m.Name, new MethodTarget(this, m));
+			container.Register(typeof(IFileSystem), FileSystem);
+			container.Register(typeof(IExecutionEnvironment), environment);
 		}
 
 		public T New<T>()
 		{
-			foreach(var ctor in typeof(T).GetConstructors())
-			{
-				var parameters = ctor.GetParameters();
-				var args = new object[parameters.Length];
-				for(int i = 0; i != parameters.Length; ++i)
-					args[i] = Resolve(parameters[i].ParameterType);
-				return (T)ctor.Invoke(args);
-			}
-			return default(T);
-		}
-
-		object Resolve(Type type)
-		{
-			if(type == typeof(IFileSystem))
-				return FileSystem;
-			if(type == typeof(IExecutionEnvironment))
-				return environment;
-			return null;
+			return container.Get<T>();
 		}
 
 		public bool HasTarget(string name)
