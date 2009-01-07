@@ -36,7 +36,7 @@ namespace Pencil.Core
 				}
 		}
 
-		bool ShouldAdd(T item){ return !nodes.ContainsKey(GetLabel(item)) && ShouldAddCore(item); }
+		bool ShouldAdd(T item){ return ShouldAddCore(item); }
 
 		protected virtual bool Recursive { get { return true; } }
 		protected abstract string GetLabel(T item);

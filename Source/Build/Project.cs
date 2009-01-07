@@ -8,7 +8,6 @@ namespace Pencil.Build
 	{
 		Dictionary<string,Target> targets = new Dictionary<string,Target>();
 		readonly IFileSystem fileSystem = new FileSystem();
-		readonly IExecutionEnvironment environment = new ExecutionEnvironment();
 		internal Logger logger;
 		readonly ZeptoContainer container = new ZeptoContainer();
 
@@ -18,7 +17,7 @@ namespace Pencil.Build
 			if(m.DeclaringType != typeof(object))
 				targets.Add(m.Name, new MethodTarget(this, m));
 			container.Register(typeof(IFileSystem), FileSystem);
-			container.Register(typeof(IExecutionEnvironment), environment);
+			container.Register(typeof(IExecutionEnvironment), new ExecutionEnvironment());
 		}
 
 		public T New<T>()
