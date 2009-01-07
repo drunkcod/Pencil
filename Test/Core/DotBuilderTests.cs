@@ -51,6 +51,13 @@ namespace Pencil.Test.Core
             dot.RankSeparation = 0.12;
             WriteEmpty(dot).ShouldEqual("digraph{ranksep=0.12}");
         }
+		[Test]
+		public void Should_support_setting_RankDirection()
+		{
+            var dot = new DotBuilder(new StringWriter());
+            dot.RankDirection = RankDirection.LeftRight;
+            WriteEmpty(dot).ShouldEqual("digraph{rankdir=LR}");
+		}
         [Test]
         public void Should_support_setting_NodeSeparation()
         {
@@ -72,7 +79,7 @@ namespace Pencil.Test.Core
             dot.NodeHeight = 0.1;
             WriteEmpty(dot).ShouldEqual("digraph{node[height=0.1]}");
         }
-		
+
         static string ToDot(DirectedGraph graph)
 		{
 			return new DotBuilder(new StringWriter()).Write(graph).Target.ToString();

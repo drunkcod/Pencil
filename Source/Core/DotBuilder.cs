@@ -21,6 +21,7 @@ namespace Pencil.Core
         public double NodeSeparation { get; set; }
         public NodeShape NodeShape { get; set; }
         public double NodeHeight { get; set; }
+		public RankDirection RankDirection { get; set; }
 
 		public DotBuilder Write(DirectedGraph graph)
 		{
@@ -42,7 +43,18 @@ namespace Pencil.Core
                 Append("ranksep={0}", RankSeparation);
             if(NodeSeparation != 0)
                 Append("nodesep={0}", NodeSeparation);
+			if(RankDirection != RankDirection.TopBottom)
+				Append("rankdir={0}", Encode(RankDirection));
         }
+
+		static string Encode(RankDirection dir)
+		{
+			switch(dir)
+			{
+				case RankDirection.LeftRight: return "LR";
+				default: return "TB";
+			}
+		}
 
         StringBuilder CollectNodeStyle()
         {
@@ -53,7 +65,7 @@ namespace Pencil.Core
                 target.AppendFormat("shape={0} ", NodeShape.ToString().ToLowerInvariant());
             if(NodeHeight != 0)
                 target.AppendFormat("height={0} ", NodeHeight.ToString(CultureInfo.InvariantCulture));
-            
+
             if(target.Length == 0)
                 return target;
             return target.Remove(target.Length - 1, 1);

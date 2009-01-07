@@ -45,5 +45,6 @@ dot.RankSeparation <- 0.07
 dot.NodeSeparation <- 0.1
 dot.NodeShape <- NodeShape.Box
 dot.NodeHeight <- 0.1
+dot.RankDirection <- RankDirection.LeftRight;
 
 dot.Write(digraph)
