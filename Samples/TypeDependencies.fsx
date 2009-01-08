@@ -1,6 +1,6 @@
 #light
 
-#r "..\Build\Debug\Pencil.dll"
+#r "Pencil.dll"
 
 open System
 open System.Drawing;

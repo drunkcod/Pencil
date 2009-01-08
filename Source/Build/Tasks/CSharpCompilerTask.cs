@@ -14,7 +14,7 @@ namespace Pencil.Build.Tasks
 	{
 		List<Path> sources = new List<Path>();
 		List<Path> references = new List<Path>();
-        IFileSystem fileSystem;
+		IFileSystem fileSystem;
 
 		public List<Path> Sources { get { return sources; } }
 		public List<Path> References { get { return references; } }
@@ -57,7 +57,7 @@ namespace Pencil.Build.Tasks
             References.ForEach(file =>
             {
                 var target = Output.GetDirectory() + file.GetFileName();
-                if(fileSystem.FileExists(target))
+                if(fileSystem.FileExists(target) || !fileSystem.FileExists(file))
                     return;
                 fileSystem.CopyFile(file, target, true);
             });

@@ -5,7 +5,7 @@ namespace Pencil.Build.Tasks
 
 	public abstract class ExecTaskBase
 	{
-        IExecutionEnvironment executionEnvironment;
+		IExecutionEnvironment executionEnvironment;
 
         protected ExecTaskBase(IExecutionEnvironment executionEnvironment)
         {

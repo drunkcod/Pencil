@@ -7,6 +7,7 @@ namespace Pencil.Core
 	{
 		readonly int id;
 		Color fillColor = Color.White;
+		Color borderColor = Color.Black;
 
 		public DotNode(int id)
 		{
@@ -20,6 +21,12 @@ namespace Pencil.Core
 			get { return fillColor; }
 			set { fillColor = value; }
 		}
+		
+		public Color BorderColor
+		{
+			get { return borderColor; }
+			set { borderColor = value; }
+		}
 
 		public override string ToString()
 		{
@@ -27,7 +34,10 @@ namespace Pencil.Core
 			builder.AppendFormat("{0}[label=\"{1}\"", Id, Label);
 			if(FillColor != Color.White)
 				builder.AppendFormat(" style=filled fillcolor=\"#{0:X2}{1:X2}{2:X2}\"",
-					fillColor.R, fillColor.G, fillColor.B);
+					FillColor.R, FillColor.G, FillColor.B);
+			if(BorderColor != Color.Black)
+				builder.AppendFormat(" color=\"#{0:X2}{1:X2}{2:X2}\"",
+					BorderColor.R, BorderColor.G, BorderColor.B);  
 			builder.Append(']');
 			return builder.ToString();
 		}

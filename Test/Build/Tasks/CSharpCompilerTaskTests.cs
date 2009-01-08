@@ -40,7 +40,7 @@ namespace Pencil.Test.Build.Tasks
             compiler.References.Add(new Path("Foo.dll"));
 
             fileSystem.DirectoryExistsHandler = x => true;
-            fileSystem.FileExistsHandler = x => false;
+            fileSystem.FileExistsHandler = x => x.Equals(new Path("Foo.dll"));
             bool copied = false;
             fileSystem.CopyFileHandler = (from, to, overwrite) =>
             {

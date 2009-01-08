@@ -58,7 +58,9 @@
     <Compile Include="Build\TextReaderExtensions.cs" />
     <Compile Include="Build\Path.cs" />
     <Compile Include="Build\TargetFailedException.cs" />
-    <Compile Include="CompilationFailedException.cs" />
+    <Compile Include="Build\CompilationFailedException.cs" />
+    <Compile Include="Build\ZeptoContainer.cs" />
+    <Compile Include="Build\ProjectCompiler.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

@@ -23,6 +23,7 @@ public class PencilProject : Project
 		var source = new Path("Source");
 		csc.Sources.Add(source + "Core" + "*.cs");
 		csc.Sources.Add(source + "NMeter" + "*.cs");
+		csc.References.Add(new Path("System.Drawing.dll"));
 		csc.OutputType = OutputType.Library;
 		csc.Output = outdir + "Pencil.dll";
 		csc.Debug = true;
@@ -32,8 +33,7 @@ public class PencilProject : Project
 	[DependsOn("Core")]
 	public void Console()
 	{
-		var csc = New<CSharpCompilerTask>();
-		csc.Sources.Add(new Path("Source") + "NMeter" + "Console" + "*.cs");
+		var csc = New<CSharpCompilerTask>();		csc.Sources.Add(new Path("Source") + "NMeter" + "Console" + "*.cs");
 		csc.References.Add(outdir + "Pencil.dll");
 		csc.OutputType = OutputType.Application;
 		csc.Output = outdir + "NMeter.Console.exe";
@@ -51,11 +51,12 @@ public class PencilProject : Project
 		csc.Sources.Add(test + "*.cs");
 		csc.Sources.Add(test + "Core" + "*.cs");
 		csc.Sources.Add(test + "Build" + "*.cs");
-        csc.Sources.Add(test + "Build" + "Tasks" + "*.cs");
-        csc.Sources.Add(test + "NMeter" + "*.cs");
-        csc.Sources.Add(test + "Stubs" + "*.cs");
-        csc.References.Add(outdir + "Pencil.dll");
-        csc.References.Add(outdir + "Pencil.Build.exe");
+		csc.Sources.Add(test + "Build" + "Tasks" + "*.cs");
+		csc.Sources.Add(test + "NMeter" + "*.cs");
+ 		csc.Sources.Add(test + "Stubs" + "*.cs");
+ 		csc.References.Add(new Path("System.Drawing.dll"));
+		csc.References.Add(outdir + "Pencil.dll");
+		csc.References.Add(outdir + "Pencil.Build.exe");
 		csc.References.Add(nunitDir + "nunit.framework.dll");
 		csc.OutputType = OutputType.Library;
 		csc.Output = outdir + "Pencil.Test.dll";
@@ -65,14 +66,15 @@ public class PencilProject : Project
 		FileSystem.CopyFile(test + "SampleProject.xml", outdir + "SampleProject.xml", true);
 
 		var nunit = New<ExecTask>();
-		nunit.Program = nunitDir + "nunit-console.exe";
-		nunit.CommandLine = csc.Output.ToString() + " /nologo";
+		nunit.Program = new Path("mono");
+		nunit.CommandLine = (nunitDir + "nunit-console.exe ").ToString() + csc.Output.ToString() + " -nologo -noshadow";
 		nunit.Execute();
 	}
 
 	public void Clean()
 	{
-		foreach(var file in FileSystem.GetFilesRecursive(new Path("."), "*.bak"))
+		foreach(var ext in new[]{ "*.bak", "*.pidb" })
+		foreach(var file in FileSystem.GetFilesRecursive(new Path("."), ext))
 			FileSystem.DeleteFile(file);
 	}
 }
