@@ -44,15 +44,19 @@ let ignore = { new IFilter<IType> with
 let dependencies = TypeDependencyGraph(digraph, ignore)
 
 
+let fxStyle = DotNodeStyle()
+fxStyle.FillColor <- Color.FromArgb(200, 255, 200)
+fxStyle.BorderColor <- Color.FromArgb(133, 196, 133)
+fxStyle.FontColor <- Color.FromArgb(50, 64, 50)
+
+
 let mutable (currentNode:DotNode) = null
 factory.NodeCreated.Add(fun e -> currentNode <- e.Item)
 
 dependencies.NodeCreated.Add(fun e ->
     let name = e.Item.FullName
     if name <> null && name.StartsWith("System.") then
-        currentNode.FillColor <- Color.FromArgb(200, 255, 200)
-        currentNode.BorderColor <- Color.FromArgb(133, 196, 133)
-        currentNode.FontColor <- Color.FromArgb(50, 64, 50))
+        currentNode.Style <- fxStyle)
 
 let IsAssembly fileName =
     let ext = Path.GetExtension(fileName)

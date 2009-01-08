@@ -12,7 +12,7 @@ namespace Pencil.Test.Core
 		{
 			var node = new DotNode(0);
 			node.Label = "PinkNode";
-			node.FillColor = Color.FromArgb(0xFF, 0x0F, 0xBE);
+			node.Style.FillColor = Color.FromArgb(0xFF, 0x0F, 0xBE);
 
 			node.ToString().ShouldEqual("0[label=\"PinkNode\" style=filled fillcolor=\"#FF0FBE\"]");
 		}
@@ -21,7 +21,7 @@ namespace Pencil.Test.Core
 		{
 			var node = new DotNode(0);
 			node.Label = "NodeWithBorder";
-			node.BorderColor = Color.FromArgb(0xFF, 0xA0, 0xE0);
+			node.Style.BorderColor = Color.FromArgb(0xFF, 0xA0, 0xE0);
 			
 			node.ToString().ShouldEqual("0[label=\"NodeWithBorder\" color=\"#FFA0E0\"]");
 		}
@@ -30,7 +30,7 @@ namespace Pencil.Test.Core
 		{
 			var node = new DotNode(0);
 			node.Label = "ColoredText";
-			node.FontColor = Color.FromArgb(0, 255, 0);
+			node.Style.FontColor = Color.FromArgb(0, 255, 0);
 			node.ToString().ShouldEqual("0[label=\"ColoredText\" fontcolor=\"#00FF00\"]");
 		}
 	}
