@@ -25,10 +25,18 @@ let ignore = { new IFilter<IType> with
             || t.Equals(typeof<System.Runtime.Serialization.ISerializable>)
             || t.Equals(typeof<System.Text.StringBuilder>)
             || t.Name = "List`1"
+            || t.Name = "Stack`1"
+            || t.Name = "ICollection`1"
             || t.Name = "IEnumerable`1"
             || t.Name = "IEnumerator"
             || t.Name = "IEnumerator`1"
+            || t.Name = "IDictionary`2"
             || t.Name = "Dictionary`2"
+            || t.Name = "KeyValuePair`2"
+            || t.Name = "Action`1"
+            || t.Name = "Converter`2"
+            || t.Name = "Func`2"
+            || t.Name = "Func`4"
             || t.Name = "_Exception")}
 
 let dependencies = TypeDependencyGraph(digraph, ignore)
