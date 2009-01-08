@@ -1,5 +1,6 @@
 namespace Pencil.Core
 {
+	using System;
 	using System.Collections.Generic;
 
 	public abstract class DependencyGraph<T>
@@ -12,6 +13,8 @@ namespace Pencil.Core
 		{
 			this.graph = graph;
 		}
+
+		public event EventHandler<NodeCreatedEventArgs<T>> NodeCreated;
 
 		public void Add(T item)
 		{
@@ -57,6 +60,9 @@ namespace Pencil.Core
             if(result.Created)
             {
                 result.Item = AddNode(label);
+				var tmp = NodeCreated;
+				if(tmp != null)
+					tmp(this, new NodeCreatedEventArgs<T>(item));
                 nodes.Add(label, result.Item);
             }
             return result;

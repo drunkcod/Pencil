@@ -96,5 +96,23 @@ namespace Pencil.Test.Core
             graph.Add(Type.Wrap(typeof(TypeWithArray)));
             Assert.That(digraph.Edges.Map(x => x.ToString()).ToList(), Is.EquivalentTo(new[] { "0->1" }));
         }
+
+		class EmptyType {}
+
+		[Test]
+		public void Should_raise_NodeCreated_when_adding_node()
+		{
+            var digraph = new DirectedGraph();
+            var graph = new TypeDependencyGraph(digraph);
+			var nodeCreatedRaised = false;
+			graph.NodeCreated += (sender, e) =>
+			{
+				Assert.AreSame(sender, graph);
+				e.Item.Equals(typeof(EmptyType)).ShouldBe(true);
+				nodeCreatedRaised = true;
+			};
+            graph.Add(Type.Wrap(typeof(EmptyType)));
+			nodeCreatedRaised.ShouldBe(true);
+		}
 	}
 }

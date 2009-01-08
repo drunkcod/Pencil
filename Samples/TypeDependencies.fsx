@@ -3,11 +3,13 @@
 #r "..\Build\Debug\Pencil.dll"
 
 open System
+open System.Drawing;
 open System.IO
 open Pencil.Core
 open Pencil.NMeter
 
-let digraph = DirectedGraph()
+let factory = DotNodeFactory()
+let digraph = DirectedGraph(factory)
 let ignore = { new IFilter<IType> with
     member x.Include t =
         not (
@@ -40,6 +42,15 @@ let ignore = { new IFilter<IType> with
             || t.Name = "_Exception")}
 
 let dependencies = TypeDependencyGraph(digraph, ignore)
+
+
+let mutable (currentNode:DotNode) = null
+factory.NodeCreated.Add(fun e -> currentNode <- e.Item)
+
+dependencies.NodeCreated.Add(fun e ->
+    let name = e.Item.FullName
+    if name <> null && name.StartsWith("System.") then
+        currentNode.FillColor <- Color.FromArgb(255, 200, 200))
 
 let IsAssembly fileName =
     let ext = Path.GetExtension(fileName)

@@ -20,6 +20,7 @@ namespace Pencil.Test.Stubs
         }
 
         public string Name { get { return name; } }
+		public string FullName { get { return name; } }
 		public IType ElementType { get { return GetElementTypeHandler(); } }
 		public IEnumerable<IMethod> Methods { get { return GetMethodsHandler(); } }
 		public ICollection<IType> DependsOn { get { return GetDependsOnHandler(); } }
