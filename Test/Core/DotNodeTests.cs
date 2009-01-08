@@ -25,5 +25,13 @@ namespace Pencil.Test.Core
 			
 			node.ToString().ShouldEqual("0[label=\"NodeWithBorder\" color=\"#FFA0E0\"]");
 		}
+		[Test]
+		public void Should_support_FontColor()
+		{
+			var node = new DotNode(0);
+			node.Label = "ColoredText";
+			node.FontColor = Color.FromArgb(0, 255, 0);
+			node.ToString().ShouldEqual("0[label=\"ColoredText\" fontcolor=\"#00FF00\"]");
+		}
 	}
 }

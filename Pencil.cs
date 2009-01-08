@@ -67,7 +67,9 @@ public class PencilProject : Project
 
 		var nunit = New<ExecTask>();
 		nunit.Program = new Path("mono");
-		nunit.CommandLine = (nunitDir + "nunit-console.exe ").ToString() + csc.Output.ToString() + " -nologo -noshadow";
+		nunit.CommandLine = (nunitDir + "nunit-console.exe ").ToString() 
+			+ csc.Output.ToString() 
+			+ " -nologo -noshadow";
 		nunit.Execute();
 	}
 

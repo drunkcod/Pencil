@@ -50,7 +50,9 @@ factory.NodeCreated.Add(fun e -> currentNode <- e.Item)
 dependencies.NodeCreated.Add(fun e ->
     let name = e.Item.FullName
     if name <> null && name.StartsWith("System.") then
-        currentNode.FillColor <- Color.FromArgb(255, 200, 200))
+        currentNode.FillColor <- Color.FromArgb(200, 255, 200)
+        currentNode.BorderColor <- Color.FromArgb(133, 196, 133)
+        currentNode.FontColor <- Color.FromArgb(50, 64, 50))
 
 let IsAssembly fileName =
     let ext = Path.GetExtension(fileName)
