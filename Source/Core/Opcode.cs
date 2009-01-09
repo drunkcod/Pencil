@@ -4,7 +4,7 @@ namespace Pencil.Core
 
 	internal enum ParameterType
 	{
-		None, SByte, Int32, Int64, Single, Double, Method, Type, String, Field, Token
+		None, SByte, Int32, Int64, Single, Double, Method, Type, String, Field, Token, Array
 	}
 
 	public struct Opcode
@@ -129,7 +129,7 @@ namespace Pencil.Core
 			new Opcode("bgt.un", ParameterType.Int32),
 			new Opcode("ble.un", ParameterType.Int32),
 			new Opcode("blt.un", ParameterType.Int32),
-			new Opcode("switch"),
+			new Opcode("switch", ParameterType.Array),
 			new Opcode("ldind.i1"),
 			new Opcode("ldind.u1"),
 			new Opcode("ldind.i2"),

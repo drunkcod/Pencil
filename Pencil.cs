@@ -66,10 +66,8 @@ public class PencilProject : Project
 		FileSystem.CopyFile(test + "SampleProject.xml", outdir + "SampleProject.xml", true);
 
 		var nunit = New<ExecTask>();
-		nunit.Program = new Path("mono");
-		nunit.CommandLine = (nunitDir + "nunit-console.exe ").ToString() 
-			+ csc.Output.ToString() 
-			+ " -nologo -noshadow";
+		nunit.Program = nunitDir + "nunit-console.exe";
+		nunit.CommandLine = csc.Output.ToString() + " -nologo -noshadow";
 		nunit.Execute();
 	}
 

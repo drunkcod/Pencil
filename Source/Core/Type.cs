@@ -46,7 +46,7 @@
         {
 			if(type == null)
 				throw new ArgumentNullException();
-            this.type = type;
+            this.type = type.IsGenericType ? type.GetGenericTypeDefinition() : type;
         }
 
         public string Name { get { return type.Name; } }
@@ -70,13 +70,23 @@
 				var baseType = type.BaseType;
 				if(baseType != null)
 					dependsOn.Add(Type.Wrap(baseType));
-				type.GetInterfaces().ForEach(x => dependsOn.Add(Type.Wrap(x)));
+				type.GetInterfaces().ForEach(x =>
+				{
+					if(Implements(x))
+						dependsOn.Add(Type.Wrap(x));
+				});
                 type.GetFields(AllMethods).ForEach(x => { if(x.DeclaringType == type) dependsOn.Add(Type.Wrap(x.FieldType)); });
 				EachOwnMethod(m => m.Arguments.Map(a => a.Type).ForEach(dependsOn.Add));
 				EachOwnMethod(m => dependsOn.Add(m.ReturnType));
 				EachOwnMethod(m => m.Calls.ForEach(x =>{ dependsOn.Add(x.DeclaringType);}));
 				return dependsOn.Types;
 			}
+		}
+
+		bool Implements(System.Type interfaceType)
+		{
+			var baseType = type.BaseType;
+			return baseType == null || !interfaceType.IsAssignableFrom(baseType);
 		}
 
 		void EachOwnMethod(Action<IMethod> action)

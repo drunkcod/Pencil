@@ -355,7 +355,7 @@
         [Test]
         public void Decode_switch()
         {
-            CheckDecode("switch", 0x45);
+            CheckDecode("switch [7, 42]", 0x45, 2, 0, 0, 0, 7, 0, 0, 0, 42, 0, 0, 0);
         }
         [Test]
         public void Decode_ldind_i1()

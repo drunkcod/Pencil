@@ -19,7 +19,7 @@
 			Assert.That(disassembler.Decode(ilbytes).Map(x => x.ToString()).ToList(), Is.EquivalentTo(expected));
 		}
 
-        void CheckDecode(string expected, params byte[] ilbytes)
+		void CheckDecode(string expected, params byte[] ilbytes)
         {
             var disassembler = new Disassembler(this);
             Assert.AreEqual(expected, disassembler.Decode(ilbytes)[0].ToString());

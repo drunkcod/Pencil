@@ -151,6 +151,27 @@ namespace Pencil.Test.Core
 			Type.Wrap(typeof(MyEnum)).DependsOn.ShouldBeEmpty();
 		}
 
+		interface IBase {}
+		class Base : IBase {}
+		class Derived : Base {}
+		[Test]
+		public void DependsOn_should_not_return_interface_implemented_by_base()
+		{
+            Assert.That(Type.Wrap(typeof(Derived)).DependsOn.Map(x => x.Name).ToList(),
+				Is.EquivalentTo(new[] { "Base" }));
+		}
+
+		class Thing<T>
+		{
+			public IEnumerable<T> Foo(){ return new T[0]; }
+		}
+		[Test]
+		public void DependsOn_should_handle_nested_generics()
+		{
+            Assert.That(Type.Wrap(typeof(Thing<>)).DependsOn.Map(x => x.FullName).ToList(),
+				Is.EquivalentTo(new[] { "System.Collections.Generic.IEnumerable`1" }));
+		}
+
 		class EmptyAttribute : Attribute {}
 
 		[Test]

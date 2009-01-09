@@ -1,8 +1,16 @@
 namespace Pencil.Core
 {
+	using System;
 	using System.Collections.Generic;
 	using System.Reflection;
     using ReflectionModule = System.Reflection.Module;
+
+	public class MethodDecodeException : Exception
+	{
+		public MethodDecodeException(IMethod method, Exception inner):
+			base(string.Format("Failed to Decode method {0}.", method.Name), inner)
+		{}
+	}
 
 	public class Method : IMethod
 	{
@@ -51,7 +59,14 @@ namespace Pencil.Core
 			get
 			{
 				var dissassembler = new Disassembler(new TokenResolver(method.Module, method.DeclaringType, method));
-				return dissassembler.Decode(GetIL());
+				try
+				{
+					return dissassembler.Decode(GetIL());
+				}
+				catch(ArgumentOutOfRangeException e)
+				{
+					throw new MethodDecodeException(this, e);
+				}
 			}
 		}
 
