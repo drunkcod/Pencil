@@ -13,6 +13,8 @@ namespace Pencil.Build
 			this.target = target;
 		}
 
+		public TextWriter Target { get { return target; } }
+
 		public void Write(string format, params object[] args)
 		{
 			target.Write(indentation);

@@ -6,6 +6,13 @@ namespace Pencil.Build
 
     sealed class ExecutionEnvironment : IExecutionEnvironment
     {
+		readonly TextWriter standardOut;
+
+		public ExecutionEnvironment(TextWriter standardOut)
+		{
+			this.standardOut = standardOut;
+		}
+		
         public IProcess Start(string fileName, string arguments)
         {
             var startInfo = new ProcessStartInfo();
@@ -13,10 +20,10 @@ namespace Pencil.Build
             startInfo.Arguments = arguments;
             startInfo.UseShellExecute = false;
             startInfo.RedirectStandardOutput = true;
-            return new ProcessAdapter(Process.Start(startInfo));
+            return ProcessAdapter.Start(startInfo);
         }
 		
-		public TextWriter StandardOut { get { return Console.Out; } }
+		public TextWriter StandardOut { get { return standardOut; } }
 		public bool IsMono { get { return Type.GetType("Mono.Runtime") != null; } }
     }
 }

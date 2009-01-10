@@ -4,6 +4,8 @@ using Pencil.Build.Tasks;
 public class PencilProject : Project
 {
 	readonly Path outdir = new Path("Build") + "Debug";
+	
+	IFileSystem FileSystem { get { return New<IFileSystem>(); } }
 
 	public void Build()
     {

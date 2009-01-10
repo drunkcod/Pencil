@@ -6,7 +6,12 @@ namespace Pencil.Build
     {
         Process process;
 
-        public ProcessAdapter(Process process)
+		public static ProcessAdapter Start(ProcessStartInfo startInfo)
+		{
+			return new ProcessAdapter(Process.Start(startInfo));
+		}
+		
+        ProcessAdapter(Process process)
         {
             this.process = process;
         }

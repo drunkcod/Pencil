@@ -1,16 +1,15 @@
-﻿namespace Pencil.Test.Stubs
+namespace Pencil.Test.Stubs
 {
     using Pencil.Build;
     using System;
 
     class ProjectStub : IProject
     {
-        public Action<string> RunHandler;
+        public Action<string> RunHandler = x => {};
+		public Predicate<string> HasTargetHandler;
 
-        public bool HasTarget(string name) { return false; }
+        public bool HasTarget(string name) { return HasTargetHandler(name); }
         public void Run(string target) { RunHandler(target); }
-
-		public IFileSystem FileSystem { get; set; }
-		public IExecutionEnvironment ExecutionEnvironment { get; set; }
+		public void Register<T>(T instance){}
     }
 }

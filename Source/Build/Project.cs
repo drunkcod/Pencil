@@ -12,8 +12,6 @@ namespace Pencil.Build
 		public Project()
 		{
 			targets = new MethodTargetExtractor().GetTargets(this);
-			container.Register(typeof(IFileSystem), () => FileSystem);
-			container.Register(typeof(IExecutionEnvironment), () => ExecutionEnvironment);
 		}
 
 		public T New<T>()
@@ -33,7 +31,6 @@ namespace Pencil.Build
 				targets[targetName].Execute();
 		}
 
-		public IFileSystem FileSystem { get; set;  }
-		public IExecutionEnvironment ExecutionEnvironment { get; set; }
+		public void Register<T>(T instance){ container.Register(typeof(T), instance); }
 	}
 }

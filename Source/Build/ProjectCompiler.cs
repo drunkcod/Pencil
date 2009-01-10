@@ -3,16 +3,16 @@ namespace Pencil.Build
 	using System;
 	using System.Collections.Generic;
 	using System.CodeDom.Compiler;
-	using Microsoft.CSharp;
 
 	class ProjectCompiler
 	{
-		readonly CodeDomProvider codeProvider = new CSharpCodeProvider(new Dictionary<string,string>(){{"CompilerVersion", "v3.5"}});
+		readonly CodeDomProvider codeProvider;
 		readonly Logger logger;
 
-		public ProjectCompiler(Logger logger)
+		public ProjectCompiler(Logger logger, CodeDomProvider codeProvider)
 		{
 			this.logger = logger;
+			this.codeProvider = codeProvider;
 		}
 
 		public IProject ProjectFromFile(string path)
