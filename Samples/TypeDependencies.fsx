@@ -49,9 +49,11 @@ let ignore = { new IFilter<IType> with
             || t.Equals(typeof<Guid>)
             || t.Name = "Nullable`1"
             || "System.Collections.".IsStartOf(t.FullName)
+            || t.Name = "Action"
             || t.Name = "Action`1"
             || t.Name = "Converter`2"
             || t.Name = "Comparison`1"
+            || t.Name = "Func`1"
             || t.Name = "Func`2"
             || t.Name = "Func`4"
             || t.Name = "_Exception"

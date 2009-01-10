@@ -5,15 +5,13 @@ namespace Pencil.Build
 
 	public class Project : IProject
 	{
-		Dictionary<string,Target> targets = new Dictionary<string,Target>();
+		readonly Dictionary<string,Target> targets;
 		internal Logger logger;
 		readonly ZeptoContainer container = new ZeptoContainer();
 
 		public Project()
 		{
-			foreach(var m in GetType().GetMethods())
-			if(m.DeclaringType != typeof(object))
-				targets.Add(m.Name, new MethodTarget(this, m));
+			targets = new MethodTargetExtractor().GetTargets(this);
 			container.Register(typeof(IFileSystem), () => FileSystem);
 			container.Register(typeof(IExecutionEnvironment), () => ExecutionEnvironment);
 		}
