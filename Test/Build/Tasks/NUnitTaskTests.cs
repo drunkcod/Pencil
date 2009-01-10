@@ -84,5 +84,18 @@ namespace Pencil.Test.Build.Tasks
 			};
 			nunit.Execute();
 		}
+		[Test]
+		public void Should_support_disabling_logo()
+		{
+			var environment = new ExecutionEnvironmentStub();
+			var nunit = new NUnitTask(environment);
+			nunit.ShowLogo = false;
+			environment.StartHandler += (p, args) => 
+			{
+				args.Contains("-nologo").ShouldBe(true);
+				return new NullProcess();
+			};
+			nunit.Execute();
+		}
 	}
 }

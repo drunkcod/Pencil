@@ -69,6 +69,7 @@ public class PencilProject : Project
 		nunit.NUnitBinPath= nunitDir;
 		nunit.Target = csc.Output;
 		nunit.ShadowCopy = false;
+		nunit.ShowLogo = false;
 		nunit.Execute();
 	}
 

@@ -6,6 +6,7 @@ namespace Pencil.Build.Tasks
 	{
 		Path binPath = Path.Empty;
 		bool shadowCopy = true;
+		bool showlogo = true;
 		
 		public NUnitTask(IExecutionEnvironment executionEnvironment): base(executionEnvironment){}
 
@@ -13,6 +14,7 @@ namespace Pencil.Build.Tasks
 		public Path NUnitBinPath { get { return binPath; } set { binPath = value; } }
 		public Path Target { get; set; }
 		public bool ShadowCopy { get { return shadowCopy; } set { shadowCopy = value; } }
+		public bool ShowLogo { get { return showlogo; } set { showlogo = value; } }
 		
 		protected override Path GetProgramCore ()
 		{
@@ -25,6 +27,8 @@ namespace Pencil.Build.Tasks
 			args.AppendFormat(" {0}", Target);
 			if(!ShadowCopy)
 				args.AppendFormat(" {0}", "-noshadow");
+			if(!ShowLogo)
+				args.AppendFormat(" {0}", "-nologo");
 			return args.ToString();
 		}
 	}
