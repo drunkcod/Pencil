@@ -20,7 +20,9 @@ namespace Pencil.Core
 		{
 			var builder = new StringBuilder();
 			builder.AppendFormat("{0}[label=\"{1}\"", Id, Label);
-			return Style.AppendTo(builder).Append(']').ToString();
+			if(!Style.IsEmpty)
+				Style.AppendTo(builder.Append(' '));
+			return builder.Append(']').ToString();
 		}
 	}
 }

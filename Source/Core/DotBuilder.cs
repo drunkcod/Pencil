@@ -9,6 +9,7 @@ namespace Pencil.Core
 	{
         string format;
         TextWriter target;
+		DotNodeStyle nodeStyle = new DotNodeStyle();
 
 		public DotBuilder(TextWriter target)
 		{
@@ -16,13 +17,11 @@ namespace Pencil.Core
 		}
 
 		public TextWriter Target { get { return target; } }
-        public int FontSize { get; set; }
         public double RankSeparation { get; set; }
         public double NodeSeparation { get; set; }
-        public NodeShape NodeShape { get; set; }
-        public double NodeHeight { get; set; }
 		public RankDirection RankDirection { get; set; }
-
+		public DotNodeStyle NodeStyle { get { return nodeStyle; } set { nodeStyle = value; } }
+		
 		public DotBuilder Write(DirectedGraph graph)
 		{
             Begin();
@@ -58,17 +57,7 @@ namespace Pencil.Core
 
         StringBuilder CollectNodeStyle()
         {
-            var target = new StringBuilder();
-            if(FontSize != 0)
-                target.AppendFormat("fontsize={0} ", FontSize);
-            if(NodeShape != NodeShape.Oval)
-                target.AppendFormat("shape={0} ", NodeShape.ToString().ToLowerInvariant());
-            if(NodeHeight != 0)
-                target.AppendFormat("height={0} ", NodeHeight.ToString(CultureInfo.InvariantCulture));
-
-            if(target.Length == 0)
-                return target;
-            return target.Remove(target.Length - 1, 1);
+			return NodeStyle.AppendTo(new StringBuilder());
         }
 
         void Append(Edge edge)

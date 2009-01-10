@@ -29,7 +29,6 @@ let isAspNetType (t:IType) =
     let name = t.FullName
     name <> null && name.StartsWith("System.Web.UI.")
 
-
 type System.String with
     member this.IsStartOf (s:string) = s <> null && s.StartsWith(this)
 
@@ -61,17 +60,7 @@ let ignore = { new IFilter<IType> with
             || isAspNetType t)}
 
 let dependencies = TypeDependencyGraph(digraph, ignore)
-
-let fxStyle =
-    DotNodeStyle(
-        FillColor = Color.FromArgb(200, 255, 200),
-        BorderColor = Color.FromArgb(133, 196, 133),
-        FontColor = Color.FromArgb(50, 64, 50))
-let msStyle = DotNodeStyle()
-msStyle.FillColor <- Color.FromArgb(200, 200, 255)
-msStyle.BorderColor <- Color.FromArgb(133, 133, 196)
-msStyle.FontColor <- Color.FromArgb(50, 50, 64)
-
+let fxStyle = new DotNodeStyle()
 
 let mutable (currentNode:DotNode) = null
 factory.NodeCreated.Add(fun e -> currentNode <- e.Item)
@@ -92,11 +81,8 @@ fsi.CommandLineArgs
     |> Seq.iter (fun x -> x.Types |> Seq.filter includeType |> Seq.iter (dependencies.Add)))
 
 let dot = DotBuilder(Console.Out)
-dot.FontSize <- 8
 dot.RankSeparation <- 0.07
 dot.NodeSeparation <- 0.1
-dot.NodeShape <- NodeShape.Box
-dot.NodeHeight <- 0.1
 dot.RankDirection <- RankDirection.LeftRight
 
 dot.Write(digraph)
