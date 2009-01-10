@@ -67,6 +67,15 @@ namespace Pencil.Test.Core
             dot.NodeStyle = style;
             WriteEmpty(dot).ShouldEqual("digraph{node[height=0.1]}");
 		}
+		[Test]
+		public void Should_support_setting_EdgeStyle()
+		{
+            var dot = new DotBuilder(new StringWriter());
+			var style = new DotEdgeStyle();
+			style.ArrowSize = 0.1;
+            dot.EdgeStyle = style;
+            WriteEmpty(dot).ShouldEqual("digraph{edge[arrowsize=0.1]}");
+		}
 
         static string ToDot(DirectedGraph graph)
 		{

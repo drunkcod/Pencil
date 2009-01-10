@@ -10,6 +10,7 @@ namespace Pencil.Core
         string format;
         TextWriter target;
 		DotNodeStyle nodeStyle = new DotNodeStyle();
+		DotEdgeStyle edgeStyle = new DotEdgeStyle();
 
 		public DotBuilder(TextWriter target)
 		{
@@ -21,6 +22,7 @@ namespace Pencil.Core
         public double NodeSeparation { get; set; }
 		public RankDirection RankDirection { get; set; }
 		public DotNodeStyle NodeStyle { get { return nodeStyle; } set { nodeStyle = value; } }
+		public DotEdgeStyle EdgeStyle { get { return edgeStyle; } set { edgeStyle = value; } }
 		
 		public DotBuilder Write(DirectedGraph graph)
 		{
@@ -35,9 +37,12 @@ namespace Pencil.Core
         {
 			target.Write("digraph{");
             format = "{0}";
-            var nodeStyle = CollectNodeStyle();
+            var nodeStyle = NodeStyle.AppendTo(new StringBuilder());;
             if(nodeStyle.Length != 0)
                 Append("node[{0}]", nodeStyle);
+            var edgeStyle = EdgeStyle.AppendTo(new StringBuilder());;
+            if(edgeStyle.Length != 0)
+                Append("edge[{0}]", edgeStyle);
             if(RankSeparation != 0)
                 Append("ranksep={0}", RankSeparation);
             if(NodeSeparation != 0)
@@ -54,11 +59,6 @@ namespace Pencil.Core
 				default: return "TB";
 			}
 		}
-
-        StringBuilder CollectNodeStyle()
-        {
-			return NodeStyle.AppendTo(new StringBuilder());
-        }
 
         void Append(Edge edge)
         {

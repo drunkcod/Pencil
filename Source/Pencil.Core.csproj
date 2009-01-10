@@ -91,6 +91,8 @@
     <Compile Include="Core\INodeFactory.cs" />
     <Compile Include="Core\NodeCreatedEventArgs.cs" />
     <Compile Include="Core\RankDirection.cs" />
+    <Compile Include="Core\DotEdgeStyle.cs" />
+    <Compile Include="Core\DotStyleWriter.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

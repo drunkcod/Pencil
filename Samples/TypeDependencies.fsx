@@ -60,7 +60,11 @@ let ignore = { new IFilter<IType> with
             || isAspNetType t)}
 
 let dependencies = TypeDependencyGraph(digraph, ignore)
-let fxStyle = new DotNodeStyle()
+let fxStyle =
+    DotNodeStyle(
+        FillColor = Color.FromArgb(200, 255, 200), 
+        BorderColor = Color.FromArgb(100, 164, 100),
+        FontColor = Color.FromArgb(32, 96, 32))
 
 let mutable (currentNode:DotNode) = null
 factory.NodeCreated.Add(fun e -> currentNode <- e.Item)
@@ -84,5 +88,18 @@ let dot = DotBuilder(Console.Out)
 dot.RankSeparation <- 0.07
 dot.NodeSeparation <- 0.1
 dot.RankDirection <- RankDirection.LeftRight
+dot.NodeStyle <- 
+    DotNodeStyle(
+        FontSize = 8,
+        Shape = NodeShape.Box,
+        Height = 0.1,
+        FillColor = Color.FromArgb(200, 200, 255), 
+        BorderColor = Color.FromArgb(100, 100, 164),
+        FontColor = Color.FromArgb(32, 32, 96))
+dot.EdgeStyle <-
+    DotEdgeStyle(
+        ArrowSize=0.7,
+        Color = Color.FromArgb(32, 32, 32),
+        PenWidth = 0.75)
 
 dot.Write(digraph)

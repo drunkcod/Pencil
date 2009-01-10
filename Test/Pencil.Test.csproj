@@ -95,6 +95,7 @@
     <Compile Include="Core\DotNodeTests.cs" />
     <Compile Include="Build\Tasks\NUnitTaskTests.cs" />
     <Compile Include="Core\DotNodeStyleTests.cs" />
+    <Compile Include="Core\DotEdgeStyleTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Source\Pencil.Build.csproj">

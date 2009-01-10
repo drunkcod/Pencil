@@ -45,32 +45,24 @@ namespace Pencil.Core
         public NodeShape Shape { get; set; }
         public double Height { get; set; }
 
-		public override string ToString(){ return AppendTo(new StringBuilder()).ToString().Trim(); }
+		public override string ToString(){ return AppendTo(new StringBuilder()).ToString(); }
 
 		public StringBuilder AppendTo(StringBuilder target)
 		{
 			if(IsEmpty)
 				return target;
-			
-			if(FontSize != 0)
-                target.AppendFormat("fontsize={0} ", FontSize);
+			var style = new DotStyleWriter(target)
+				.Append("fontsize", FontSize);
             if(Shape != NodeShape.Oval)
-                target.AppendFormat("shape={0} ", Shape.ToString().ToLowerInvariant());
-            if(Height != 0)
-                target.AppendFormat("height={0} ", Height.ToString(CultureInfo.InvariantCulture));
+                target.AppendFormat("shape={0} ", Shape.ToString().ToLowerInvariant());            
+            style.Append("height", Height);
 			if(!FillColor.IsEmpty)
-				AppendColor("fillcolor", FillColor, target.Append("style=filled "));
-			if(!BorderColor.IsEmpty)
-				AppendColor("color", BorderColor, target);
-			if(!FontColor.IsEmpty)
-				AppendColor("fontcolor", FontColor, target);
+				target.Append("style=filled ");
+			style.Append("fillcolor", FillColor)
+				.Append("color", BorderColor)
+				.Append("fontcolor", FontColor);
 			target.Length -= 1;
 			return target;
-		}
-
-		static void AppendColor(string name, Color color, StringBuilder target)
-		{
-			target.AppendFormat("{0}=\"#{1:X2}{2:X2}{3:X2}\" ", name, color.R, color.G, color.B);
 		}
 	}
 }
