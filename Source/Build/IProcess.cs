@@ -1,4 +1,4 @@
-﻿namespace Pencil.Build
+namespace Pencil.Build
 {
     using System.IO;
 
@@ -7,6 +7,5 @@
         bool HasExited { get; }
         int ExitCode { get; }
         TextReader StandardOutput { get; }
-
     }
 }

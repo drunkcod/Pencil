@@ -24,12 +24,18 @@ namespace Pencil.Test.Core
 	interface ISampleInterface {}
 	class DependentType : ISampleInterface
 	{
-		public SampleType DoStuff(){ return new SampleType(); }
+		public SampleType DoStuff()
+		{ 
+			ReadStuff(null);
+			HiddenConstruction();
+			HiddenStaticCall();
+			return new SampleType(); 
+		}
 		protected void WriteStuff(TextWriter writer){}
 		void ReadStuff(TextReader reader){ reader.GetType();}
 		void HiddenConstruction(){ new StringBuilder(); }
-		void HiddenStaticCall(){ var foo = DateTime.Now; }
-		void CallSelf(){ CallSelf(); }
+		void HiddenStaticCall(){ var foo = DateTime.Now; foo.AddDays(1); }
+		void CallSelf(){ if(selfField != null) CallSelf(); }
 
         DependentType[] selfField = new DependentType[0];
 	}
@@ -130,6 +136,7 @@ namespace Pencil.Test.Core
         class WithInitializer
         {
             IList<int> list = new List<int>();
+			void Foo(){ if(list == null) Foo();}
         }
 
         [Test]

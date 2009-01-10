@@ -1,6 +1,6 @@
 #light
 
-#r "..\Build\Debug\Pencil.dll"
+#r "Pencil.dll"
 
 open System
 open System.Drawing
@@ -65,6 +65,11 @@ let fxStyle =
         FillColor = Color.FromArgb(200, 255, 200),
         BorderColor = Color.FromArgb(133, 196, 133),
         FontColor = Color.FromArgb(50, 64, 50))
+let msStyle = DotNodeStyle()
+msStyle.FillColor <- Color.FromArgb(200, 200, 255)
+msStyle.BorderColor <- Color.FromArgb(133, 133, 196)
+msStyle.FontColor <- Color.FromArgb(50, 50, 64)
+
 
 let mutable (currentNode:DotNode) = null
 factory.NodeCreated.Add(fun e -> currentNode <- e.Item)

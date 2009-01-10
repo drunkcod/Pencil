@@ -3,6 +3,8 @@ namespace Pencil.Build
 	using FXPath = System.IO.Path;
 	public class Path
 	{
+		public static readonly Path Empty = new Path(".");
+		
 		string path;
 
 		public Path(string path){ this.path = path; }

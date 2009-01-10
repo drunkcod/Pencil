@@ -1,5 +1,5 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -85,13 +85,30 @@
     <Compile Include="NMeter\IgnoreFilter.cs" />
     <Compile Include="NMeter\IgnoreFilterConfiguration.cs" />
     <Compile Include="NMeter\ProjectConfiguration.cs" />
+    <Compile Include="Core\DotNode.cs" />
+    <Compile Include="Core\DotNodeFactory.cs" />
+    <Compile Include="Core\DotNodeStyle.cs" />
+    <Compile Include="Core\INodeFactory.cs" />
+    <Compile Include="Core\NodeCreatedEventArgs.cs" />
+    <Compile Include="Core\RankDirection.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
+    <Reference Include="System.Drawing" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Core\Pencil.Core.suo" />
+  </ItemGroup>
+  <ProjectExtensions>
+    <MonoDevelop>
+      <Properties>
+        <GtkDesignInfo />
+      </Properties>
+    </MonoDevelop>
+  </ProjectExtensions>
 </Project>

@@ -61,6 +61,7 @@
     <Compile Include="Build\CompilationFailedException.cs" />
     <Compile Include="Build\ZeptoContainer.cs" />
     <Compile Include="Build\ProjectCompiler.cs" />
+    <Compile Include="Build\Tasks\NUnitTask.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

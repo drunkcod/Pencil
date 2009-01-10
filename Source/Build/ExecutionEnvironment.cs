@@ -15,7 +15,8 @@ namespace Pencil.Build
             startInfo.RedirectStandardOutput = true;
             return new ProcessAdapter(Process.Start(startInfo));
         }
-
+		
 		public TextWriter StandardOut { get { return Console.Out; } }
+		public bool IsMono { get { return Type.GetType("Mono.Runtime") != null; } }
     }
 }

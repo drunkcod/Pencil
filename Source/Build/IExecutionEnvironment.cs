@@ -1,4 +1,4 @@
-﻿namespace Pencil.Build
+namespace Pencil.Build
 {
 	using System.IO;
 
@@ -6,5 +6,6 @@
     {
         IProcess Start(string fileName, string arguments);
 		TextWriter StandardOut { get; }
+		bool IsMono { get; }
     }
 }

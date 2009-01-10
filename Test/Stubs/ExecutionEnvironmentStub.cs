@@ -1,4 +1,4 @@
-﻿namespace Pencil.Test.Stubs
+namespace Pencil.Test.Stubs
 {
 	using System;
 	using System.IO;
@@ -10,6 +10,7 @@
     class ExecutionEnvironmentStub : IExecutionEnvironment
     {
         public Func<string, string, IProcess> StartHandler;
+		public Func<bool> IsMonoHandler = () => false;
 
         public IProcess Start(string fileName, string arguments)
         {
@@ -17,5 +18,6 @@
         }
 
 		public TextWriter StandardOut { get { return Console.Out; } }
+		public bool IsMono { get { return IsMonoHandler(); } }
     }
 }

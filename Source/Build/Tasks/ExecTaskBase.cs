@@ -7,6 +7,8 @@ namespace Pencil.Build.Tasks
 	{
 		IExecutionEnvironment executionEnvironment;
 
+		public Path Program { get { return GetProgramCore(); } }
+
         protected ExecTaskBase(IExecutionEnvironment executionEnvironment)
         {
             this.executionEnvironment = executionEnvironment;
@@ -14,12 +16,14 @@ namespace Pencil.Build.Tasks
 
 		public void Execute()
 		{
-            var task = executionEnvironment.Start(GetProgramCore().ToString(), GetArgumentsCore());
+            var task = executionEnvironment.Start(Program.ToString(), GetArgumentsCore());
 			while(!task.HasExited)
 				task.StandardOutput.CopyTo(executionEnvironment.StandardOut);
 			if(task.ExitCode != 0)
 				throw new Exception();
 		}
+
+		protected bool IsRunningOnMono { get { return executionEnvironment.IsMono; } }
 
 		protected abstract Path GetProgramCore();
 		protected abstract string GetArgumentsCore();

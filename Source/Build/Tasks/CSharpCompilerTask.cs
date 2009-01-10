@@ -31,12 +31,10 @@ namespace Pencil.Build.Tasks
 		protected override Path GetProgramCore()
 		{
 			var runtime = new Path(RuntimeEnvironment.GetRuntimeDirectory());
-			if(RunningOnMono)
+			if(IsRunningOnMono)
 				return runtime.Combine("gmcs.exe");
 			return runtime.Combine("..").Combine("v3.5").Combine("csc.exe");
 		}
-
-		static bool RunningOnMono { get { return Type.GetType("Mono.Runtime") != null; } }
 
 		protected override string GetArgumentsCore()
 		{

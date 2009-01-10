@@ -51,6 +51,7 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Build\LoggerTests.cs" />
@@ -90,6 +91,9 @@
     <Compile Include="Stubs\TargetStub.cs" />
     <Compile Include="Stubs\TypeStub.cs" />
     <Compile Include="Build\PathTests.cs" />
+    <Compile Include="Core\DotNodeFactoryTests.cs" />
+    <Compile Include="Core\DotNodeTests.cs" />
+    <Compile Include="Build\Tasks\NUnitTaskTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Source\Pencil.Build.csproj">
