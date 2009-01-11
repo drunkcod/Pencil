@@ -6,6 +6,7 @@ namespace Pencil.Build
     {
         bool DirectoryExists(string path);
         void CreateDirectory(string path);
+		void EnsureDirectory(Path path);
         bool FileExists(Path path);
         void CopyFile(Path from, Path to, bool overwrite);
 		void DeleteFile(Path path);

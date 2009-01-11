@@ -2,6 +2,7 @@ namespace Pencil.Build.Tasks
 {
 	using System;
 	using System.Diagnostics;
+    using System.Runtime.InteropServices;
 
 	public abstract class ExecTaskBase
 	{
@@ -24,7 +25,11 @@ namespace Pencil.Build.Tasks
 		}
 
 		protected bool IsRunningOnMono { get { return executionEnvironment.IsMono; } }
-
+		protected Path RuntimeDirectory 
+		{ 
+			get { return new Path(RuntimeEnvironment.GetRuntimeDirectory()); } 
+		}
+		
 		protected abstract Path GetProgramCore();
 		protected abstract string GetArgumentsCore();
 	}

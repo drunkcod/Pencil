@@ -1,8 +1,6 @@
 namespace Pencil.Build.Tasks
 {
 	using System;
-    using System.Collections.Generic;
-    using System.Runtime.InteropServices;
     using System.Text;
 
 	public enum OutputType
@@ -12,12 +10,12 @@ namespace Pencil.Build.Tasks
 
 	public class CSharpCompilerTask : ExecTaskBase
 	{
-		List<Path> sources = new List<Path>();
-		List<Path> references = new List<Path>();
+		FileSet sources = new FileSet();
+		FileSet references = new FileSet();
 		IFileSystem fileSystem;
 
-		public List<Path> Sources { get { return sources; } }
-		public List<Path> References { get { return references; } }
+		public FileSet Sources { get { return sources; } }
+		public FileSet References { get { return references; } }
 		public OutputType OutputType { get; set; }
 		public Path Output { get; set; }
 		public bool Debug { get; set; }
@@ -30,43 +28,23 @@ namespace Pencil.Build.Tasks
 
 		protected override Path GetProgramCore()
 		{
-			var runtime = new Path(RuntimeEnvironment.GetRuntimeDirectory());
 			if(IsRunningOnMono)
-				return runtime.Combine("gmcs.exe");
-			return runtime.Combine("..").Combine("v3.5").Combine("csc.exe");
+				return RuntimeDirectory + "gmcs.exe";
+			return RuntimeDirectory + ".." + "v3.5" + "csc.exe";
 		}
 
 		protected override string GetArgumentsCore()
 		{
-            EnsureOutputDirectory();
-            CopyReferencedAssemblies();
-            return CollectArguments();
+			References.CopyTo(fileSystem, Output.GetDirectory());
+			return CollectArguments();
 		}
-
-        void EnsureOutputDirectory()
-        {
-            string outputDirectory = Output.GetDirectoryName();
-            if(!fileSystem.DirectoryExists(outputDirectory))
-                fileSystem.CreateDirectory(outputDirectory);
-        }
-
-        void CopyReferencedAssemblies()
-        {
-            References.ForEach(file =>
-            {
-                var target = Output.GetDirectory() + file.GetFileName();
-                if(fileSystem.FileExists(target) || !fileSystem.FileExists(file))
-                    return;
-                fileSystem.CopyFile(file, target, true);
-            });
-        }
 
         string CollectArguments()
         {
-            var arguments = new StringBuilder("/nologo");
-            arguments.AppendFormat(" /out:{0}", Output);
-            arguments.AppendFormat(" /debug{0}", Debug ? "+" : "-");
-            arguments.AppendFormat(" /target:{0}", GetTargetType());
+            var arguments = new StringBuilder("/nologo")
+            	.AppendFormat(" /out:{0}", Output)
+            	.AppendFormat(" /debug{0}", Debug ? "+" : "-")
+            	.AppendFormat(" /target:{0}", GetTargetType());
             using(var r = References.GetEnumerator())
             {
                 if(r.MoveNext())
@@ -74,12 +52,8 @@ namespace Pencil.Build.Tasks
                 while(r.MoveNext())
                     arguments.AppendFormat(",{0}", r.Current);
             }
-            using(var s = Sources.GetEnumerator())
-            {
-                while(s.MoveNext())
-                    arguments.AppendFormat(" {0}", s.Current);
-            }
-            return arguments.ToString();
+			sources.ForEach(x => arguments.AppendFormat(" {0}", x));
+			return arguments.ToString();
         }
 
 		string GetTargetType()

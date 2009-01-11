@@ -6,10 +6,12 @@ namespace Pencil.Build
 
 	public class MethodTarget : Target
 	{
+		IProject project;
 		MethodInfo method;
 
-		public MethodTarget(IProject project, MethodInfo method): base(project)
+		public MethodTarget(IProject project, MethodInfo method)
 		{
+			this.project = project;
 			this.method = method;
 		}
 
@@ -18,6 +20,8 @@ namespace Pencil.Build
 			foreach(DependsOnAttribute item in method.GetCustomAttributes(typeof(DependsOnAttribute), false))
 				yield return item.Name;
 		}
+
+		protected override IProject GetProjectCore (){ return project; }
 
 		protected override void ExecuteCore()
 		{

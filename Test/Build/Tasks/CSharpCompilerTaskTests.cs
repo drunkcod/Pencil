@@ -19,13 +19,13 @@ namespace Pencil.Test.Build.Tasks
             var compiler = new CSharpCompilerTask(fileSystem, environment);
 			var outDir = new Path("Build").Combine("Debug");
             compiler.Output = outDir.Combine("Pencil.Build.dll");
-            string createdDirectory = string.Empty;
+            Path createdDirectory = Path.Empty;
 
             fileSystem.DirectoryExistsHandler = x => false;
-            fileSystem.CreateDirectoryHandler = x => createdDirectory = x;
+            fileSystem.EnsureDirectoryHandler = x => createdDirectory = x;
             compiler.Execute();
 
-            Assert.AreEqual(outDir.ToString(), createdDirectory);
+            outDir.ShouldEqual(createdDirectory);
         }
         [Test]
         public void Should_copy_referenced_assemblies()

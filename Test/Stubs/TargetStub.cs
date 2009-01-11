@@ -1,4 +1,4 @@
-﻿namespace Pencil.Test.Stubs
+namespace Pencil.Test.Stubs
 {
     using System.Collections.Generic;
     using System;
@@ -6,13 +6,14 @@
 
     class TargetStub : Target
     {
+		IProject project;
         IEnumerable<string> dependencies;
 
         public Action ExecuteHandler;
 
         public TargetStub(IProject project, IEnumerable<string> dependencies)
-            : base(project)
         {
+			this.project = project;
             this.dependencies = dependencies;
         }
 
@@ -21,6 +22,7 @@
             return dependencies;
         }
 
+		protected override IProject GetProjectCore(){ return project; }
         protected override void ExecuteCore() { ExecuteHandler(); }
     }
 }

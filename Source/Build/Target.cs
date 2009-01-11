@@ -3,15 +3,8 @@ namespace Pencil.Build
 	using System.Collections.Generic;
 	using System.Reflection;
 
-	public class Target
+	public abstract class Target
 	{
-		protected IProject project;
-
-		protected Target(IProject project)
-		{
-			this.project = project;
-		}
-
 		public void Execute()
 		{
 			SatisfyDependencies();
@@ -21,13 +14,15 @@ namespace Pencil.Build
 		private void SatisfyDependencies()
 		{
 			foreach(var item in GetDependencies())
-				project.Run(item);
+				GetProjectCore().Run(item);
 		}
 
 		public virtual IEnumerable<string> GetDependencies()
 		{
 			return new string[0];
 		}
+
+		protected abstract IProject GetProjectCore();
 
 		protected virtual void ExecuteCore(){}
 	}
