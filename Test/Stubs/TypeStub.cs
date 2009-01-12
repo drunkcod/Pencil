@@ -11,6 +11,7 @@ namespace Pencil.Test.Stubs
 		public Func<bool> GetIsGenericParameterHandler = () => false;
 		public Func<IType> GetElementTypeHandler;
 		public Func<IEnumerable<IMethod>> GetMethodsHandler = () => new IMethod[0];
+		public Converter<System.Type, bool> IsAHandler = x => false;
 
         string name;
 		string fullName;
@@ -31,5 +32,6 @@ namespace Pencil.Test.Stubs
 		public ICollection<IType> DependsOn { get { return GetDependsOnHandler(); } }
 		public bool IsGenerated { get { return GetIsGeneratedHandler(); } }
 		public bool IsGenericParameter { get { return GetIsGenericParameterHandler(); } }
+		public bool IsA<T>(){ return IsAHandler(typeof(T)); }
 	}
 }

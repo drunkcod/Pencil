@@ -109,6 +109,8 @@
 
 		public bool IsGenericParameter { get { return type.IsGenericParameter; } }
 
+		public bool IsA<T>(){ return typeof(T).IsAssignableFrom(type); }
+
 		public override string ToString(){ return Name; }
 
 		public override bool Equals(object obj)

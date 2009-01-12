@@ -25,11 +25,11 @@ namespace Pencil.Test.Core
 	class DependentType : ISampleInterface
 	{
 		public SampleType DoStuff()
-		{ 
+		{
 			ReadStuff(null);
 			HiddenConstruction();
 			HiddenStaticCall();
-			return new SampleType(); 
+			return new SampleType();
 		}
 		protected void WriteStuff(TextWriter writer){}
 		void ReadStuff(TextReader reader){ reader.GetType();}
@@ -195,6 +195,12 @@ namespace Pencil.Test.Core
 		public void ElementType_should_be_item_type_for_array()
 		{
 			Type.Wrap(typeof(object[])).ElementType.Equals(typeof(object)).ShouldBe(true);
+		}
+
+		[Test]
+		public void IsA_should_be_true_if_assignable_from_other_type()
+		{
+			Type.Wrap(typeof(EmptyAttribute)).IsA<Attribute>().ShouldBe(true);
 		}
     }
 }

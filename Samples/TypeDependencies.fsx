@@ -38,8 +38,6 @@ let ignore = { new IFilter<IType> with
             isPrimitiveType t
             || t.Equals(typeof<System.Type>)
             || t.Equals(typeof<ValueType>)
-            || t.Equals(typeof<Exception>)
-            || t.Equals(typeof<Delegate>)
             || t.Equals(typeof<IDisposable>)
             || t.Equals(typeof<System.Runtime.Serialization.ISerializable>)
             || t.Equals(typeof<System.Text.StringBuilder>)
@@ -48,13 +46,8 @@ let ignore = { new IFilter<IType> with
             || t.Equals(typeof<Guid>)
             || t.Name = "Nullable`1"
             || "System.Collections.".IsStartOf(t.FullName)
-            || t.Name = "Action"
-            || t.Name = "Action`1"
-            || t.Name = "Converter`2"
-            || t.Name = "Comparison`1"
-            || t.Name = "Func`1"
-            || t.Name = "Func`2"
-            || t.Name = "Func`4"
+            || t.IsA<Delegate>()
+            || t.IsA<Exception>()
             || t.Name = "_Exception"
             || isComponentModelType t
             || isAspNetType t)}

@@ -11,5 +11,6 @@
 		ICollection<IType> DependsOn { get; }
 		bool IsGenerated { get; }
 		bool IsGenericParameter { get; }
+		bool IsA<T>();
     }
 }
