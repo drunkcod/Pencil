@@ -45,6 +45,11 @@ namespace Pencil.Core
 			return new List<T>(sequence);
 		}
 
+		public static int Count<T>(this IEnumerable<T> sequence)
+		{
+			return Count(sequence, x => true);
+		}
+
 		public static int Count<T>(this IEnumerable<T> sequence, Predicate<T> predicate)
 		{
 			int count = 0;

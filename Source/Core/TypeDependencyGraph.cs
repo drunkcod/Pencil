@@ -14,6 +14,7 @@ namespace Pencil.Core
 
 		protected override bool Recursive { get { return false; } }
 		protected override string GetLabel(IType item){ return item.Name; }
+		protected override string GetId(IType item){ return item.FullName; }
 		protected override IEnumerable<IType> GetDependencies(IType item){ return item.DependsOn.Map(x => x.ElementType); }
 		protected override bool ShouldAddCore(IType item){ return !item.IsGenerated && filter.Include(item); }
 	}

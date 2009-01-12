@@ -114,5 +114,16 @@ namespace Pencil.Test.Core
             graph.Add(Type.Wrap(typeof(EmptyType)));
 			nodeCreatedRaised.ShouldBe(true);
 		}
+
+		[Test]
+		public void Should_create_distinct_nodes_for_types_with_same_name()
+		{
+			var digraph = new DirectedGraph();
+            var graph = new TypeDependencyGraph(digraph);
+			graph.Add(new TypeStub("NamespaceOne", "Foo"));
+			graph.Add(new TypeStub("NamespaceTwo", "Foo"));
+
+			digraph.Nodes.Count().ShouldEqual(2);
+		}
 	}
 }

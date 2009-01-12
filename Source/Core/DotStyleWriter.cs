@@ -2,6 +2,7 @@ namespace Pencil.Core
 {
 	using System.Drawing;
 	using System.Text;
+	using System.Globalization;
 
 	class DotStyleWriter
 	{
@@ -22,7 +23,7 @@ namespace Pencil.Core
 		public DotStyleWriter Append(string name, double value)
 		{
 			if(value != 0)
-				target.AppendFormat("{0}={1} ", name, value);
+				target.AppendFormat(CultureInfo.InvariantCulture, "{0}={1} ", name, value);
 			return this;
 		}
 

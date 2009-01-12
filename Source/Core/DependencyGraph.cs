@@ -22,11 +22,6 @@ namespace Pencil.Core
 				AddChildren(CreateNode(item).Item, item);
 		}
 
-		protected Node AddNode(string label)
-		{
-			return graph.AddNode(label);
-		}
-
 		void AddChildren(Node current, T parent)
 		{
 			foreach(var item in GetDependencies(parent))
@@ -43,6 +38,7 @@ namespace Pencil.Core
 
 		protected virtual bool Recursive { get { return true; } }
 		protected abstract string GetLabel(T item);
+		protected virtual string GetId(T item){ return GetLabel(item); }
 		protected abstract IEnumerable<T> GetDependencies(T item);
 		protected abstract bool ShouldAddCore(T item);
 
@@ -56,16 +52,22 @@ namespace Pencil.Core
 		{
             var result = new CreateResult();
 			var label = GetLabel(item);
-            result.Created = !nodes.TryGetValue(label, out result.Item);
+			var id = GetId(item);
+            result.Created = !nodes.TryGetValue(id, out result.Item);
             if(result.Created)
             {
                 result.Item = AddNode(label);
 				var tmp = NodeCreated;
 				if(tmp != null)
 					tmp(this, new NodeCreatedEventArgs<T>(item));
-                nodes.Add(label, result.Item);
+                nodes.Add(id, result.Item);
             }
             return result;
+		}
+
+		Node AddNode(string label)
+		{
+			return graph.AddNode(label);
 		}
 	}
 }
