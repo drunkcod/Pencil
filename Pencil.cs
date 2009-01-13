@@ -4,15 +4,15 @@ using Pencil.Build.Tasks;
 public class PencilProject : Project
 {
 	readonly Path outdir = new Path("Build") + "Debug";
-	
+	readonly Path source = new Path("Source");
 	IFileSystem FileSystem { get { return New<IFileSystem>(); } }
 
 	public void Build()
     {
         var csc = New<CSharpCompilerTask>();
-		var source = new Path("Source") + "Build";
-        csc.Sources.Add(source + "*.cs");
-        csc.Sources.Add(source + "Tasks" + "*.cs");
+		var build = source + "Build";
+        csc.Sources.Add(build + "*.cs");
+        csc.Sources.Add(build + "Tasks" + "*.cs");
         csc.OutputType = OutputType.Application;
         csc.Output = outdir + "Pencil.Build.exe";
         csc.Debug = false;
@@ -22,9 +22,9 @@ public class PencilProject : Project
     public void Core()
 	{
 		var csc = New<CSharpCompilerTask>();
-		var source = new Path("Source");
 		csc.Sources.Add(source + "Core" + "*.cs");
 		csc.Sources.Add(source + "NMeter" + "*.cs");
+		csc.Sources.Add(source + "IO" + "*.cs");
 		csc.References.Add(new Path("System.Drawing.dll"));
 		csc.OutputType = OutputType.Library;
 		csc.Output = outdir + "Pencil.dll";
@@ -35,7 +35,8 @@ public class PencilProject : Project
 	[DependsOn("Core")]
 	public void Console()
 	{
-		var csc = New<CSharpCompilerTask>();		csc.Sources.Add(new Path("Source") + "NMeter" + "Console" + "*.cs");
+		var csc = New<CSharpCompilerTask>();
+		csc.Sources.Add(source + "NMeter" + "Console" + "*.cs");
 		csc.References.Add(outdir + "Pencil.dll");
 		csc.OutputType = OutputType.Application;
 		csc.Output = outdir + "NMeter.Console.exe";
@@ -56,7 +57,7 @@ public class PencilProject : Project
 		csc.Sources.Add(test + "Build" + "Tasks" + "*.cs");
 		csc.Sources.Add(test + "NMeter" + "*.cs");
  		csc.Sources.Add(test + "Stubs" + "*.cs");
- 		csc.References.Add(new Path("System.Drawing.dll"));
+		csc.References.Add(new Path("System.Drawing.dll"));
 		csc.References.Add(outdir + "Pencil.dll");
 		csc.References.Add(outdir + "Pencil.Build.exe");
 		csc.References.Add(nunitDir + "nunit.framework.dll");

@@ -93,15 +93,16 @@
     <Compile Include="Core\RankDirection.cs" />
     <Compile Include="Core\DotEdgeStyle.cs" />
     <Compile Include="Core\DotStyleWriter.cs" />
+    <Compile Include="IO\Pipe.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
-    <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Core\Pencil.Core.suo" />
@@ -113,4 +114,7 @@
       </Properties>
     </MonoDevelop>
   </ProjectExtensions>
+  <ItemGroup>
+    <Folder Include="IO/" />
+  </ItemGroup>
 </Project>
