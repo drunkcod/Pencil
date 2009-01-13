@@ -94,6 +94,7 @@
     <Compile Include="Core\DotEdgeStyle.cs" />
     <Compile Include="Core\DotStyleWriter.cs" />
     <Compile Include="IO\Pipe.cs" />
+    <Compile Include="IO\StreamExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />

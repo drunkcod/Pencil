@@ -28,13 +28,7 @@ namespace Pencil.NMeter.Console
 
 			new Pipe("dot", "-Tgif").Transfer(
 				stream => new DotBuilder(stream).Write(digraph),
-				stream =>
-				{
-					var output = File.OpenWrite("output.gif");
-					var buffer = new byte[4096];
-					for(int b; (b = stream.Read(buffer, 0, buffer.Length)) != 0;)
-						output.Write(buffer, 0, b);
-				});
+				stream => stream.CopyTo(File.OpenWrite("output.gif")));
 		}
 
 		static bool IsAssembly(string path)
