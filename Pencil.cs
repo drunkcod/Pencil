@@ -7,18 +7,6 @@ public class PencilProject : Project
 	readonly Path source = new Path("Source");
 	IFileSystem FileSystem { get { return New<IFileSystem>(); } }
 
-	public void Build()
-    {
-        var csc = New<CSharpCompilerTask>();
-		var build = source + "Build";
-        csc.Sources.Add(build + "*.cs");
-        csc.Sources.Add(build + "Tasks" + "*.cs");
-        csc.OutputType = OutputType.Application;
-        csc.Output = outdir + "Pencil.Build.exe";
-        csc.Debug = false;
-        csc.Execute();
-    }
-
     public void Core()
 	{
 		var csc = New<CSharpCompilerTask>();
@@ -31,6 +19,20 @@ public class PencilProject : Project
 		csc.Debug = true;
 		csc.Execute();
 	}
+
+	[DependsOn("Core")]
+	public void Build()
+    {
+        var csc = New<CSharpCompilerTask>();
+		var build = source + "Build";
+        csc.Sources.Add(build + "*.cs");
+        csc.Sources.Add(build + "Tasks" + "*.cs");
+		csc.References.Add(outdir + "Pencil.dll");
+        csc.OutputType = OutputType.Application;
+        csc.Output = outdir + "Pencil.Build.exe";
+        csc.Debug = false;
+        csc.Execute();
+    }
 
 	[DependsOn("Core")]
 	public void Console()
