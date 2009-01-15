@@ -1,4 +1,4 @@
-namespace Pencil.Build
+namespace Pencil.IO
 {
 	using FXPath = System.IO.Path;
 	public class Path
@@ -13,6 +13,7 @@ namespace Pencil.Build
 
 		public string GetDirectoryName(){ return FXPath.GetDirectoryName(path); }
 		public string GetFileName(){ return FXPath.GetFileName(path); }
+		public string GetExtension(){ return FXPath.GetExtension(path); }
 
 		public static Path operator+(Path path, string more){ return path.Combine(more); }
 

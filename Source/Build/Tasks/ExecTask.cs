@@ -1,5 +1,7 @@
 namespace Pencil.Build.Tasks
 {
+	using Pencil.IO;
+	
 	public class ExecTask : ExecTaskBase
 	{
 		Path program;

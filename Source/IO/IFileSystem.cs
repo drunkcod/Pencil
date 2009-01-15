@@ -1,4 +1,4 @@
-namespace Pencil.Build
+namespace Pencil.IO
 {
 	using System.Collections.Generic;
 
@@ -8,8 +8,10 @@ namespace Pencil.Build
         void CreateDirectory(string path);
 		void EnsureDirectory(Path path);
         bool FileExists(Path path);
+        System.IO.Stream OpenWrite(Path path);
         void CopyFile(Path from, Path to, bool overwrite);
 		void DeleteFile(Path path);
+		IEnumerable<Path> GetFiles(Path root, string pattern); 
 		IEnumerable<Path> GetFilesRecursive(Path root, string pattern);
     }
 }

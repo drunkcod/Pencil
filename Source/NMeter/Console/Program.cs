@@ -2,7 +2,6 @@ namespace Pencil.NMeter.Console
 {
 	using System;
 	using System.Collections.Generic;
-	using System.IO;
 	using Pencil.Core;
 	using Pencil.NMeter;
 	using Pencil.IO;
@@ -15,25 +14,27 @@ namespace Pencil.NMeter.Console
 
 			var loader = new StaticAssemblyLoader();
 			var assemblies = new List<IAssembly>();
-			Directory.GetFiles(config.BinPath, "*.*")
+			var fs = new FileSystem();
+			fs.GetFiles(new Pencil.IO.Path(config.BinPath), "*.*")
 			.ForEach(IsAssembly, path =>
 			{
-				var assembly = AssemblyLoader.LoadFrom(path);
+				var assembly = AssemblyLoader.LoadFrom(path.ToString());
 				loader.Register(assembly);
 				assemblies.Add(assembly);
 			});
 			var digraph = new DirectedGraph();
-			var dependencies = new AssemblyDependencyGraph(digraph, loader, IgnoreFilter.From(config.IgnoreAssemblies));
+			var dependencies = new AssemblyDependencyGraph(digraph, loader, 
+				IgnoreFilter.From(config.IgnoreAssemblies));
 			assemblies.ForEach(dependencies.Add);
 
-			new Pipe("dot", "-Tgif").Transfer(
+			new Pipe("dot", "-Tpng").Transfer(
 				stream => new DotBuilder(stream).Write(digraph),
-				stream => stream.CopyTo(File.OpenWrite("output.gif")));
+				stream => fs.WriteFile(new Path("output.png"), stream));
 		}
 
-		static bool IsAssembly(string path)
+		static bool IsAssembly(Pencil.IO.Path path)
 		{
-			var ext = Path.GetExtension(path);
+			var ext = path.GetExtension();
 			return ext == ".dll" || ext == ".exe";
 		}
 	}

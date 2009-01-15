@@ -2,6 +2,7 @@ namespace Pencil.Build
 {
 	using System;
 	using System.Collections.Generic;
+	using Pencil.IO;
 	
 	public class FileSet
 	{

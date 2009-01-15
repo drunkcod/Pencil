@@ -3,6 +3,7 @@ namespace Pencil.Test.Stubs
     using System;
 	using System.Collections.Generic;
     using Pencil.Build;
+    using Pencil.IO;
 
     class FileSystemStub : IFileSystem
     {
@@ -20,8 +21,10 @@ namespace Pencil.Test.Stubs
         public bool DirectoryExists(string path) { return DirectoryExistsHandler(path); }
 		public void EnsureDirectory(Path path){ EnsureDirectoryHandler(path); }
         public bool FileExists(Path path) { return FileExistsHandler(path); }
+        public System.IO.Stream OpenWrite(Path path){ return System.IO.Stream.Null; }
         public void CopyFile(Path from, Path to, bool overwrite) { CopyFileHandler(from, to, overwrite); }
 		public void DeleteFile(Path path){ DeleteFileHandler(path); }
+		public IEnumerable<Path> GetFiles(Path root, string pattern){ return GetFilesRecursiveHandler(root, pattern); }
 		public IEnumerable<Path> GetFilesRecursive(Path root, string pattern){ return GetFilesRecursiveHandler(root, pattern); }
     }
 }

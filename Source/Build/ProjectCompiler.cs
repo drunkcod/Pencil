@@ -3,6 +3,7 @@ namespace Pencil.Build
 	using System;
 	using System.Collections.Generic;
 	using System.CodeDom.Compiler;
+	using Pencil.IO;
 
 	class ProjectCompiler
 	{

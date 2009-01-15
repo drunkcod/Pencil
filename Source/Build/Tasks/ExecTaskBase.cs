@@ -3,6 +3,7 @@ namespace Pencil.Build.Tasks
 	using System;
 	using System.Diagnostics;
     using System.Runtime.InteropServices;
+    using Pencil.IO;
 
 	public abstract class ExecTaskBase
 	{

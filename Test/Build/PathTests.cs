@@ -1,7 +1,7 @@
 namespace Pencil.Test
 {
 	using NUnit.Framework;
-	using Pencil.Build;
+	using Pencil.IO;
 	using FXPath = System.IO.Path;
 	
 	[TestFixture]

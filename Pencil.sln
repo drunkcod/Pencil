@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual C# Express 2008
+# Visual Studio 2008
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pencil.Scenarios", "Scenarios\Pencil.Scenarios.csproj", "{FB5AC86A-A4A9-4B77-B9F2-2CFD2C41DA7C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pencil.Core", "Source\Pencil.Core.csproj", "{E5228228-0A0C-481D-9E4A-808485D70385}"
@@ -9,28 +9,43 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pencil.Test", "Test\Pencil.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pencil.Build", "Source\Pencil.Build.csproj", "{62B094FB-4868-4824-9B31-831B71254E2C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pencil.Build", "Source\NMeter\Console\NMeter.Console.csproj", "{27693021-9DFD-4D4A-ADD2-074661AD3778}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{FB5AC86A-A4A9-4B77-B9F2-2CFD2C41DA7C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FB5AC86A-A4A9-4B77-B9F2-2CFD2C41DA7C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FB5AC86A-A4A9-4B77-B9F2-2CFD2C41DA7C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FB5AC86A-A4A9-4B77-B9F2-2CFD2C41DA7C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E5228228-0A0C-481D-9E4A-808485D70385}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E5228228-0A0C-481D-9E4A-808485D70385}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E5228228-0A0C-481D-9E4A-808485D70385}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E5228228-0A0C-481D-9E4A-808485D70385}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DE33D780-BAD0-41C7-9327-A90B50EFC5F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DE33D780-BAD0-41C7-9327-A90B50EFC5F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DE33D780-BAD0-41C7-9327-A90B50EFC5F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DE33D780-BAD0-41C7-9327-A90B50EFC5F9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{27693021-9DFD-4D4A-ADD2-074661AD3778}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{27693021-9DFD-4D4A-ADD2-074661AD3778}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{27693021-9DFD-4D4A-ADD2-074661AD3778}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{27693021-9DFD-4D4A-ADD2-074661AD3778}.Release|Any CPU.Build.0 = Release|Any CPU
 		{62B094FB-4868-4824-9B31-831B71254E2C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{62B094FB-4868-4824-9B31-831B71254E2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{62B094FB-4868-4824-9B31-831B71254E2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{62B094FB-4868-4824-9B31-831B71254E2C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DE33D780-BAD0-41C7-9327-A90B50EFC5F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE33D780-BAD0-41C7-9327-A90B50EFC5F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DE33D780-BAD0-41C7-9327-A90B50EFC5F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DE33D780-BAD0-41C7-9327-A90B50EFC5F9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E5228228-0A0C-481D-9E4A-808485D70385}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E5228228-0A0C-481D-9E4A-808485D70385}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E5228228-0A0C-481D-9E4A-808485D70385}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E5228228-0A0C-481D-9E4A-808485D70385}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FB5AC86A-A4A9-4B77-B9F2-2CFD2C41DA7C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB5AC86A-A4A9-4B77-B9F2-2CFD2C41DA7C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB5AC86A-A4A9-4B77-B9F2-2CFD2C41DA7C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB5AC86A-A4A9-4B77-B9F2-2CFD2C41DA7C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{34E21258-9A89-4301-984C-652C1E5191BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{34E21258-9A89-4301-984C-652C1E5191BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{34E21258-9A89-4301-984C-652C1E5191BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{34E21258-9A89-4301-984C-652C1E5191BE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		name = Pencil
+		version = 0.1
+		StartupItem = Test\Pencil.Test.csproj
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

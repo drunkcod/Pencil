@@ -1,6 +1,7 @@
 namespace Pencil.Build.Tasks
 {
 	using System.Text;
+	using Pencil.IO;
 	
 	public class NUnitTask : ExecTaskBase
 	{

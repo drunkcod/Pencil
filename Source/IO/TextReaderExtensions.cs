@@ -1,8 +1,8 @@
-namespace Pencil.Build
+namespace Pencil.IO
 {
 	using System.IO;
 
-	static class TextReaderExtensions
+	public static class TextReaderExtensions
 	{
 		public static void CopyTo(this TextReader source, TextWriter target)
 		{

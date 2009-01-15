@@ -41,9 +41,7 @@
   <ItemGroup>
     <Compile Include="Build\DependsOnAttribute.cs" />
     <Compile Include="Build\ExecutionEnvironment.cs" />
-    <Compile Include="Build\FileSystem.cs" />
     <Compile Include="Build\IExecutionEnvironment.cs" />
-    <Compile Include="Build\IFileSystem.cs" />
     <Compile Include="Build\IProcess.cs" />
     <Compile Include="Build\IProject.cs" />
     <Compile Include="Build\Logger.cs" />
@@ -55,8 +53,6 @@
     <Compile Include="Build\Tasks\CSharpCompilerTask.cs" />
     <Compile Include="Build\Tasks\ExecTask.cs" />
     <Compile Include="Build\Tasks\ExecTaskBase.cs" />
-    <Compile Include="Build\TextReaderExtensions.cs" />
-    <Compile Include="Build\Path.cs" />
     <Compile Include="Build\TargetFailedException.cs" />
     <Compile Include="Build\CompilationFailedException.cs" />
     <Compile Include="Build\ZeptoContainer.cs" />
@@ -64,6 +60,7 @@
     <Compile Include="Build\Tasks\NUnitTask.cs" />
     <Compile Include="Build\MethodTargetExtractor.cs" />
     <Compile Include="Build\FileSet.cs" />
+    <Compile Include="Build\Startup.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -73,11 +70,10 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
   </ItemGroup>
-  <ProjectExtensions>
-    <MonoDevelop>
-      <Properties>
-        <GtkDesignInfo />
-      </Properties>
-    </MonoDevelop>
-  </ProjectExtensions>
+  <ItemGroup>
+    <ProjectReference Include="Pencil.Core.csproj">
+      <Project>{E5228228-0A0C-481D-9E4A-808485D70385}</Project>
+      <Name>Pencil.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
 </Project>

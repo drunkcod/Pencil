@@ -5,6 +5,7 @@ namespace Pencil.Test.Build.Tasks
     using Pencil.Build;
     using Pencil.Build.Tasks;
     using Pencil.Test.Stubs;
+    using Pencil.IO;
 
     [TestFixture]
     public class CSharpCompilerTaskTests

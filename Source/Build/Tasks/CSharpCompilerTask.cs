@@ -2,6 +2,7 @@ namespace Pencil.Build.Tasks
 {
 	using System;
     using System.Text;
+    using Pencil.IO;
 
 	public enum OutputType
 	{
