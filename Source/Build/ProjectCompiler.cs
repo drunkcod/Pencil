@@ -3,17 +3,21 @@ namespace Pencil.Build
 	using System;
 	using System.Collections.Generic;
 	using System.CodeDom.Compiler;
+	using Pencil.Core;
 	using Pencil.IO;
 
 	class ProjectCompiler
 	{
 		readonly CodeDomProvider codeProvider;
 		readonly Logger logger;
+		readonly IEnumerable<Path> referencedAssemblies;
 
-		public ProjectCompiler(Logger logger, CodeDomProvider codeProvider)
+		public ProjectCompiler(Logger logger, CodeDomProvider codeProvider, 
+			params Path[] referencedAssemblies)
 		{
 			this.logger = logger;
 			this.codeProvider = codeProvider;
+			this.referencedAssemblies = referencedAssemblies;
 		}
 
 		public IProject ProjectFromFile(string path)
@@ -24,22 +28,21 @@ namespace Pencil.Build
 			throw new CompilationFailedException(result);
 		}
 
-		static CompilerParameters GetCompilerParameters()
+		CompilerParameters GetCompilerParameters()
 		{
 			var options = new CompilerParameters();
 			options.GenerateExecutable = false;
 			options.GenerateInMemory = true;
-			options.ReferencedAssemblies.Add(new Path("Tools").Combine("Pencil.Build.exe").ToString());
-			options.ReferencedAssemblies.Add(new Path("Tools").Combine("Pencil.dll").ToString());
+			referencedAssemblies.ForEach(x => options.ReferencedAssemblies.Add(x.ToString()));
 			return options;
 		}
 
-		IProject GetProject(Type[] types)
+		IProject GetProject(System.Type[] types)
 		{
 			foreach(var item in types)
 				if(typeof(IProject).IsAssignableFrom(item))
 				{
-					var project = item.GetConstructor(Type.EmptyTypes).Invoke(null) as Project;
+					var project = item.GetConstructor(System.Type.EmptyTypes).Invoke(null) as Project;
 					project.logger = logger;
 					return project;
 				}

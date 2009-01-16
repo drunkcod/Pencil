@@ -10,6 +10,22 @@ namespace Pencil.Test.Build.Tasks
     [TestFixture]
     public class CSharpCompilerTaskTests
     {
+    	[Test]
+    	public void Should_support_Optimize_flag()
+    	{
+            var fileSystem = new FileSystemStub();
+            var environment = new ExecutionEnvironmentStub();
+            var compiler = new CSharpCompilerTask(fileSystem, environment);
+
+			compiler.Optimize = true;
+			environment.StartHandler = (fileName, arguments) => 
+			{
+				arguments.Contains(" /optimize+").ShouldBe(true);
+				return new ProcessStub();
+			};
+			compiler.Output = new Path("MyAssembly.dll");
+			compiler.Execute();			
+    	}
         [Test]
         public void Should_create_target_directory_if_not_present()
         {

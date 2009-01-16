@@ -20,6 +20,7 @@ namespace Pencil.Build.Tasks
 		public OutputType OutputType { get; set; }
 		public Path Output { get; set; }
 		public bool Debug { get; set; }
+		public bool Optimize { get; set; }
 
         public CSharpCompilerTask(IFileSystem fileSystem, IExecutionEnvironment executionEnvironment):
 			base(executionEnvironment)
@@ -36,6 +37,8 @@ namespace Pencil.Build.Tasks
 
 		protected override string GetArgumentsCore()
 		{
+			if(Output == null)
+				throw new InvalidOperationException("Output path is null.");
 			References.CopyTo(fileSystem, Output.GetDirectory());
 			return CollectArguments();
 		}
@@ -46,6 +49,8 @@ namespace Pencil.Build.Tasks
             	.AppendFormat(" /out:{0}", Output)
             	.AppendFormat(" /debug{0}", Debug ? "+" : "-")
             	.AppendFormat(" /target:{0}", GetTargetType());
+            if(Optimize)
+            	arguments.Append(" /optimize+");
             using(var r = References.GetEnumerator())
             {
                 if(r.MoveNext())

@@ -8,6 +8,7 @@ namespace Pencil.IO
 		string path;
 
 		public Path(string path){ this.path = path; }
+
 		public Path Combine(string child){ return new Path(FXPath.Combine(path, child)); }
 		public Path GetDirectory(){ return new Path(GetDirectoryName()); }
 

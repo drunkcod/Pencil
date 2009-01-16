@@ -13,10 +13,6 @@ namespace Pencil.Build
 		readonly Logger output;
 		readonly Converter<string,IProject> compiler;
 
- 		public Program(Logger output, CodeDomProvider codeProvider):
- 			this(output, new ProjectCompiler(output, codeProvider).ProjectFromFile)
- 		{}
-
  		public Program(Logger output, Converter<string,IProject> compiler)
 		{
 			this.output = output;
@@ -31,6 +27,7 @@ namespace Pencil.Build
 			for(int i = 1; i < args.Length; ++i)
 				if(BuildTarget(project, args[i]) != Success)
 					return Failiure;			
+            output.Write("BUILD SUCCEEDED");
 			return Success;
 		}
 
@@ -41,7 +38,6 @@ namespace Pencil.Build
                 if(project.HasTarget(target))
                 {
                     project.Run(target);
-                    output.Write("BUILD SUCCEEDED");
                     return Success;
                 }
                 else

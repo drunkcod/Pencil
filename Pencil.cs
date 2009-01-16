@@ -92,6 +92,7 @@ public class PencilProject : Project
 	{
 		var csc = New<CSharpCompilerTask>();
 		csc.Debug = debugMode;
+		csc.Optimize = !debugMode;
 		return csc;
 	}
 }
