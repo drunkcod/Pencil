@@ -11,20 +11,27 @@ namespace Pencil.Build
 		public const int Failiure = 1;
 
 		readonly Logger output;
-		readonly ProjectCompiler compiler;
+		readonly Converter<string,IProject> compiler;
 
- 		public Program(Logger output, CodeDomProvider codeProvider)
+ 		public Program(Logger output, CodeDomProvider codeProvider):
+ 			this(output, new ProjectCompiler(output, codeProvider).ProjectFromFile)
+ 		{}
+
+ 		public Program(Logger output, Converter<string,IProject> compiler)
 		{
 			this.output = output;
-			this.compiler = new ProjectCompiler(output, codeProvider);
+			this.compiler = compiler;
 		}
 
 		public int Run(string[] args)
 		{
-			var project = compiler.ProjectFromFile(args[0]);
+			var project = compiler(args[0]);
 			project.Register<IFileSystem>(new FileSystem());
 			project.Register<IExecutionEnvironment>(new ExecutionEnvironment(output.Target));
-			return BuildTarget(project, args[1]);
+			for(int i = 1; i < args.Length; ++i)
+				if(BuildTarget(project, args[i]) != Success)
+					return Failiure;			
+			return Success;
 		}
 
 		public int BuildTarget(IProject project, string target)

@@ -6,7 +6,8 @@ namespace Pencil.Build
 	public class Project : IProject
 	{
 		readonly Dictionary<string,Target> targets;
-		internal Logger logger;
+		readonly HashSet<string> done = new HashSet<string>();
+		internal Logger logger = new Logger(System.IO.TextWriter.Null);
 		readonly ZeptoContainer container = new ZeptoContainer();
 
 		public Project()
@@ -26,9 +27,19 @@ namespace Pencil.Build
 
 		public void Run(string targetName)
 		{
+			if(done.Contains(targetName))
+				return;
 			logger.Write("{0}:", targetName);
 			using(logger.Indent())
-				targets[targetName].Execute();
+			{
+				RunCore(targetName);
+				done.Add(targetName);
+			}
+		}
+
+		protected virtual void RunCore(string targetName)
+		{
+			targets[targetName].Execute();
 		}
 
 		public void Register<T>(T instance){ container.Register(typeof(T), instance); }

@@ -30,6 +30,7 @@ namespace Pencil.Build
 			options.GenerateExecutable = false;
 			options.GenerateInMemory = true;
 			options.ReferencedAssemblies.Add(new Path("Tools").Combine("Pencil.Build.exe").ToString());
+			options.ReferencedAssemblies.Add(new Path("Tools").Combine("Pencil.dll").ToString());
 			return options;
 		}
 

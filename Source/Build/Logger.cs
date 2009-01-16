@@ -5,6 +5,8 @@ namespace Pencil.Build
 
 	public class Logger
 	{
+		public static readonly Logger Null = new Logger(TextWriter.Null);
+		
 		TextWriter target;
 		string indentation = string.Empty;
 

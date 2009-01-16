@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Pencil.Test</RootNamespace>
     <AssemblyName>Pencil.Test</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <StartupObject>
     </StartupObject>
@@ -19,7 +19,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\Build\Debug\</OutputPath>
+    <OutputPath>..\Build\Debug</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -99,6 +99,7 @@
     <Compile Include="Build\Tasks\NUnitTaskTests.cs" />
     <Compile Include="Core\DotNodeStyleTests.cs" />
     <Compile Include="Core\DotEdgeStyleTests.cs" />
+    <Compile Include="Build\ProjectTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Source\Pencil.Build.csproj">
@@ -115,4 +116,11 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
+  <ProjectExtensions>
+    <MonoDevelop>
+      <Properties>
+        <GtkDesignInfo />
+      </Properties>
+    </MonoDevelop>
+  </ProjectExtensions>
 </Project>
