@@ -52,10 +52,9 @@ namespace Pencil.Test.Build.Tasks
 			environment.IsMonoHandler = () => true;
 			var nunit = new NUnitTask(environment);
 
-			environment.StartHandler += (p, args) => 
+			environment.RunHandler += (p, args, x) => 
 			{
 				args.StartsWith(nunit.NUnitPath.ToString()).ShouldBe(true);
-				return new NullProcess();
 			};
 			nunit.Execute();
 		}
@@ -65,10 +64,9 @@ namespace Pencil.Test.Build.Tasks
 			var environment = new ExecutionEnvironmentStub();
 			var nunit = new NUnitTask(environment);
 			nunit.Target = new Path("MyTests.dll");
-			environment.StartHandler += (p, args) => 
+			environment.RunHandler += (p, args, x) => 
 			{
 				args.Contains("MyTests.dll").ShouldBe(true);
-				return new NullProcess();
 			};
 			nunit.Execute();
 		}
@@ -78,10 +76,9 @@ namespace Pencil.Test.Build.Tasks
 			var environment = new ExecutionEnvironmentStub();
 			var nunit = new NUnitTask(environment);
 			nunit.ShadowCopy = false;
-			environment.StartHandler += (p, args) => 
+			environment.RunHandler += (p, args, x) => 
 			{
 				args.Contains("-noshadow").ShouldBe(true);
-				return new NullProcess();
 			};
 			nunit.Execute();
 		}
@@ -91,10 +88,9 @@ namespace Pencil.Test.Build.Tasks
 			var environment = new ExecutionEnvironmentStub();
 			var nunit = new NUnitTask(environment);
 			nunit.ShowLogo = false;
-			environment.StartHandler += (p, args) => 
+			environment.RunHandler = (p, args, x) => 
 			{
 				args.Contains("-nologo").ShouldBe(true);
-				return new NullProcess();
 			};
 			nunit.Execute();
 		}

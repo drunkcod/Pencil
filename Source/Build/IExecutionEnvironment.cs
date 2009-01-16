@@ -1,10 +1,11 @@
 namespace Pencil.Build
 {
+	using System;
 	using System.IO;
 
     public interface IExecutionEnvironment
     {
-        IProcess Start(string fileName, string arguments);
+        void Run(string fileName, string arguments, Action<IProcess> processHandler);
 		TextWriter StandardOut { get; }
 		bool IsMono { get; }
     }

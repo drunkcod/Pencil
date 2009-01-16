@@ -18,11 +18,13 @@ namespace Pencil.Build.Tasks
 
 		public void Execute()
 		{
-            var task = executionEnvironment.Start(Program.ToString(), GetArgumentsCore());
-			while(!task.HasExited)
-				task.StandardOutput.CopyTo(executionEnvironment.StandardOut);
-			if(task.ExitCode != 0)
-				throw new Exception();
+			executionEnvironment.Run(Program.ToString(), GetArgumentsCore(), task =>
+			{
+				while(!task.HasExited)
+					task.StandardOutput.CopyTo(executionEnvironment.StandardOut);
+				if(task.ExitCode != 0)
+					throw new Exception();
+			});
 		}
 
 		protected bool IsRunningOnMono { get { return executionEnvironment.IsMono; } }

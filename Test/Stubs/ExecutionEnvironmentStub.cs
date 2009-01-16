@@ -9,12 +9,12 @@ namespace Pencil.Test.Stubs
 
     class ExecutionEnvironmentStub : IExecutionEnvironment
     {
-        public Func<string, string, IProcess> StartHandler;
+        public Action<string, string, Action<IProcess>> RunHandler = (x, y, z) => {};
 		public Func<bool> IsMonoHandler = () => false;
 
-        public IProcess Start(string fileName, string arguments)
+        public void Run(string fileName, string arguments, Action<IProcess> processHandler)
         {
-            return StartHandler(fileName, arguments);
+            RunHandler(fileName, arguments, processHandler);
         }
 
 		public TextWriter StandardOut { get { return Console.Out; } }

@@ -13,14 +13,15 @@ namespace Pencil.Build
 			this.standardOut = standardOut;
 		}
 		
-        public IProcess Start(string fileName, string arguments)
+        public void Run(string fileName, string arguments, Action<IProcess> processHandler)
         {
             var startInfo = new ProcessStartInfo();
             startInfo.FileName = fileName;
             startInfo.Arguments = arguments;
             startInfo.UseShellExecute = false;
             startInfo.RedirectStandardOutput = true;
-            return ProcessAdapter.Start(startInfo);
+            using(var process = Process.Start(startInfo))
+            	 processHandler(new ProcessAdapter(process));
         }
 		
 		public TextWriter StandardOut { get { return standardOut; } }

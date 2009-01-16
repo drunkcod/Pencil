@@ -18,10 +18,9 @@ namespace Pencil.Test.Build.Tasks
             var compiler = new CSharpCompilerTask(fileSystem, environment);
 
 			compiler.Optimize = true;
-			environment.StartHandler = (fileName, arguments) => 
+			environment.RunHandler = (fileName, arguments, x) => 
 			{
 				arguments.Contains(" /optimize+").ShouldBe(true);
-				return new ProcessStub();
 			};
 			compiler.Output = new Path("MyAssembly.dll");
 			compiler.Execute();			
@@ -31,7 +30,6 @@ namespace Pencil.Test.Build.Tasks
         {
             var fileSystem = new FileSystemStub();
             var environment = new ExecutionEnvironmentStub();
-            environment.StartHandler = (fileName, arguments) => new ProcessStub();
 
             var compiler = new CSharpCompilerTask(fileSystem, environment);
 			var outDir = new Path("Build").Combine("Debug");
@@ -49,7 +47,6 @@ namespace Pencil.Test.Build.Tasks
         {
             var fileSystem = new FileSystemStub();
             var environment = new ExecutionEnvironmentStub();
-            environment.StartHandler = (fileName, arguments) => new ProcessStub();
 
             var compiler = new CSharpCompilerTask(fileSystem, environment);
 			var outDir = new Path("Build");
@@ -74,7 +71,6 @@ namespace Pencil.Test.Build.Tasks
         {
             var fileSystem = new FileSystemStub();
             var environment = new ExecutionEnvironmentStub();
-            environment.StartHandler = (fileName, arguments) => new ProcessStub();
 
             var compiler = new CSharpCompilerTask(fileSystem, environment);
             compiler.Output = new Path("Build").Combine("Bar.dll");

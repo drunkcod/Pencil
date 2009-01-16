@@ -5,13 +5,8 @@ namespace Pencil.Build
     sealed class ProcessAdapter : IProcess
     {
         Process process;
-
-		public static ProcessAdapter Start(ProcessStartInfo startInfo)
-		{
-			return new ProcessAdapter(Process.Start(startInfo));
-		}
 		
-        ProcessAdapter(Process process)
+        public ProcessAdapter(Process process)
         {
             this.process = process;
         }
