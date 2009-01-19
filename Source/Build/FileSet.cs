@@ -3,7 +3,7 @@ namespace Pencil.Build
 	using System;
 	using System.Collections.Generic;
 	using Pencil.IO;
-	
+
 	public class FileSet
 	{
 		readonly List<Path> items = new List<Path>();
@@ -20,7 +20,6 @@ namespace Pencil.Build
                     return;
                 fileSystem.CopyFile(file, target, true);
             });
-
 		}
 
 		public void ForEach(Action<Path> action){ items.ForEach(action); }

@@ -18,12 +18,12 @@ namespace Pencil.Test.Build.Tasks
             var compiler = new CSharpCompilerTask(fileSystem, environment);
 
 			compiler.Optimize = true;
-			environment.RunHandler = (fileName, arguments, x) => 
+			environment.RunHandler = (fileName, arguments, x) =>
 			{
 				arguments.Contains(" /optimize+").ShouldBe(true);
 			};
 			compiler.Output = new Path("MyAssembly.dll");
-			compiler.Execute();			
+			compiler.Execute();
     	}
         [Test]
         public void Should_create_target_directory_if_not_present()
@@ -37,7 +37,7 @@ namespace Pencil.Test.Build.Tasks
             Path createdDirectory = Path.Empty;
 
             fileSystem.DirectoryExistsHandler = x => false;
-            fileSystem.EnsureDirectoryHandler = x => createdDirectory = x;
+            fileSystem.CreateDirectoryHandler = x => createdDirectory = new Path(x);
             compiler.Execute();
 
             outDir.ShouldEqual(createdDirectory);

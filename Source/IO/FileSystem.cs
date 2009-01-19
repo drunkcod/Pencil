@@ -7,12 +7,6 @@ namespace Pencil.IO
     {
         public bool DirectoryExists(string path) { return Directory.Exists(path); }
         public void CreateDirectory(string path) { Directory.CreateDirectory(path); }
-		public void EnsureDirectory(Path path)
-		{
-			var tmp = path.ToString();
-			if(!DirectoryExists(tmp))
-				CreateDirectory(tmp);
-		}
         public bool FileExists(Path path) { return File.Exists(path.ToString()); }
         public Stream OpenWrite(Path path){ return File.OpenWrite(path.ToString()); }
         public void CopyFile(Path from, Path to, bool overwrite) { File.Copy(from.ToString(), to.ToString(), overwrite); }

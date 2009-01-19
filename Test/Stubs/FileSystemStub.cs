@@ -10,8 +10,7 @@ namespace Pencil.Test.Stubs
 		public delegate void Action3<TArg0, TArg1, TArg2>(TArg0 arg0, TArg1 arg1, TArg2 arg2);
 
         public Action<string> CreateDirectoryHandler = Path => {};
-        public Converter<string, bool> DirectoryExistsHandler;
-		public Action<Path> EnsureDirectoryHandler = path => {};
+        public Converter<string, bool> DirectoryExistsHandler = x => false;
         public Converter<Path, bool> FileExistsHandler;
         public Action3<Path, Path, bool> CopyFileHandler;
 		public Action<Path> DeleteFileHandler = path => {};
@@ -19,7 +18,6 @@ namespace Pencil.Test.Stubs
 
         public void CreateDirectory(string path) { CreateDirectoryHandler(path); }
         public bool DirectoryExists(string path) { return DirectoryExistsHandler(path); }
-		public void EnsureDirectory(Path path){ EnsureDirectoryHandler(path); }
         public bool FileExists(Path path) { return FileExistsHandler(path); }
         public System.IO.Stream OpenWrite(Path path){ return System.IO.Stream.Null; }
         public void CopyFile(Path from, Path to, bool overwrite) { CopyFileHandler(from, to, overwrite); }

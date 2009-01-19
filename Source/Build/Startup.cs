@@ -14,9 +14,8 @@ namespace Pencil.Build
 			var logger = new Logger(Console.Out);
 			var codeProvider = new CSharpCodeProvider(new Dictionary<string,string>(){{"CompilerVersion", "v3.5"}});
 			var compiler = new ProjectCompiler(logger, codeProvider,
-				new Path(Assembly.GetExecutingAssembly().CodeBase),
-				new Path(Assembly.GetAssembly(typeof(Path)).CodeBase));
-			
+				new Path(Assembly.GetExecutingAssembly().Location),
+				new Path(Assembly.GetAssembly(typeof(Path)).Location));
 			var program = new Program(logger, compiler.ProjectFromFile);
 			program.ShowLogo();
 			var stopwatch = Stopwatch.StartNew();

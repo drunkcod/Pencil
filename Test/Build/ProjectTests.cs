@@ -3,6 +3,7 @@ namespace Pencil.Test.Build
 	using System;
 	using System.Collections.Generic;
 	using NUnit.Framework;
+	using NUnit.Framework.SyntaxHelpers;
 	using Pencil.Build;
 	using Pencil.Build.Tasks;
 
@@ -39,7 +40,7 @@ namespace Pencil.Test.Build
 			var project = new DoubleBuildBug();
 			project.RunHandler += targetsBuilt.Add;
 			project.Run("Test");
-			targetsBuilt.ShouldEqual(new[]{ "Test", "Core", "Build" });
+			Assert.That(targetsBuilt, Is.EquivalentTo(new[]{ "Test", "Core", "Build" }));
 		}
 	}
 }
