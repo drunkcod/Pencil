@@ -2,7 +2,7 @@ namespace Pencil.Core
 {
 	using System.Globalization;
 
-	static class StringExtensions
+	public static class StringExtensions
 	{
 		public static string InvariantFormat(this string format, params object[] args)
 		{
@@ -13,5 +13,10 @@ namespace Pencil.Core
         {
             return string.IsNullOrEmpty(s);
         }
+
+		public static bool IsStartOf(this string prefix, string s)
+		{
+			return !s.IsNullOrEmpty() && s.StartsWith(prefix);
+		}
 	}
 }

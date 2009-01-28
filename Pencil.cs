@@ -1,3 +1,4 @@
+using System;
 using Pencil.IO;
 using Pencil.Build;
 using Pencil.Build.Tasks;
@@ -74,6 +75,30 @@ public class PencilProject : Project
 		nunit.ShadowCopy = false;
 		nunit.ShowLogo = false;
 		nunit.Execute();
+	}
+
+	public void FSharpCompilerTask()
+	{
+		var fsc = New<FSharpCompilerTask>();
+		fsc.BinPath = new Path(Environment.GetEnvironmentVariable("FSharp"));
+		fsc.Sources.Add(source + "Build" + "Tasks" + "FSharpCompilerTask.fs");
+		fsc.References.Add(fsc.BinPath + "FSharp.Core.dll");
+		fsc.References.Add(Outdir + "Pencil.dll");
+		fsc.References.Add(Outdir + "Pencil.Build.exe");
+		fsc.OutputType = OutputType.Library;
+		fsc.Output = Outdir + "Pencil.Build.FSharpCompilerTask.dll";
+		fsc.Execute();
+	}
+
+	public void Unit()
+	{
+		var fsc = New<FSharpCompilerTask>();
+		fsc.BinPath = new Path(Environment.GetEnvironmentVariable("FSharp"));
+		fsc.Sources.Add(source + "Unit" + "Syntax.fs");
+		fsc.References.Add(fsc.BinPath + "FSharp.Core.dll");
+		fsc.OutputType = OutputType.Library;
+		fsc.Output = Outdir + "Pencil.Unit.dll";
+		fsc.Execute();
 	}
 
 	public void Clean()

@@ -1,6 +1,6 @@
 @echo off
 color
-@Tools\Pencil.Build.exe Pencil.cs %*
+@Tools\Pencil.Build.exe Pencil.cs -r:Tools\Pencil.Build.FSharpCompilerTask.dll %*
 goto %ERRORLEVEL%
 rem Fail!, paint it red.
 :1

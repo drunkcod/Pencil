@@ -40,6 +40,13 @@ namespace Pencil.Core
 					action(item);
         }
 
+		public static IEnumerable<T> Filter<T>(this IEnumerable<T> sequence, Predicate<T> filter)
+		{
+			foreach(var item in sequence)
+				if(filter(item))
+					yield return item;
+		}
+
 		public static List<T> ToList<T>(this IEnumerable<T> sequence)
 		{
 			return new List<T>(sequence);
