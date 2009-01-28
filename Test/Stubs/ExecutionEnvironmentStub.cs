@@ -4,10 +4,10 @@ namespace Pencil.Test.Stubs
 	using System.IO;
     using Pencil.Build;
 
-    delegate TReturn Func<TArg0, TArg1, TReturn>(TArg0 arg0, TArg1 arg1);
-    delegate void Action2<TArg0, TArg1>(TArg0 arg0, TArg1 arg1);
+    public delegate TReturn Func<TArg0, TArg1, TReturn>(TArg0 arg0, TArg1 arg1);
+    public delegate void Action2<TArg0, TArg1>(TArg0 arg0, TArg1 arg1);
 
-    class ExecutionEnvironmentStub : IExecutionEnvironment
+    public class ExecutionEnvironmentStub : IExecutionEnvironment
     {
         public Action<string, string, Action<IProcess>> RunHandler = (x, y, z) => {};
 		public Func<bool> IsMonoHandler = () => false;

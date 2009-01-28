@@ -54,7 +54,7 @@ namespace Pencil.Build
 
 		public void ShowLogo()
 		{
-			output.Write("Pencil.Build {0}", GetType().Assembly.GetName().Version);
+			output.Write("Pencil.Build version {0}", GetType().Assembly.GetName().Version);
 			output.Write("Copyright (C) 2008 Torbjörn Gyllebring");
 		}
 	}

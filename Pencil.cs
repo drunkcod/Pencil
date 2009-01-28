@@ -79,8 +79,7 @@ public class PencilProject : Project
 
 	public void FSharpCompilerTask()
 	{
-		var fsc = New<FSharpCompilerTask>();
-		fsc.BinPath = new Path(Environment.GetEnvironmentVariable("FSharp"));
+		var fsc = NewFSharpCompiler();
 		fsc.Sources.Add(source + "Build" + "Tasks" + "FSharpCompilerTask.fs");
 		fsc.References.Add(fsc.BinPath + "FSharp.Core.dll");
 		fsc.References.Add(Outdir + "Pencil.dll");
@@ -92,13 +91,38 @@ public class PencilProject : Project
 
 	public void Unit()
 	{
-		var fsc = New<FSharpCompilerTask>();
-		fsc.BinPath = new Path(Environment.GetEnvironmentVariable("FSharp"));
+		var fsc = NewFSharpCompiler();
 		fsc.Sources.Add(source + "Unit" + "Syntax.fs");
 		fsc.References.Add(fsc.BinPath + "FSharp.Core.dll");
 		fsc.OutputType = OutputType.Library;
 		fsc.Output = Outdir + "Pencil.Unit.dll";
 		fsc.Execute();
+	}
+	
+	[DependsOn("Unit"), DependsOn("Test")]
+	public void TestFs()
+	{
+		var fsc = NewFSharpCompiler();
+		var test = new Path("Test");
+		var nunitDir = new Path("Tools") + "NUnit-2.4.8-net-2.0" + "bin";
+		
+		fsc.Sources.Add(test + "Build" + "Tasks" + "FSharpCompilerTaskTests.fs");
+		fsc.References.Add(Outdir + "Pencil.dll");
+		fsc.References.Add(Outdir + "Pencil.Build.exe");
+		fsc.References.Add(Outdir + "Pencil.Unit.dll");
+		fsc.References.Add(Outdir + "Pencil.Build.FSharpCompilerTask.dll");
+		fsc.References.Add(Outdir + "Pencil.Test.dll");
+		fsc.References.Add(nunitDir + "nunit.framework.dll");
+		fsc.OutputType = OutputType.Library;
+		fsc.Output = Outdir + "Pencil.Test.FSharp.dll";
+		fsc.Execute();
+
+		var nunit = New<NUnitTask>();
+		nunit.NUnitBinPath= nunitDir;
+		nunit.Target = fsc.Output;
+		nunit.ShadowCopy = false;
+		nunit.ShowLogo = false;
+		nunit.Execute();	    
 	}
 
 	public void Clean()
@@ -119,5 +143,12 @@ public class PencilProject : Project
 		csc.Debug = debugMode;
 		csc.Optimize = !debugMode;
 		return csc;
+	}
+	
+	FSharpCompilerTask NewFSharpCompiler()
+	{
+		var fsc = New<FSharpCompilerTask>();
+		fsc.BinPath = new Path(Environment.GetEnvironmentVariable("FSharp"));
+		return fsc;
 	}
 }

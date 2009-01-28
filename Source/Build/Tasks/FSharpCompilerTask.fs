@@ -30,14 +30,23 @@ type FSharpCompilerTask(fileSystem:IFileSystem, platform:IExecutionEnvironment) 
     member this.BinPath
         with get() = binPath
         and set v = binPath <- v
+        
+    member private this.CompilerPath = this.BinPath + "fsc.exe"
 
-    override this.GetProgramCore() = this.BinPath + "fsc.exe"
+    override this.GetProgramCore() =
+        if this.IsRunningOnMono then
+            Path("mono")
+        else
+            this.CompilerPath
 
     override this.GetArgumentsCore() =
         this.References.CopyTo(fileSystem, this.Output.GetDirectory())
         let args = StringBuilder()
-        this.References.ForEach(fun x -> args.AppendFormat(" -r {0}", x) |> ignore)
+        if this.IsRunningOnMono then
+            args.AppendFormat("{0} ", this.CompilerPath) |> ignore
+        args.Append("--nologo") |> ignore
         this.Sources.ForEach(fun x -> args.AppendFormat(" {0}", x) |> ignore)
+        this.References.ForEach(fun x -> args.AppendFormat(" -r {0}", x) |> ignore)
         args.AppendFormat(" -o {0}", this.Output) |> ignore
         args.AppendFormat(" {0}", this.ArgumentOutputType).ToString()
 

@@ -5,7 +5,7 @@ namespace Pencil.Test.Stubs
     using Pencil.Build;
     using Pencil.IO;
 
-    class FileSystemStub : IFileSystem
+    public class FileSystemStub : IFileSystem
     {
 		public delegate void Action3<TArg0, TArg1, TArg2>(TArg0 arg0, TArg1 arg1, TArg2 arg2);
 

@@ -27,7 +27,7 @@ namespace Pencil.NMeter.Console
 				IgnoreFilter.From(config.IgnoreAssemblies));
 			assemblies.ForEach(dependencies.Add);
 
-			new Pipe("dot", "-Tpng").Transfer(
+			new Pipe("invalid_path_to_dot", "-Tpng").Transfer(
 				stream => new DotBuilder(stream).Write(digraph),
 				stream => fs.WriteFile(new Path("output.png"), stream));
 		}
