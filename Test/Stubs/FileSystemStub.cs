@@ -11,8 +11,8 @@ namespace Pencil.Test.Stubs
 
         public Action<string> CreateDirectoryHandler = Path => {};
         public Converter<string, bool> DirectoryExistsHandler = x => false;
-        public Converter<Path, bool> FileExistsHandler;
-        public Action3<Path, Path, bool> CopyFileHandler;
+        public Converter<Path, bool> FileExistsHandler = x => true;
+        public Action3<Path, Path, bool> CopyFileHandler = (x,y,overwrite) => {};
 		public Action<Path> DeleteFileHandler = path => {};
 		public Func<Path,string,IEnumerable<Path>> GetFilesRecursiveHandler = (path, pattern) => new Path[0];
 

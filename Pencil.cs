@@ -47,7 +47,7 @@ public class PencilProject : Project
 	}
 
 	[DependsOn("Core"), DependsOn("Build")]
-	public void Test()
+	public void BuildTest()
 	{
 		var csc = NewCSharpCompiler();
 		var test = new Path("Test");
@@ -66,12 +66,18 @@ public class PencilProject : Project
 		csc.OutputType = OutputType.Library;
 		csc.Output = Outdir + "Pencil.Test.dll";
 		csc.Execute();
+	}
 
+	[DependsOn("BuildTest")]
+	public void Test()
+	{
+		var test = new Path("Test");
+		var nunitDir = new Path("Tools") + "NUnit-2.4.8-net-2.0" + "bin";
 		FileSystem.CopyFile(test + "SampleProject.xml", Outdir + "SampleProject.xml", true);
 
 		var nunit = New<NUnitTask>();
 		nunit.NUnitBinPath= nunitDir;
-		nunit.Target = csc.Output;
+		nunit.Target = Outdir + "Pencil.Test.dll";
 		nunit.ShadowCopy = false;
 		nunit.ShowLogo = false;
 		nunit.Execute();
@@ -98,15 +104,18 @@ public class PencilProject : Project
 		fsc.Output = Outdir + "Pencil.Unit.dll";
 		fsc.Execute();
 	}
-	
-	[DependsOn("Unit"), DependsOn("Test")]
+
+	[DependsOn("Unit"), DependsOn("BuildTest"), DependsOn("FSharpCompilerTask")]
 	public void TestFs()
 	{
 		var fsc = NewFSharpCompiler();
 		var test = new Path("Test");
 		var nunitDir = new Path("Tools") + "NUnit-2.4.8-net-2.0" + "bin";
-		
+
+		fsc.Sources.Add(test + "NUnitHookup.fs");
 		fsc.Sources.Add(test + "Build" + "Tasks" + "FSharpCompilerTaskTests.fs");
+		fsc.Sources.Add(test + "Unit" + "ContainMatcherTests.fs");
+
 		fsc.References.Add(Outdir + "Pencil.dll");
 		fsc.References.Add(Outdir + "Pencil.Build.exe");
 		fsc.References.Add(Outdir + "Pencil.Unit.dll");
@@ -122,7 +131,7 @@ public class PencilProject : Project
 		nunit.Target = fsc.Output;
 		nunit.ShadowCopy = false;
 		nunit.ShowLogo = false;
-		nunit.Execute();	    
+		nunit.Execute();
 	}
 
 	public void Clean()
@@ -144,11 +153,13 @@ public class PencilProject : Project
 		csc.Optimize = !debugMode;
 		return csc;
 	}
-	
+
 	FSharpCompilerTask NewFSharpCompiler()
 	{
 		var fsc = New<FSharpCompilerTask>();
 		fsc.BinPath = new Path(Environment.GetEnvironmentVariable("FSharp"));
+		fsc.Debug = debugMode;
+		fsc.Optimize = !debugMode;
 		return fsc;
 	}
 }

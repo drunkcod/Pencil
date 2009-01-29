@@ -4,7 +4,6 @@ namespace Pencil.IO
 	using System.Diagnostics;
 	using System.IO;
 
-	
 	public class Pipe
 	{
 		string program;
