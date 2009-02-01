@@ -25,23 +25,23 @@ type FSharpCompilerTests() =
 
     [<Test>]
     member this.Arguments_should_include_nologo_switch() =
-        let fsc = CheckArguments (Should (Contain "--nologo"))
+        let fsc = CheckArguments (Should Contain "--nologo")
         fsc.Execute()
 
     [<Test>]
     member this.Arguments_should_contain_references_assembly() =
-        let fsc = CheckArguments (Should (Contain "-r MyAssembly.dll"))
+        let fsc = CheckArguments (Should Contain "-r MyAssembly.dll")
         fsc.References.Add(Path("MyAssembly.dll"))
         fsc.Execute()
 
     [<Test>]
     member this.Should_support_Optimize_flag() =
-        let fsc = CheckArguments (Should (Contain "-O+"))
+        let fsc = CheckArguments (Should Contain "-O+")
         fsc.Optimize <- true
         fsc.Execute()
 
     [<Test>]
     member this.Should_support_Debug_flag() =
-        let fsc = CheckArguments (Should (Contain "-g"))
+        let fsc = CheckArguments (Should Contain "-g")
         fsc.Debug <- true
         fsc.Execute()

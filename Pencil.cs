@@ -115,6 +115,7 @@ public class PencilProject : Project
 		fsc.Sources.Add(test + "NUnitHookup.fs");
 		fsc.Sources.Add(test + "Build" + "Tasks" + "FSharpCompilerTaskTests.fs");
 		fsc.Sources.Add(test + "Unit" + "ContainMatcherTests.fs");
+		fsc.Sources.Add(test + "Unit" + "SyntaxTests.fs");
 
 		fsc.References.Add(Outdir + "Pencil.dll");
 		fsc.References.Add(Outdir + "Pencil.Build.exe");
