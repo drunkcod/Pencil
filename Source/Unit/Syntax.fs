@@ -24,7 +24,7 @@ module Syntax =
 
     let private Format (s:seq<'a>) =
         let m =
-            s |> Seq.fold 
+            s |> Seq.fold
                 (fun (m:StringBuilder) x -> m.AppendFormat("{0}; ", box x))
                 (StringBuilder().Append('['))
         if m.Length > 1 then
@@ -38,6 +38,17 @@ module Syntax =
     let Fact m f = f {new ITestResult with
         member this.Success() = ()
         member this.Failiure e = Console.WriteLine("{0} Failed with {1}.", m, e.Message)}
+
+    let Theory m inputs f =
+        let failed = List<_>()
+        let test (f, a) = f {new ITestResult with
+            member this.Success() = ()
+            member this.Failiure e = failed.Add(a)}
+
+        inputs |> Seq.map (fun a -> (f a, a)) |> Seq.iter test
+        if failed.Count > 0 then
+            Console.WriteLine("{0}", box m)
+            failed |> Seq.iter (fun x -> Console.WriteLine("\tfailed for {0}", box x))
 
     let Should m e a =
         let (m:IMatcher) = m e a
@@ -59,7 +70,7 @@ module Syntax =
             member x.IsMatch = a.Equals(e)
             member x.Message = "Expected:{0}, Actual:{1}" @@ (e,a)
             member x.MatchMessage = String.Format("Actual was {0}", box a)}
-    let Contain e a = 
+    let Contain e a =
         match box e, box a with
         | (:? string as e),(:? string as a) -> {new IMatcher with
             member x.IsMatch = a.Contains(e)
