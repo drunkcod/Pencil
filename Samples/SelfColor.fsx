@@ -16,26 +16,6 @@ type Token =
     | WhiteSpace of string
     | Operator of string
 
-let Sanitize (s:string) = s.Replace("&", "&amp;").Replace("<", "&lt;")
-
-Fact "Sanitize should replace < with &lt;"(
-    Sanitize "<" |> Should Equal "&lt;")
-
-Fact "Sanitize should repalce & with &amp;"(
-    Sanitize "&" |> Should Equal "&amp;")
-
-let HtmlEncode =
-    let span style s =
-        String.Format("<span class='{0}'>{1}</span>",style, Sanitize s)
-    function
-    | Comment x -> span "c" x
-    | Keyword x -> span "kw" x
-    | Preprocessor x -> span "pp" x
-    | String x -> span "tx" x
-    | Operator x -> span "op" x
-    | Text x -> Sanitize x
-    | WhiteSpace x -> x
-
 let Classify x =
     match x with
     | "abstract" | "and" | "as" | "assert"
@@ -162,6 +142,33 @@ Fact "Tokenize should handle //line comment"(
 Fact "Tokenize should handle (* block comments *)"(
     Tokenize "(* block comment )*) " |> ToString |> Should Equal "cw")
 
+let Sanitize (s:string) = s.Replace("&", "&amp;").Replace("<", "&lt;")
+
+Fact "Sanitize should replace < with &lt;"(
+    Sanitize "<" |> Should Equal "&lt;")
+
+Fact "Sanitize should repalce & with &amp;"(
+    Sanitize "&" |> Should Equal "&amp;")
+
+let HtmlEncode =
+    let span style s =
+        String.Format("<span class='{0}'>{1}</span>",style, Sanitize s)
+    function
+    | Comment x -> span "c" x
+    | Keyword x -> span "kw" x
+    | Preprocessor x -> span "pp" x
+    | String x -> span "tx" x
+    | Operator x -> span "op" x
+    | Text x -> Sanitize x
+    | WhiteSpace x ->
+        let encodeWhite = function
+            | ' ' -> "&nbsp;"
+            | x -> string x
+        x |> Seq.fold (fun a b -> a + (encodeWhite b)) ""
+
+Fact "HtmlEncode should encode ' ' as &nbsp;"(
+    HtmlEncode (WhiteSpace " ") |> Should Equal "&nbsp;")    
+    
 let AsHtml s =
     let r = StringBuilder("<pre class='f-sharp'>")
     Tokenize s |> Seq.iter (fun x -> r.Append(HtmlEncode x) |> ignore)
@@ -171,7 +178,7 @@ Fact "AsHtml sample"(
     let sample = "#light\r\nlet numbers = [1..10]"
     let expected =
         String.Concat [|"<pre class='f-sharp'><span class='pp'>#light</span>\r\n"
-        ;"<span class='kw'>let</span> numbers <span class='op'>=</span> "
+        ;"<span class='kw'>let</span>&nbsp;numbers&nbsp;<span class='op'>=</span>&nbsp;"
         ;"<span class='op'>[</span>1<span class='op'>..</span>"
         ;"10<span class='op'>]</span></pre>"|]
     sample |> AsHtml |> Should Equal expected)
