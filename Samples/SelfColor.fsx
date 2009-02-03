@@ -1,19 +1,21 @@
-(* Building a (very simple) syntax higligher with Pencil.Unit *)
+(*
+    Building a (very simple) syntax higligher with Pencil.Unit
+*)
 #light
 
 open System
 open System.Text
-open System.Collections.Generic
 open System.IO
 open Pencil.Unit
 
 type Token =
-    | Comment of string
+    | Comment of string array
     | Keyword of string
     | Preprocessor of string
-    | String of string
+    | String of string array
     | Text of string
     | WhiteSpace of string
+    | NewLine
     | Operator of string
 
 let Classify x =
@@ -71,42 +73,52 @@ let Tokenize (s:string) =
     and sub() = s.Substring(!start, !p - !start)
     and current() = s.[!p]
     and prev() = s.[!p - 1]
-    let peek() = if (!p + 1) < s.Length then 
+    let peek() = if (!p + 1) < s.Length then
                     s.[!p + 1]
-                 else 
+                 else
                     (char)0
-    and isWhite() = Char.IsWhiteSpace(current())
+    let start() =
+         start := !p
+         current()
+    and isWhite() =
+        match current() with
+        | ' ' | '\t' -> true
+        | _ -> false
     and isOperator() = "_(){}<>,.=|-+:;[]".Contains(string (current()))
-    and notNewline() = current() <> '\r'
+    and isNewLine() = current() = '\r' || current() = '\n'
+    let notNewline() = not (isNewLine())
     and notBlockEnd() = not(current() = ')' && prev() = '*')
-    let inWord() = not (isWhite() || isOperator())
+    let inWord() = not (isWhite() || isNewLine() || isOperator())
     let read p eatLast =
         while hasMore() && p() do
             next()
         if eatLast then
             next()
         sub()
+    let splitLines (s:string) = s.Split([|'\r';'\n'|], StringSplitOptions.RemoveEmptyEntries)
     let readWhite() = WhiteSpace(read isWhite false)
+    and readNewLine() =
+        next()
+        if isNewLine() then
+            next()
+        NewLine
     and readWord() = Classify(read inWord false)
     and readOperator() = Operator(read isOperator false)
     and readString() =
+        let isEscaped() = prev() = '\\'
+        let inString() = isEscaped() || current() <> '\"'
         next()
-        while hasMore() && (prev() = '\\' || current() <> '\"') do
-            next()
-        next()
-        String(sub())
-    seq {
-        while hasMore() do
-            start := !p
-            let token =
-                match current() with
-                | '\"' -> readString()
-                | '/' when peek() = '/' -> Comment(read notNewline false)
-                | '(' when peek() = '*' -> Comment(read notBlockEnd true)
-                | _ when isWhite() -> readWhite()
-                | _ when isOperator() -> readOperator()
-                | _ -> readWord()
-            yield token}
+        String(read inString true |> splitLines)
+    let nextToken() =
+        match start() with
+        | '\"' -> readString()
+        | '/' when peek() = '/' -> Comment(read notNewline false |> splitLines)
+        | '(' when peek() = '*' -> Comment(read notBlockEnd true |> splitLines)
+        | _ when isWhite() -> readWhite()
+        | _ when isOperator() -> readOperator()
+        | _ when isNewLine() -> readNewLine()
+        | _ -> readWord()
+    seq { while hasMore() do yield nextToken()}
 
 let ToString x =
     let encode = function
@@ -116,8 +128,9 @@ let ToString x =
         | String _ -> "s"
         | Text _ -> "t"
         | WhiteSpace _ -> "w"
+        | NewLine -> "n"
         | Operator _ -> "o"
-    x |> Seq.fold (fun (r:StringBuilder) x -> r.Append(encode x)) (StringBuilder())
+    x |> Seq.fold (fun (r:StringBuilder) -> encode >> r.Append) (StringBuilder())
     |> string
 
 Fact "Tokenize should categorize"(
@@ -125,6 +138,16 @@ Fact "Tokenize should categorize"(
 
 Fact "Tokenize should handle string"(
     Tokenize "\"Hello World\"" |> ToString |> Should Equal "s")
+
+let Lines = function
+    | String x | Comment x -> x
+    | _ -> [||]
+
+Fact "Tokenize should split string into lines"(
+    Tokenize "\"Hello\r\nWorld\"" |> Seq.hd |> Lines |> Seq.length |> Should Equal 2)
+
+Fact "Tokenize should split comment into lines"(
+    Tokenize "(*Hello\r\nWorld*)" |> Seq.hd |> Lines |> Seq.length |> Should Equal 2)
 
 Theory "Tokenize should separate start on operators"
     ("_ ( ) { } < > [ ] , = | - + : ; .".Split([|' '|]))
@@ -135,14 +158,20 @@ Fact "Tokenize should end on separators"(
 
 Fact "Tokenize should handle escaped char in string"(
     Tokenize "\"\\\"\"" |>  ToString |> Should Equal "s")
-    
+
 Fact "Tokenize should handle //line comment"(
     Tokenize "//line comment" |> ToString |> Should Equal "c")
 
 Fact "Tokenize should handle (* block comments *)"(
     Tokenize "(* block comment )*) " |> ToString |> Should Equal "cw")
 
-let Sanitize (s:string) = s.Replace("&", "&amp;").Replace("<", "&lt;")
+Fact "Tokenize should handle newline"(
+    Tokenize "\r\n" |> ToString |> Should Equal "n")
+
+Fact "Tokenize should separate whitespace and newline"(
+    Tokenize "    \r\n" |> ToString |> Should Equal "wn")
+
+let Sanitize (s:string) = s.Replace("&", "&amp;").Replace("<", "&lt;").Replace(" ", "&nbsp;")
 
 Fact "Sanitize should replace < with &lt;"(
     Sanitize "<" |> Should Equal "&lt;")
@@ -150,39 +179,49 @@ Fact "Sanitize should replace < with &lt;"(
 Fact "Sanitize should repalce & with &amp;"(
     Sanitize "&" |> Should Equal "&amp;")
 
-let HtmlEncode =
-    let span style s =
-        String.Format("<span class='{0}'>{1}</span>",style, Sanitize s)
-    function
-    | Comment x -> span "c" x
-    | Keyword x -> span "kw" x
-    | Preprocessor x -> span "pp" x
-    | String x -> span "tx" x
-    | Operator x -> span "op" x
-    | Text x -> Sanitize x
-    | WhiteSpace x ->
-        let encodeWhite = function
-            | ' ' -> "&nbsp;"
-            | x -> string x
-        x |> Seq.fold (fun a b -> a + (encodeWhite b)) ""
+Fact "Sanitize should repalce ' ' with &nbsp;"(
+    Sanitize " " |> Should Equal "&nbsp;")
 
-Fact "HtmlEncode should encode ' ' as &nbsp;"(
-    HtmlEncode (WhiteSpace " ") |> Should Equal "&nbsp;")    
-    
+type IHtmlWriter =
+    abstract Literal : string -> unit
+    abstract Span : string -> string -> unit
+    abstract NewLine : unit -> unit
+
+let HtmlEncode (w:IHtmlWriter) =
+    let lines f (x:string array) =
+        f x.[0]
+        for i = 1 to x.Length - 1 do
+            w.NewLine()
+            f x.[i]
+    function
+    | Keyword x -> w.Span "kw" x
+    | Preprocessor x -> w.Span "pp" x
+    | Comment x -> lines (w.Span "c") x
+    | String x -> lines (w.Span "tx") x
+    | Operator x -> w.Span "op" x
+    | Text x | WhiteSpace x -> w.Literal x
+    | NewLine -> w.NewLine()
+
 let AsHtml s =
-    let r = StringBuilder("<pre class='f-sharp'>")
-    Tokenize s |> Seq.iter (fun x -> r.Append(HtmlEncode x) |> ignore)
-    string (r.Append("</pre>"))
+    let r = StringBuilder("<div class='f-sharp'>")
+    let encode = HtmlEncode {new IHtmlWriter with
+        member this.Literal s = r.Append(Sanitize s) |> ignore
+        member this.Span c s = r.AppendFormat("<span class='{0}'>{1}</span>", c, Sanitize s) |> ignore
+        member this.NewLine() = r.Append("<br>") |> ignore}
+    Tokenize s |> Seq.iter encode
+    string (r.Append("</div>"))
 
 Fact "AsHtml sample"(
     let sample = "#light\r\nlet numbers = [1..10]"
     let expected =
-        String.Concat [|"<pre class='f-sharp'><span class='pp'>#light</span>\r\n"
+        String.Concat [|"<div class='f-sharp'><span class='pp'>#light</span><br>"
         ;"<span class='kw'>let</span>&nbsp;numbers&nbsp;<span class='op'>=</span>&nbsp;"
         ;"<span class='op'>[</span>1<span class='op'>..</span>"
-        ;"10<span class='op'>]</span></pre>"|]
+        ;"10<span class='op'>]</span></div>"|]
     sample |> AsHtml |> Should Equal expected)
 
-//Render myself.
-File.ReadAllText(__SOURCE_FILE__)
-|> AsHtml |> (fun x -> File.WriteAllText(__SOURCE_FILE__ + ".html", x))
+//Render
+let input = __SOURCE_FILE__
+let template = File.ReadAllText("Template.html")
+File.ReadAllText(input) |> AsHtml
+|> (fun x -> File.WriteAllText(input + ".html", template.Replace("$code", x)))
