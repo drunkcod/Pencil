@@ -13,5 +13,7 @@
 		bool IsGenerated { get; }
 		bool IsSpecialName { get; }
 		bool IsConstructor { get; }
+		
+		object Invoke(object target, params object[] args);
     }
 }

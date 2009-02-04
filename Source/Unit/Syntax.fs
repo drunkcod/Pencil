@@ -15,8 +15,8 @@ type IMatcher =
 type Error = { Message: string }
 
 type ITestResult =
-    abstract Success : unit -> unit
-    abstract Failiure : Error -> unit
+    abstract Success : unit -> ITestResult
+    abstract Failiure : Error -> ITestResult
 
 [<AutoOpen>]
 module Syntax =
@@ -32,18 +32,22 @@ module Syntax =
         m.Append(']')
 
     let mutable TestResult = {new ITestResult with
-        member this.Success() = ()
-        member this.Failiure e = ()}
+        member this.Success() = this
+        member this.Failiure e = this}
 
     let Fact m f = f {new ITestResult with
-        member this.Success() = ()
-        member this.Failiure e = Console.WriteLine("{0} Failed with {1}.", m, e.Message)}
+        member this.Success() = this
+        member this.Failiure e = 
+            Console.WriteLine("{0} Failed with {1}.", m, e.Message)
+            this}
 
     let Theory m inputs f =
         let failed = List<_>()
         let test (f, a) = f {new ITestResult with
-            member this.Success() = ()
-            member this.Failiure e = failed.Add(a)}
+            member this.Success() = this
+            member this.Failiure e = 
+                failed.Add(a)
+                this}
 
         inputs |> Seq.map (fun a -> (f a, a)) |> Seq.iter test
         if failed.Count > 0 then

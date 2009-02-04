@@ -101,5 +101,10 @@ namespace Pencil.Core
 		public bool IsGenerated { get { return method.IsGenerated(); } }
 		public bool IsSpecialName { get { return method.IsSpecialName; } }
 		public bool IsConstructor { get { return method.IsConstructor; } }
+		
+		public object Invoke(object target, params object[] args)
+		{
+		    return method.Invoke(target, args);
+		}
 	}
 }
