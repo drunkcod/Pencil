@@ -99,6 +99,7 @@ public class PencilProject : Project
 	{
 		var fsc = NewFSharpCompiler();
 		fsc.Sources.Add(source + "Unit" + "Syntax.fs");
+		fsc.Sources.Add(source + "Unit" + "Suite.fs");
 		fsc.References.Add(fsc.BinPath + "FSharp.Core.dll");
 		fsc.OutputType = OutputType.Library;
 		fsc.Output = Outdir + "Pencil.Unit.dll";

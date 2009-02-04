@@ -3,6 +3,7 @@ namespace Pencil.Core
 	using System;
 	using System.Collections.Generic;
 	using System.Reflection;
+	using System.Text;
     using ReflectionModule = System.Reflection.Module;
 
 	public class MethodDecodeException : Exception
@@ -68,6 +69,25 @@ namespace Pencil.Core
 					throw new MethodDecodeException(this, e);
 				}
 			}
+		}
+
+		public override string ToString()
+		{
+			return "{0} {1}({2})".InvariantFormat(ReturnType, Name, FormatArguments());
+		}
+
+		string FormatArguments()
+		{
+			if(Arguments.Count == 0)
+				return string.Empty;
+			var args = new StringBuilder();
+			string format = "{0} {1}";
+			foreach(var item in Arguments)
+			{
+				args.AppendFormat(format, item.Type, item.Name);
+				format = ", {0} {1}";
+			}
+			return args.ToString();
 		}
 
 		byte[] GetIL()

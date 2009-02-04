@@ -65,6 +65,19 @@ namespace Pencil.Test.Core
 		{
 			Method.Wrap(GetType().GetConstructor(System.Type.EmptyTypes)).IsConstructor.ShouldBe(true);
 		}
+		[Test]
+		public void ToString_should_include_return_type_and_name()
+		{
+			GetMyMethod().ToString().ShouldEqual("Int32 MyMethod()");
+		}
+
+		public void MyMethod2(string foo, object bar){}
+		[Test]
+		public void ToString_should_include_arguments()
+		{
+			Method.Wrap(GetType().GetMethod("MyMethod2"))
+			.ToString().ShouldEqual("Void MyMethod2(String foo, Object bar)");
+		}
 
 		Method GetMyMethod()
 		{

@@ -202,5 +202,35 @@ namespace Pencil.Test.Core
 		{
 			Type.Wrap(typeof(EmptyAttribute)).IsA<Attribute>().ShouldBe(true);
 		}
+		[Test]
+		public void IsPublic_should_be_true_for_public_type()
+		{
+			Type.Wrap(GetType()).IsPublic.ShouldBe(true);
+		}
+
+		public class PublicType{}
+		[Test]
+		public void IsPublic_should_be_true_for_public_type_nested_in_public_type()
+		{
+			Type.Wrap(typeof(PublicType)).IsPublic.ShouldBe(true);
+		}
+
+		class PrivateType{}
+		[Test]
+		public void IsPublic_should_be_false_for_non_public_type()
+		{
+			Type.Wrap(typeof(PrivateType)).IsPublic.ShouldBe(false);
+		}
+
+		class Outer
+		{
+			class Nested {}
+		}
+		[Test]
+		public void NestedTypes_should_include_inner_classes()
+		{
+			Assert.That(Type.Wrap(typeof(Outer)).NestedTypes.Map(x => x.Name).ToList(),
+				Is.EquivalentTo(new[]{ "Nested"}));
+		}
     }
 }

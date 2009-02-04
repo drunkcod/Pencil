@@ -11,6 +11,7 @@
             return new MethodArgument(parameter);
         }
 
+		public string Name { get { return parameter.Name; } }
         public IType Type { get { return Pencil.Core.Type.Wrap(parameter.ParameterType); } }
 
         MethodArgument(ParameterInfo parameter)

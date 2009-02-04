@@ -82,6 +82,14 @@
 				return dependsOn.Types;
 			}
 		}
+		public IEnumerable<IType> NestedTypes
+		{
+			get
+			{
+				return type.GetNestedTypes(BindingFlags.Public | BindingFlags.NonPublic)
+				.Map(x => Wrap(x));
+			}
+		}
 
 		bool Implements(System.Type interfaceType)
 		{
@@ -110,6 +118,8 @@
 		public bool IsGenericParameter { get { return type.IsGenericParameter; } }
 
 		public bool IsA<T>(){ return typeof(T).IsAssignableFrom(type); }
+
+		public bool IsPublic { get {return type.IsPublic || type.IsNestedPublic; } }
 
 		public override string ToString(){ return Name; }
 
