@@ -18,7 +18,7 @@ type FSharpCompilerTests() =
     let CheckArguments f =
         let environment = {new IExecutionEnvironment with
             member this.Run(program, arguments, handler) =
-                f arguments
+                f arguments |> ignore
             member this.IsMono = false
             member this.StandardOut = TextWriter.Null}
         FSharpCompilerTask(FileSystemStub(), environment)

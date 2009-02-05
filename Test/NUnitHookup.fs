@@ -7,9 +7,12 @@ open NUnit.Framework
 [<AutoOpen>]
 module NUnitHookup =
     let NUnitResult = {new ITestResult with
-        member this.Success() = ()
-        member this.Failiure e = Assert.Fail(e.Message)}
-    let Should m e a = Should m e a NUnitResult
+        member this.Begin test = this
+        member this.Success() = this
+        member this.Failiure e = 
+            Assert.Fail(e)
+            this}
+    let Should m e a = Should m e a NUnitResult |> ignore
 
 type NUnitFixtureAttribute() =
     inherit TestFixtureAttribute()

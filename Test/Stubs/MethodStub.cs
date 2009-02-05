@@ -15,6 +15,7 @@ namespace Pencil.Test.Stubs
 		public Func<bool> GetIsConstructorHandler = () => false;
 		public Func<IType> GetReturnTypeHandler = () => null;
 		public Func<IEnumerable<IMethod>> GetCallsHandler = () => new IMethod[0];
+		public Func<object, object[], object> InvokeHandler = (self, args) => null;
 
 		public MethodStub(string name)
 		{
@@ -30,6 +31,10 @@ namespace Pencil.Test.Stubs
 		public bool IsGenerated { get { return GetIsGeneratedHandler(); } }
 		public bool IsSpecialName { get { return GetIsSpecialNameHandler(); } }
 		public bool IsConstructor { get { return GetIsConstructorHandler(); } }
+		public object Invoke(object instance, params object[] args)
+		{ 
+		    return InvokeHandler(instance, args); 
+		}
 
         public override string ToString()
         {

@@ -10,13 +10,13 @@ open NUnit.Framework
 type ContainMatcherTests() =
     [<Test>]
     member this.Should_match_strings() =
-        (Contain "Bar" "FooBarBaz").IsMatch |> Should Equal true
+        (Contain "Bar" "FooBarBaz").IsMatch |> Should Be true
 
     [<Test>]
     member this.Match_should_return_false_if_not_present() =
-        (Contain "expected" "actual").IsMatch |> Should Equal false
+        (Contain "expected" "actual").IsMatch |> Should Be false
 
     [<Test>]
     member this.Format_should_have_sensible_message() =
         (Contain "expected" "actual").Message
-        |> Should Equal "\"actual\" doesn't contain \"expected\""
+        |> Should Be "\"actual\" doesn't contain \"expected\""

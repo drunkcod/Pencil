@@ -12,11 +12,10 @@ type IMatcher =
     abstract Message : string
     abstract MatchMessage : string
 
-type Error = { Message: string }
-
 type ITestResult =
+    abstract Begin : string -> ITestResult
     abstract Success : unit -> ITestResult
-    abstract Failiure : Error -> ITestResult
+    abstract Failiure : string -> ITestResult
 
 [<AutoOpen>]
 module Syntax =
@@ -32,18 +31,21 @@ module Syntax =
         m.Append(']')
 
     let mutable TestResult = {new ITestResult with
+        member this.Begin test = this
         member this.Success() = this
         member this.Failiure e = this}
 
     let Fact m f = f {new ITestResult with
+        member this.Begin test = this
         member this.Success() = this
         member this.Failiure e = 
-            Console.WriteLine("{0} Failed with {1}.", m, e.Message)
+            Console.WriteLine("{0} Failed with {1}.", m, e)
             this}
 
     let Theory m inputs f =
         let failed = List<_>()
         let test (f, a) = f {new ITestResult with
+            member this.Begin test = this
             member this.Success() = this
             member this.Failiure e = 
                 failed.Add(a)
@@ -60,7 +62,7 @@ module Syntax =
             if m.IsMatch then
                 result.Success()
             else
-                result.Failiure({Message = m.Message})
+                result.Failiure m.Message
 
     let Wont m e a =
         let (m:IMatcher) = m e a
@@ -68,12 +70,13 @@ module Syntax =
             if not m.IsMatch then
                 result.Success()
             else
-                result.Failiure({Message = m.MatchMessage})
+                result.Failiure m.MatchMessage
 
-    let Equal e a = {new IMatcher with
+    let Be e a = {new IMatcher with
             member x.IsMatch = a.Equals(e)
             member x.Message = "Expected:{0}, Actual:{1}" @@ (e,a)
             member x.MatchMessage = String.Format("Actual was {0}", box a)}
+    
     let Contain e a =
         match box e, box a with
         | (:? string as e),(:? string as a) -> {new IMatcher with
