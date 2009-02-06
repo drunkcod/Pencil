@@ -9,11 +9,11 @@ open System.IO
 open Pencil.Unit
 
 type Token =
-    | BeginComment of string
+    | BeginComment
     | EndComment
     | Keyword of string
     | Preprocessor of string
-    | BeginString of string
+    | BeginString
     | EndString
     | Text of string
     | WhiteSpace of string
@@ -88,6 +88,8 @@ let Tokenize (s:string) =
         | _ -> false
     and isOperator() = "_(){}<>,.=|-+:;[]".Contains(string (current()))
     and isNewLine() = current() = '\r' || current() = '\n'
+    and isEscaped() = prev() = '\\'
+    let inString() = isEscaped() || current() <> '\"'
     let notNewline() = not (isNewLine())
     and notBlockEnd() = not(current() = ')' && prev() = '*')
     let inWord() = not (isWhite() || isNewLine() || isOperator())
@@ -101,46 +103,37 @@ let Tokenize (s:string) =
     let readWhite() = WhiteSpace(read isWhite false)
     and readNewLine() =
         next()
-        if isNewLine() then
+        if hasMore() && isNewLine() then
             next()
         NewLine
     and readWord() = Classify(read inWord false)
     and readOperator() = Operator(read isOperator false)
-    let nextToken() =
-        match start() with
-        | '\"' ->
-            seq{
-                next()
-                yield BeginString(sub())
-                start() |> ignore
-                let isEscaped() = prev() = '\\'
-                let inString() = isEscaped() || current() <> '\"'
-                let lines = read inString true |> splitLines
-                yield Text lines.[0]
-                for i = 1 to lines.Length - 1 do
-                    yield NewLine
-                    yield Text lines.[i]
-                yield EndString } |> Seq.to_list
+    and readLines p = seq { 
+            let lines = read p true |> splitLines
+            yield Text lines.[0]
+            for i = 1 to lines.Length - 1 do
+                yield NewLine
+                yield Text lines.[i]}
 
-        | '/' when peek() = '/' ->
-            seq {
-                yield BeginComment(sub())
-                yield Text(read notNewline false)
-                yield EndComment} |> Seq.to_list
-        | '(' when peek() = '*' ->
-            seq {
-                yield BeginComment(sub())
-                let lines = read notBlockEnd true |> splitLines
-                yield Text lines.[0]
-                for i = 1 to lines.Length - 1 do
-                    yield NewLine
-                    yield Text lines.[i]
-                yield EndComment} |> Seq.to_list
-        | _ when isWhite() -> [readWhite()]
-        | _ when isOperator() -> [readOperator()]
-        | _ when isNewLine() -> [readNewLine()]
-        | _ -> [readWord()]
-    seq { while hasMore() do yield! nextToken()}
+    seq { while hasMore() do
+            match start() with
+            | '\"' ->
+                    yield BeginString
+                    next()
+                    yield! readLines inString
+                    yield EndString                    
+            | '/' when peek() = '/' ->
+                    yield BeginComment
+                    yield Text(read notNewline false)
+                    yield EndComment
+            | '(' when peek() = '*' ->
+                    yield BeginComment
+                    yield! readLines notBlockEnd
+                    yield EndComment
+            | _ when isWhite() -> yield readWhite()
+            | _ when isOperator() -> yield readOperator()
+            | _ when isNewLine() -> yield readNewLine()
+            | _ -> yield readWord() }
 
 let ToString x =
     let encode = function
@@ -168,6 +161,10 @@ Fact "Tokenize should split string into lines"(
 
 Fact "Tokenize should split comment into lines"(
     Tokenize "(*Hello\r\nWorld*)" |> ToString |> Should Be "ctnt/c")
+
+Theory "Tokenize shouold handle diffrent line endings"
+    ["\r"; "\n"; "\r\n"]
+    (fun line -> Tokenize line |> ToString |> Should Be "n")
 
 Theory "Tokenize should separate start on operators"
     ("_ ( ) { } < > [ ] , = | - + : ; .".Split([|' '|]))
@@ -213,13 +210,9 @@ let HtmlEncode (w:IHtmlWriter) =
     function
     | Keyword x -> w.Span "kw" x
     | Preprocessor x -> w.Span "pp" x
-    | BeginComment x ->
-        w.BeginSpan "c"
-        w.Literal x
+    | BeginComment -> w.BeginSpan "c"
+    | BeginString -> w.BeginSpan "tx"
     | EndComment | EndString -> w.EndSpan()
-    | BeginString x ->
-        w.BeginSpan "tx"
-        w.Literal x
     | Operator x -> w.Span "op" x
     | Text x | WhiteSpace x -> w.Literal x
     | NewLine -> w.NewLine()

@@ -2,6 +2,8 @@
 
 namespace Pencil.Unit
 
+open Pencil.Core
+
 type ISuite =
     abstract Tests : (ITestResult -> ITestResult) list
 
@@ -13,3 +15,5 @@ module Suite =
         inputs |> Seq.fold (fun result x -> f x result) (result.Begin m)
 
     let Suite x = {new ISuite with member this.Tests = x }
+    
+    let IsSuite (m:IMethod) = m.ReturnType.Equals(typeof<ISuite>) && m.Arguments.Count = 0

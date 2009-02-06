@@ -1,22 +1,18 @@
 #light
 
-namespace Pencil.Test.Unit
-
 open System
 open Pencil.Unit
-open NUnit.Framework
+open Pencil.Unit.Suite
 
-[<NUnitFixture>]
-type ContainMatcherTests() =
-    [<Test>]
-    member this.Should_match_strings() =
-        (Contain "Bar" "FooBarBaz").IsMatch |> Should Be true
+let Tests() = 
+    Suite [
+        Fact "Contain should find substring"(
+            (Contain "Bar" "FooBarBaz").IsMatch |> Should Be true)
+        
+        Fact "Contain should return false if expected not present"(
+            (Contain "expected" "actual").IsMatch |> Should Be false)
 
-    [<Test>]
-    member this.Match_should_return_false_if_not_present() =
-        (Contain "expected" "actual").IsMatch |> Should Be false
-
-    [<Test>]
-    member this.Format_should_have_sensible_message() =
-        (Contain "expected" "actual").Message
-        |> Should Be "\"actual\" doesn't contain \"expected\""
+        Fact "Format should have sensible message"(
+            (Contain "expected" "actual").Message
+            |> Should Be "\"actual\" doesn't contain \"expected\"")
+]

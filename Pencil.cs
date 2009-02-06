@@ -2,6 +2,7 @@ using System;
 using Pencil.IO;
 using Pencil.Build;
 using Pencil.Build.Tasks;
+using Pencil.Unit;
 
 public class PencilProject : Project
 {
@@ -100,7 +101,10 @@ public class PencilProject : Project
 		var fsc = NewFSharpCompiler();
 		fsc.Sources.Add(source + "Unit" + "Syntax.fs");
 		fsc.Sources.Add(source + "Unit" + "Suite.fs");
+		fsc.Sources.Add(source + "Unit" + "TextWriterTestResults.fs");
+		fsc.Sources.Add(source + "Unit" + "TextWriterRunner.fs");
 		fsc.References.Add(fsc.BinPath + "FSharp.Core.dll");
+		fsc.References.Add(Outdir + "Pencil.dll");
 		fsc.OutputType = OutputType.Library;
 		fsc.Output = Outdir + "Pencil.Unit.dll";
 		fsc.Execute();
@@ -113,7 +117,6 @@ public class PencilProject : Project
 		var test = new Path("Test");
 		var nunitDir = new Path("Tools") + "NUnit-2.4.8-net-2.0" + "bin";
 
-		fsc.Sources.Add(test + "NUnitHookup.fs");
 		fsc.Sources.Add(test + "Build" + "Tasks" + "FSharpCompilerTaskTests.fs");
 		fsc.Sources.Add(test + "Unit" + "ContainMatcherTests.fs");
 		fsc.Sources.Add(test + "Unit" + "SyntaxTests.fs");
@@ -123,17 +126,11 @@ public class PencilProject : Project
 		fsc.References.Add(Outdir + "Pencil.Unit.dll");
 		fsc.References.Add(Outdir + "Pencil.Build.FSharpCompilerTask.dll");
 		fsc.References.Add(Outdir + "Pencil.Test.dll");
-		fsc.References.Add(nunitDir + "nunit.framework.dll");
 		fsc.OutputType = OutputType.Library;
 		fsc.Output = Outdir + "Pencil.Test.FSharp.dll";
 		fsc.Execute();
-
-		var nunit = New<NUnitTask>();
-		nunit.NUnitBinPath= nunitDir;
-		nunit.Target = fsc.Output;
-		nunit.ShadowCopy = false;
-		nunit.ShowLogo = false;
-		nunit.Execute();
+        
+        TextWriterRunner.Run(fsc.Output.ToString(), System.Console.Out);
 	}
 
 	public void Clean()
