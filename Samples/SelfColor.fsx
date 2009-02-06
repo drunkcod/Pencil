@@ -60,10 +60,10 @@ Theory "Classify should support all F# keywords"
     true try type upcast use val void when while with yield"
     .Split([|' ';'\t';'\r';'\n'|], StringSplitOptions.RemoveEmptyEntries))
 
-    (fun x -> Classify x |> IsKeyword |> Should Equal true)
+    (fun x -> Classify x |> IsKeyword |> Should Be true)
 
 Fact "Classify should treat leading # as Preprocessor"
-    (Classify "#light" |> IsPreprocessor |> Should Equal true)
+    (Classify "#light" |> IsPreprocessor |> Should Be true)
 
 let Tokenize (s:string) =
     let start = ref 0
@@ -134,53 +134,53 @@ let ToString x =
     |> string
 
 Fact "Tokenize should categorize"(
-    Tokenize "#light let foo" |> ToString |> Should Equal "pwkwt")
+    Tokenize "#light let foo" |> ToString |> Should Be "pwkwt")
 
 Fact "Tokenize should handle string"(
-    Tokenize "\"Hello World\"" |> ToString |> Should Equal "s")
+    Tokenize "\"Hello World\"" |> ToString |> Should Be "s")
 
 let Lines = function
     | String x | Comment x -> x
     | _ -> [||]
 
 Fact "Tokenize should split string into lines"(
-    Tokenize "\"Hello\r\nWorld\"" |> Seq.hd |> Lines |> Seq.length |> Should Equal 2)
+    Tokenize "\"Hello\r\nWorld\"" |> Seq.hd |> Lines |> Seq.length |> Should Be 2)
 
 Fact "Tokenize should split comment into lines"(
-    Tokenize "(*Hello\r\nWorld*)" |> Seq.hd |> Lines |> Seq.length |> Should Equal 2)
+    Tokenize "(*Hello\r\nWorld*)" |> Seq.hd |> Lines |> Seq.length |> Should Be 2)
 
 Theory "Tokenize should separate start on operators"
     ("_ ( ) { } < > [ ] , = | - + : ; .".Split([|' '|]))
-    (fun x -> Tokenize x |> ToString |> Should Equal "o")
+    (fun x -> Tokenize x |> ToString |> Should Be "o")
 
 Fact "Tokenize should end on separators"(
-    Tokenize "foo)" |> ToString |> Should Equal "to")
+    Tokenize "foo)" |> ToString |> Should Be "to")
 
 Fact "Tokenize should handle escaped char in string"(
-    Tokenize "\"\\\"\"" |>  ToString |> Should Equal "s")
+    Tokenize "\"\\\"\"" |>  ToString |> Should Be "s")
 
 Fact "Tokenize should handle //line comment"(
-    Tokenize "//line comment" |> ToString |> Should Equal "c")
+    Tokenize "//line comment" |> ToString |> Should Be "c")
 
 Fact "Tokenize should handle (* block comments *)"(
-    Tokenize "(* block comment )*) " |> ToString |> Should Equal "cw")
+    Tokenize "(* block comment )*) " |> ToString |> Should Be "cw")
 
 Fact "Tokenize should handle newline"(
-    Tokenize "\r\n" |> ToString |> Should Equal "n")
+    Tokenize "\r\n" |> ToString |> Should Be "n")
 
 Fact "Tokenize should separate whitespace and newline"(
-    Tokenize "    \r\n" |> ToString |> Should Equal "wn")
+    Tokenize "    \r\n" |> ToString |> Should Be "wn")
 
 let Sanitize (s:string) = s.Replace("&", "&amp;").Replace("<", "&lt;").Replace(" ", "&nbsp;")
 
 Fact "Sanitize should replace < with &lt;"(
-    Sanitize "<" |> Should Equal "&lt;")
+    Sanitize "<" |> Should Be "&lt;")
 
 Fact "Sanitize should repalce & with &amp;"(
-    Sanitize "&" |> Should Equal "&amp;")
+    Sanitize "&" |> Should Be "&amp;")
 
 Fact "Sanitize should repalce ' ' with &nbsp;"(
-    Sanitize " " |> Should Equal "&nbsp;")
+    Sanitize " " |> Should Be "&nbsp;")
 
 type IHtmlWriter =
     abstract Literal : string -> unit
@@ -218,7 +218,7 @@ Fact "AsHtml sample"(
         ;"<span class='kw'>let</span>&nbsp;numbers&nbsp;<span class='op'>=</span>&nbsp;"
         ;"<span class='op'>[</span>1<span class='op'>..</span>"
         ;"10<span class='op'>]</span></div>"|]
-    sample |> AsHtml |> Should Equal expected)
+    sample |> AsHtml |> Should Be expected)
 
 //Render
 let input = __SOURCE_FILE__

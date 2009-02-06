@@ -35,21 +35,23 @@ module Syntax =
         member this.Success() = this
         member this.Failiure e = this}
 
-    let Fact m f = f {new ITestResult with
-        member this.Begin test = this
-        member this.Success() = this
-        member this.Failiure e = 
-            Console.WriteLine("{0} Failed with {1}.", m, e)
-            this}
+    let Fact m f =
+        let result = {new ITestResult with
+            member this.Begin test = this
+            member this.Success() = this
+            member this.Failiure e =
+                Console.WriteLine("{0} Failed with {1}.", m, e)
+                this}
+        fun f -> f result |> ignore
 
     let Theory m inputs f =
         let failed = List<_>()
-        let test (f, a) = f {new ITestResult with
-            member this.Begin test = this
-            member this.Success() = this
-            member this.Failiure e = 
-                failed.Add(a)
-                this}
+        let test (f, a) =
+            let result =  {new ITestResult with
+                member this.Begin test = this
+                member this.Success() = this
+                member this.Failiure e = failed.Add(a); this }
+            f result |> ignore
 
         inputs |> Seq.map (fun a -> (f a, a)) |> Seq.iter test
         if failed.Count > 0 then
@@ -76,7 +78,7 @@ module Syntax =
             member x.IsMatch = a.Equals(e)
             member x.Message = "Expected:{0}, Actual:{1}" @@ (e,a)
             member x.MatchMessage = String.Format("Actual was {0}", box a)}
-    
+
     let Contain e a =
         match box e, box a with
         | (:? string as e),(:? string as a) -> {new IMatcher with
