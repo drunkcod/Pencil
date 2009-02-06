@@ -9,10 +9,12 @@ open System.IO
 open Pencil.Unit
 
 type Token =
-    | Comment of string array
+    | BeginComment of string
+    | EndComment
     | Keyword of string
     | Preprocessor of string
-    | String of string array
+    | BeginString of string
+    | EndString
     | Text of string
     | WhiteSpace of string
     | NewLine
@@ -104,28 +106,50 @@ let Tokenize (s:string) =
         NewLine
     and readWord() = Classify(read inWord false)
     and readOperator() = Operator(read isOperator false)
-    and readString() =
-        let isEscaped() = prev() = '\\'
-        let inString() = isEscaped() || current() <> '\"'
-        next()
-        String(read inString true |> splitLines)
     let nextToken() =
         match start() with
-        | '\"' -> readString()
-        | '/' when peek() = '/' -> Comment(read notNewline false |> splitLines)
-        | '(' when peek() = '*' -> Comment(read notBlockEnd true |> splitLines)
-        | _ when isWhite() -> readWhite()
-        | _ when isOperator() -> readOperator()
-        | _ when isNewLine() -> readNewLine()
-        | _ -> readWord()
-    seq { while hasMore() do yield nextToken()}
+        | '\"' ->
+            seq{
+                next()
+                yield BeginString(sub())
+                start() |> ignore
+                let isEscaped() = prev() = '\\'
+                let inString() = isEscaped() || current() <> '\"'
+                let lines = read inString true |> splitLines
+                yield Text lines.[0]
+                for i = 1 to lines.Length - 1 do
+                    yield NewLine
+                    yield Text lines.[i]
+                yield EndString } |> Seq.to_list
+
+        | '/' when peek() = '/' ->
+            seq {
+                yield BeginComment(sub())
+                yield Text(read notNewline false)
+                yield EndComment} |> Seq.to_list
+        | '(' when peek() = '*' ->
+            seq {
+                yield BeginComment(sub())
+                let lines = read notBlockEnd true |> splitLines
+                yield Text lines.[0]
+                for i = 1 to lines.Length - 1 do
+                    yield NewLine
+                    yield Text lines.[i]
+                yield EndComment} |> Seq.to_list
+        | _ when isWhite() -> [readWhite()]
+        | _ when isOperator() -> [readOperator()]
+        | _ when isNewLine() -> [readNewLine()]
+        | _ -> [readWord()]
+    seq { while hasMore() do yield! nextToken()}
 
 let ToString x =
     let encode = function
-        | Comment _ -> "c"
+        | BeginComment _ -> "c"
+        | EndComment -> "/c"
         | Keyword _ -> "k"
         | Preprocessor _ -> "p"
-        | String _ -> "s"
+        | BeginString _ -> "s"
+        | EndString -> "/s"
         | Text _ -> "t"
         | WhiteSpace _ -> "w"
         | NewLine -> "n"
@@ -137,17 +161,13 @@ Fact "Tokenize should categorize"(
     Tokenize "#light let foo" |> ToString |> Should Be "pwkwt")
 
 Fact "Tokenize should handle string"(
-    Tokenize "\"Hello World\"" |> ToString |> Should Be "s")
-
-let Lines = function
-    | String x | Comment x -> x
-    | _ -> [||]
+    Tokenize "\"Hello World\"" |> ToString |> Should Be "s/s")
 
 Fact "Tokenize should split string into lines"(
-    Tokenize "\"Hello\r\nWorld\"" |> Seq.hd |> Lines |> Seq.length |> Should Be 2)
+    Tokenize "\"Hello\r\nWorld\"" |> ToString |> Should Be "sn/s")
 
 Fact "Tokenize should split comment into lines"(
-    Tokenize "(*Hello\r\nWorld*)" |> Seq.hd |> Lines |> Seq.length |> Should Be 2)
+    Tokenize "(*Hello\r\nWorld*)" |> ToString |> Should Be "ctnt/c")
 
 Theory "Tokenize should separate start on operators"
     ("_ ( ) { } < > [ ] , = | - + : ; .".Split([|' '|]))
@@ -184,20 +204,22 @@ Fact "Sanitize should repalce ' ' with &nbsp;"(
 
 type IHtmlWriter =
     abstract Literal : string -> unit
+    abstract BeginSpan : string -> unit
+    abstract EndSpan : unit -> unit
     abstract Span : string -> string -> unit
     abstract NewLine : unit -> unit
 
 let HtmlEncode (w:IHtmlWriter) =
-    let lines f (x:string array) =
-        f x.[0]
-        for i = 1 to x.Length - 1 do
-            w.NewLine()
-            f x.[i]
     function
     | Keyword x -> w.Span "kw" x
     | Preprocessor x -> w.Span "pp" x
-    | Comment x -> lines (w.Span "c") x
-    | String x -> lines (w.Span "tx") x
+    | BeginComment x ->
+        w.BeginSpan "c"
+        w.Literal x
+    | EndComment | EndString -> w.EndSpan()
+    | BeginString x ->
+        w.BeginSpan "tx"
+        w.Literal x
     | Operator x -> w.Span "op" x
     | Text x | WhiteSpace x -> w.Literal x
     | NewLine -> w.NewLine()
@@ -206,6 +228,8 @@ let AsHtml s =
     let r = StringBuilder("<div class='f-sharp'>")
     let encode = HtmlEncode {new IHtmlWriter with
         member this.Literal s = r.Append(Sanitize s) |> ignore
+        member this.BeginSpan c = r.AppendFormat("<span class='{0}'>", c) |> ignore
+        member this.EndSpan() = r.Append("</span>") |> ignore
         member this.Span c s = r.AppendFormat("<span class='{0}'>{1}</span>", c, Sanitize s) |> ignore
         member this.NewLine() = r.Append("<br>") |> ignore}
     Tokenize s |> Seq.iter encode
