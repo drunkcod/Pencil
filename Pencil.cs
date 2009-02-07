@@ -66,7 +66,9 @@ public class PencilProject : Project
 		csc.References.Add(nunitDir + "nunit.framework.dll");
 		csc.OutputType = OutputType.Library;
 		csc.Output = Outdir + "Pencil.Test.dll";
-		csc.Execute();
+		
+		if(csc.Sources.ChangedAfter(FileSystem.GetLastWriteTime(csc.Output)))
+    		csc.Execute();
 	}
 
 	[DependsOn("BuildTest")]
@@ -81,7 +83,10 @@ public class PencilProject : Project
 		nunit.Target = Outdir + "Pencil.Test.dll";
 		nunit.ShadowCopy = false;
 		nunit.ShowLogo = false;
-		nunit.Execute();
+		
+		if(FileSystem.GetLastWriteTime(new Path("TestResult.xml")) 
+		    < FileSystem.GetLastWriteTime(nunit.Target))
+    		nunit.Execute();
 	}
 
 	public void FSharpCompilerTask()
@@ -93,7 +98,8 @@ public class PencilProject : Project
 		fsc.References.Add(Outdir + "Pencil.Build.exe");
 		fsc.OutputType = OutputType.Library;
 		fsc.Output = Outdir + "Pencil.Build.FSharpCompilerTask.dll";
-		fsc.Execute();
+		if(fsc.Sources.ChangedAfter(FileSystem.GetLastWriteTime(fsc.Output)))
+    		fsc.Execute();
 	}
 
 	public void Unit()
@@ -107,7 +113,8 @@ public class PencilProject : Project
 		fsc.References.Add(Outdir + "Pencil.dll");
 		fsc.OutputType = OutputType.Library;
 		fsc.Output = Outdir + "Pencil.Unit.dll";
-		fsc.Execute();
+		if(fsc.Sources.ChangedAfter(FileSystem.GetLastWriteTime(fsc.Output)))
+		    fsc.Execute();
 	}
 
 	[DependsOn("Unit"), DependsOn("BuildTest"), DependsOn("FSharpCompilerTask")]
@@ -117,9 +124,12 @@ public class PencilProject : Project
 		var test = new Path("Test");
 		var nunitDir = new Path("Tools") + "NUnit-2.4.8-net-2.0" + "bin";
 
+		fsc.Sources.Add(test + "Build" + "FileSetTests.fs");
 		fsc.Sources.Add(test + "Build" + "Tasks" + "FSharpCompilerTaskTests.fs");
+		fsc.Sources.Add(test + "Unit" + "BeMatcherTests.fs");
 		fsc.Sources.Add(test + "Unit" + "ContainMatcherTests.fs");
 		fsc.Sources.Add(test + "Unit" + "SyntaxTests.fs");
+		fsc.Sources.Add(test + "Unit" + "TextWriterRunnerTests.fs");
 
 		fsc.References.Add(Outdir + "Pencil.dll");
 		fsc.References.Add(Outdir + "Pencil.Build.exe");
@@ -128,7 +138,9 @@ public class PencilProject : Project
 		fsc.References.Add(Outdir + "Pencil.Test.dll");
 		fsc.OutputType = OutputType.Library;
 		fsc.Output = Outdir + "Pencil.Test.FSharp.dll";
-		fsc.Execute();
+        if(fsc.Sources.ChangedAfter(FileSystem.GetLastWriteTime(fsc.Output))
+        || fsc.References.ChangedAfter(FileSystem.GetLastWriteTime(fsc.Output)))
+    		fsc.Execute();
         
         TextWriterRunner.Run(fsc.Output.ToString(), System.Console.Out);
 	}

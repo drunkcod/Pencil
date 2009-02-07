@@ -1,5 +1,6 @@
 namespace Pencil.IO
 {
+	using System;
 	using System.Collections.Generic;
 
     public interface IFileSystem
@@ -12,5 +13,6 @@ namespace Pencil.IO
 		void DeleteFile(Path path);
 		IEnumerable<Path> GetFiles(Path root, string pattern);
 		IEnumerable<Path> GetFilesRecursive(Path root, string pattern);
+		DateTime GetLastWriteTime(Path path);
     }
 }

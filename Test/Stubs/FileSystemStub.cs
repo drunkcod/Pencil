@@ -15,6 +15,7 @@ namespace Pencil.Test.Stubs
         public Action3<Path, Path, bool> CopyFileHandler = (x,y,overwrite) => {};
 		public Action<Path> DeleteFileHandler = path => {};
 		public Func<Path,string,IEnumerable<Path>> GetFilesRecursiveHandler = (path, pattern) => new Path[0];
+		public Converter<Path, DateTime> GetLastWriteTimeHandler = path => DateTime.Today;
 
         public void CreateDirectory(string path) { CreateDirectoryHandler(path); }
         public bool DirectoryExists(string path) { return DirectoryExistsHandler(path); }
@@ -24,5 +25,7 @@ namespace Pencil.Test.Stubs
 		public void DeleteFile(Path path){ DeleteFileHandler(path); }
 		public IEnumerable<Path> GetFiles(Path root, string pattern){ return GetFilesRecursiveHandler(root, pattern); }
 		public IEnumerable<Path> GetFilesRecursive(Path root, string pattern){ return GetFilesRecursiveHandler(root, pattern); }
+    	public DateTime GetLastWriteTime(Path path){ return GetLastWriteTimeHandler(path); }
+
     }
 }

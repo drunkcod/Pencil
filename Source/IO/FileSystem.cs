@@ -1,5 +1,6 @@
 namespace Pencil.IO
 {
+	using System;
     using System.IO;
 	using System.Collections.Generic;
 
@@ -21,5 +22,6 @@ namespace Pencil.IO
 			foreach(var item in Directory.GetFiles(root.ToString(), pattern, SearchOption.AllDirectories))
 				yield return new Path(item);
 		}
+		public DateTime GetLastWriteTime(Path path){ return File.GetLastWriteTime(path.ToString()); }
     }
 }

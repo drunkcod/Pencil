@@ -6,20 +6,51 @@ namespace Pencil.Build
 
 	public class FileSet
 	{
+	    readonly IFileSystem fileSystem;
 		readonly List<Path> items = new List<Path>();
+
+        public FileSet(IFileSystem fileSystem)
+        {
+            this.fileSystem = fileSystem;
+        }
+        
+        public FileSet(): this(new FileSystem()){}
+        
+        public IEnumerable<Path> Items 
+        { 
+            get 
+            {
+                foreach(var item in items)
+                    if(item.ToString().Contains("*"))
+                    {
+                        foreach(var file in fileSystem.GetFiles(item.GetDirectory(), item.GetFileName()))
+                            yield return file;
+                    }
+                    else 
+                        yield return item;              
+            } 
+        }
 
 		public void Add(Path path){ items.Add(path); }
 
-		public void CopyTo(IFileSystem fileSystem, Path destination)
+		public void CopyTo(Path destination)
 		{
 			fileSystem.EnsureDirectory(destination);
-			items.ForEach(file =>
+			foreach(var file in Items)
             {
                 var target = destination + file.GetFileName();
                 if(fileSystem.FileExists(target) || !fileSystem.FileExists(file))
                     return;
                 fileSystem.CopyFile(file, target, true);
-            });
+            }
+		}
+		
+		public bool ChangedAfter(DateTime timestamp)
+		{
+			foreach(var item in Items)
+				if(fileSystem.GetLastWriteTime(item) > timestamp)
+					return true;
+		    return false;
 		}
 
 		public void ForEach(Action<Path> action){ items.ForEach(action); }

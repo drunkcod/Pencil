@@ -11,9 +11,8 @@ namespace Pencil.Build.Tasks
 
 	public class CSharpCompilerTask : ExecTaskBase
 	{
-		FileSet sources = new FileSet();
-		FileSet references = new FileSet();
-		IFileSystem fileSystem;
+		readonly FileSet sources;
+		readonly FileSet references;
 
 		public FileSet Sources { get { return sources; } }
 		public FileSet References { get { return references; } }
@@ -25,7 +24,8 @@ namespace Pencil.Build.Tasks
         public CSharpCompilerTask(IFileSystem fileSystem, IExecutionEnvironment executionEnvironment):
 			base(executionEnvironment)
         {
-            this.fileSystem = fileSystem;
+		    sources = new FileSet(fileSystem);
+		    references = new FileSet(fileSystem);
         }
 
 		protected override Path GetProgramCore()
@@ -39,7 +39,7 @@ namespace Pencil.Build.Tasks
 		{
 			if(Output == null)
 				throw new InvalidOperationException("Output path is null.");
-			References.CopyTo(fileSystem, Output.GetDirectory());
+			References.CopyTo(Output.GetDirectory());
 			return CollectArguments();
 		}
 

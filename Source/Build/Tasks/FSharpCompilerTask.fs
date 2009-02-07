@@ -50,7 +50,7 @@ type FSharpCompilerTask(fileSystem:IFileSystem, platform:IExecutionEnvironment) 
             this.CompilerPath
 
     override this.GetArgumentsCore() =
-        this.References.CopyTo(fileSystem, this.Output.GetDirectory())
+        this.References.CopyTo(this.Output.GetDirectory())
         let args = StringBuilder()
         if this.IsRunningOnMono then
             args.AppendFormat("{0} ", this.CompilerPath) |> ignore

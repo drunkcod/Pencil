@@ -5,6 +5,7 @@ namespace Pencil.Unit
 open System
 open System.Text
 open System.Diagnostics
+open System.Collections
 open System.Collections.Generic
 
 type IMatcher =
@@ -20,6 +21,24 @@ type ITestResult =
 [<AutoOpen>]
 module Syntax =
     let (@@) (format:string) (arg0,arg1) = String.Format(format, arg0, arg1)
+
+    let rec Equals a b =
+        match box a with
+        | :? IEnumerable as x  -> 
+            match box b with
+            | :? IEnumerable as y ->
+                let xItems = x.GetEnumerator()
+                let yItems = y.GetEnumerator()
+                let rec loop a b = 
+                    match a = b with
+                    | true when a = false -> true
+                    | false -> false
+                    | _ -> (Equals xItems.Current yItems.Current) 
+                        && loop (xItems.MoveNext()) (yItems.MoveNext())
+                loop (xItems.MoveNext()) (yItems.MoveNext())                                   
+            | _ -> false
+        | _ -> a.Equals(b)
+
 
     let private Format (s:seq<'a>) =
         let m =
@@ -75,7 +94,7 @@ module Syntax =
                 result.Failiure m.MatchMessage
 
     let Be e a = {new IMatcher with
-            member x.IsMatch = a.Equals(e)
+            member x.IsMatch = Equals a e
             member x.Message = "Expected:{0}, Actual:{1}" @@ (e,a)
             member x.MatchMessage = String.Format("Actual was {0}", box a)}
 
