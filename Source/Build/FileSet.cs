@@ -23,7 +23,8 @@ namespace Pencil.Build
                 foreach(var item in items)
                     if(item.ToString().Contains("*"))
                     {
-                        foreach(var file in fileSystem.GetFiles(item.GetDirectory(), item.GetFileName()))
+                        var files = fileSystem.GetFiles(item.GetDirectory(), item.GetFileName());
+                        foreach(var file in files)
                             yield return file;
                     }
                     else 
@@ -53,7 +54,6 @@ namespace Pencil.Build
 		    return false;
 		}
 
-		public void ForEach(Action<Path> action){ items.ForEach(action); }
 		public IEnumerator<Path> GetEnumerator(){ return items.GetEnumerator(); }
 	}
 }

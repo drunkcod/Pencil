@@ -7,27 +7,27 @@ namespace Pencil.Build.Tasks
 
 	public abstract class ExecTaskBase
 	{
-		IExecutionEnvironment executionEnvironment;
+		IExecutionEnvironment platform;
 
 		public Path Program { get { return GetProgramCore(); } }
 
-        protected ExecTaskBase(IExecutionEnvironment executionEnvironment)
+        protected ExecTaskBase(IExecutionEnvironment platform)
         {
-            this.executionEnvironment = executionEnvironment;
+            this.platform = platform;
         }
 
 		public void Execute()
 		{
-			executionEnvironment.Run(Program.ToString(), GetArgumentsCore(), task =>
+			platform.Run(Program.ToString(), GetArgumentsCore(), task =>
 			{
 				while(!task.HasExited)
-					task.StandardOutput.CopyTo(executionEnvironment.StandardOut);
+					task.StandardOutput.CopyTo(platform.StandardOut);
 				if(task.ExitCode != 0)
 					throw new Exception();
 			});
 		}
 
-		protected bool IsRunningOnMono { get { return executionEnvironment.IsMono; } }
+		protected bool IsRunningOnMono { get { return platform.IsMono; } }
 		protected Path RuntimeDirectory 
 		{ 
 			get { return new Path(RuntimeEnvironment.GetRuntimeDirectory()); } 

@@ -14,21 +14,21 @@ type TextWriterTestResult (target:TextWriter, stopwatch : IStopwatch) =
     let mutable test = ""
     let mutable count = 0
     let failures = List<Error>()
+    
+    member this.ReportResult (x:char) =
+        count <- count + 1
+        target.Write x
+        this :> ITestResult
+    
     interface ITestResult with
         member this.Begin t =
             test <- t
             this :> ITestResult
 
-        member this.Success() =
-            count <- count + 1
-            target.Write('.')
-            this :> ITestResult
-
+        member this.Success() = this.ReportResult '.'
         member this.Failiure e =
-            count <- count + 1
-            failures.Add {Test = test; Message = e}
-            target.Write('F')
-            this :> ITestResult
+            failures.Add {Test = test; Message = e} 
+            this.ReportResult 'F'
 
     member this.ShowReport() =
         let time = stopwatch.Elapsed

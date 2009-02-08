@@ -9,24 +9,15 @@ namespace Pencil.Build.Tasks
 		Library, Application, WindowsApplication, Module
 	}
 
-	public class CSharpCompilerTask : ExecTaskBase
+	public class CSharpCompilerTask : CompilerBaseTask
 	{
-		readonly FileSet sources;
-		readonly FileSet references;
-
-		public FileSet Sources { get { return sources; } }
-		public FileSet References { get { return references; } }
 		public OutputType OutputType { get; set; }
-		public Path Output { get; set; }
 		public bool Debug { get; set; }
 		public bool Optimize { get; set; }
 
-        public CSharpCompilerTask(IFileSystem fileSystem, IExecutionEnvironment executionEnvironment):
-			base(executionEnvironment)
-        {
-		    sources = new FileSet(fileSystem);
-		    references = new FileSet(fileSystem);
-        }
+        public CSharpCompilerTask(IFileSystem fileSystem, 
+            IExecutionEnvironment executionEnvironment): base(fileSystem, executionEnvironment)
+        {}
 
 		protected override Path GetProgramCore()
 		{
@@ -58,7 +49,8 @@ namespace Pencil.Build.Tasks
                 while(r.MoveNext())
                     arguments.AppendFormat(",{0}", r.Current);
             }
-			sources.ForEach(x => arguments.AppendFormat(" {0}", x));
+            foreach(var x in Sources.Items)
+    			arguments.AppendFormat(" {0}", x);
 			return arguments.ToString();
         }
 

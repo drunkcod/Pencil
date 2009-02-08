@@ -20,7 +20,7 @@ public class PencilProject : Project
 		csc.References.Add(new Path("System.Drawing.dll"));
 		csc.OutputType = OutputType.Library;
 		csc.Output = Outdir + "Pencil.dll";
-		csc.Execute();
+        csc.Compile();
 	}
 
 	[DependsOn("Core")]
@@ -33,7 +33,7 @@ public class PencilProject : Project
 		csc.References.Add(Outdir + "Pencil.dll");
         csc.OutputType = OutputType.Application;
         csc.Output = Outdir + "Pencil.Build.exe";
-        csc.Execute();
+    	csc.Compile();
     }
 
 	[DependsOn("Core")]
@@ -44,7 +44,7 @@ public class PencilProject : Project
 		csc.References.Add(Outdir + "Pencil.dll");
 		csc.OutputType = OutputType.Application;
 		csc.Output = Outdir + "NMeter.Console.exe";
-		csc.Execute();
+		csc.Compile();
 	}
 
 	[DependsOn("Core"), DependsOn("Build")]
@@ -66,16 +66,14 @@ public class PencilProject : Project
 		csc.References.Add(nunitDir + "nunit.framework.dll");
 		csc.OutputType = OutputType.Library;
 		csc.Output = Outdir + "Pencil.Test.dll";
-		
-		if(csc.Sources.ChangedAfter(FileSystem.GetLastWriteTime(csc.Output)))
-    		csc.Execute();
+		csc.Compile();
 	}
 
 	[DependsOn("BuildTest")]
 	public void Test()
 	{
 		var test = new Path("Test");
-		var nunitDir = new Path("Tools") + "NUnit-2.4.8-net-2.0" + "bin";
+     		var nunitDir = new Path("Tools") + "NUnit-2.4.8-net-2.0" + "bin";
 		FileSystem.CopyFile(test + "SampleProject.xml", Outdir + "SampleProject.xml", true);
 
 		var nunit = New<NUnitTask>();
@@ -92,14 +90,14 @@ public class PencilProject : Project
 	public void FSharpCompilerTask()
 	{
 		var fsc = NewFSharpCompiler();
+		fsc.Sources.Add(source + "Core" + "Funky.fs");
 		fsc.Sources.Add(source + "Build" + "Tasks" + "FSharpCompilerTask.fs");
 		fsc.References.Add(fsc.BinPath + "FSharp.Core.dll");
 		fsc.References.Add(Outdir + "Pencil.dll");
 		fsc.References.Add(Outdir + "Pencil.Build.exe");
 		fsc.OutputType = OutputType.Library;
 		fsc.Output = Outdir + "Pencil.Build.FSharpCompilerTask.dll";
-		if(fsc.Sources.ChangedAfter(FileSystem.GetLastWriteTime(fsc.Output)))
-    		fsc.Execute();
+        fsc.Compile();
 	}
 
 	public void Unit()
@@ -113,8 +111,7 @@ public class PencilProject : Project
 		fsc.References.Add(Outdir + "Pencil.dll");
 		fsc.OutputType = OutputType.Library;
 		fsc.Output = Outdir + "Pencil.Unit.dll";
-		if(fsc.Sources.ChangedAfter(FileSystem.GetLastWriteTime(fsc.Output)))
-		    fsc.Execute();
+		fsc.Compile();
 	}
 
 	[DependsOn("Unit"), DependsOn("BuildTest"), DependsOn("FSharpCompilerTask")]
@@ -125,6 +122,7 @@ public class PencilProject : Project
 		var nunitDir = new Path("Tools") + "NUnit-2.4.8-net-2.0" + "bin";
 
 		fsc.Sources.Add(test + "Build" + "FileSetTests.fs");
+		fsc.Sources.Add(test + "Build" + "Tasks" + "CompilerBaseTaskTests.fs");
 		fsc.Sources.Add(test + "Build" + "Tasks" + "FSharpCompilerTaskTests.fs");
 		fsc.Sources.Add(test + "Unit" + "BeMatcherTests.fs");
 		fsc.Sources.Add(test + "Unit" + "ContainMatcherTests.fs");
@@ -138,10 +136,7 @@ public class PencilProject : Project
 		fsc.References.Add(Outdir + "Pencil.Test.dll");
 		fsc.OutputType = OutputType.Library;
 		fsc.Output = Outdir + "Pencil.Test.FSharp.dll";
-        if(fsc.Sources.ChangedAfter(FileSystem.GetLastWriteTime(fsc.Output))
-        || fsc.References.ChangedAfter(FileSystem.GetLastWriteTime(fsc.Output)))
-    		fsc.Execute();
-        
+    	fsc.Compile();
         TextWriterRunner.Run(fsc.Output.ToString(), System.Console.Out);
 	}
 

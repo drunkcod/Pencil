@@ -8,11 +8,17 @@ open Pencil.Core
 open Pencil.Unit
 open Pencil.Unit.Suite
 
-type TextRunner(resultTarget:TextWriter, stopwatch:IStopwatch) = 
-    member this.Run(suite:ISuite) = 
-        let result = TextWriterTestResult(resultTarget, stopwatch)
-        suite.Tests |> Seq.fold (fun result t -> t result) (result :> ITestResult) |> ignore       
+type TextRunner(resultTarget:TextWriter, stopwatch:IStopwatch) =
+    [<OverloadID("RunMultiple")>]
+    member this.Run suites = 
+        let result = TextWriterTestResult(resultTarget, stopwatch)        
+        suites 
+        |> Seq.map (fun (x:ISuite) -> x.Tests)
+        |> Seq.concat
+        |> Seq.fold (fun result t -> t result) (result :> ITestResult) |> ignore       
         result.ShowReport()
+    [<OverloadID("RunSingle")>]
+    member this.Run(suite:ISuite) = this.Run (Seq.singleton suite)
 
 module TextWriterRunner =
     let inline private Types (x:^src) = (^src:(member Types: ^a)(x))
@@ -22,13 +28,13 @@ module TextWriterRunner =
         try
             m.Invoke(null, null) :?> ISuite
         with e -> 
-            Console.WriteLine(e.InnerException.Message)
+            Console.WriteLine(e.InnerException)
             {new ISuite with 
                 member this.Tests = []}
         
     let Run((testAssemblyPath:string),(resultTarget: TextWriter)) = 
         let startTime = DateTime.Now
-        let result = TextWriterTestResult(resultTarget, {new IStopwatch with
+        let result = TextRunner(resultTarget, {new IStopwatch with
             member this.Elapsed = DateTime.Now - startTime})
         AssemblyLoader.LoadFrom(testAssemblyPath).Modules
         |> Seq.map Types |> Seq.concat
@@ -36,9 +42,4 @@ module TextWriterRunner =
         |> Seq.map Methods |> Seq.concat
         |> Seq.filter IsSuite
         |> Seq.map Invoke
-        |> Seq.map (fun x -> x.Tests)
-        |> Seq.concat
-        |> Seq.fold (fun result t -> t result) (result :> ITestResult)
-        |> ignore
-        
-        result.ShowReport()
+        |> result.Run

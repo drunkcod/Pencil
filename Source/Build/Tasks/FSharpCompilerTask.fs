@@ -4,31 +4,21 @@ namespace Pencil.Build.Tasks
 
 open System.Text
 open Pencil.Build
+open Pencil.Core
 open Pencil.IO
 
 type FSharpCompilerTask(fileSystem:IFileSystem, platform:IExecutionEnvironment) =
-    inherit ExecTaskBase(platform)
+    inherit CompilerBaseTask(fileSystem, platform)
 
-    let sources = FileSet()
-    let references = FileSet()
     let mutable outputType = OutputType.Library
-    let mutable output = Path.Empty
     let mutable binPath = Path.Empty;
     let mutable optimize = false
     let mutable debug = false
 
-    member this.Sources = sources
-
-    member this.References = references
-
     member this.OutputType
         with get() = outputType
         and set v = outputType <- v
-
-    member this.Output
-        with get() = output
-        and set v = output <- v
-
+        
     member this.Optimize
         with get() = optimize
         and set v = optimize <- v
@@ -48,25 +38,29 @@ type FSharpCompilerTask(fileSystem:IFileSystem, platform:IExecutionEnvironment) 
             Path("mono")
         else
             this.CompilerPath
-
+            
     override this.GetArgumentsCore() =
         this.References.CopyTo(this.Output.GetDirectory())
         let args = StringBuilder()
+        let append (x:string) = args.Append(x) |> ignore
+        and appendFormat format (arg:obj) = args.AppendFormat(format, arg) |> ignore
+        
         if this.IsRunningOnMono then
-            args.AppendFormat("{0} ", this.CompilerPath) |> ignore
-        args.Append("--nologo") |> ignore
+            appendFormat "{0} " this.CompilerPath
+        append("--nologo")
 
         if this.Optimize then
-            args.Append(" -O+") |> ignore
+            append(" -O+")
 
         if this.Debug then
-            args.Append(" -g") |> ignore
+            append(" -g")
 
-        this.Sources.ForEach(fun x -> args.AppendFormat(" {0}", x) |> ignore)
-        this.References.ForEach(fun x -> args.AppendFormat(" -r {0}", x) |> ignore)
-        args.AppendFormat(" -o {0}", this.Output) |> ignore
-        args.AppendFormat(" {0}", this.ArgumentOutputType).ToString()
-
+        this.Sources |> Iter (appendFormat " {0}")
+        this.Sources |> Iter (appendFormat " -r {0}")
+        args.AppendFormat(" -o {0} {1}", this.Output, this.ArgumentOutputType) 
+        |> string
+        
     member private this.ArgumentOutputType : string =
             match this.OutputType with
             | _ -> "-a"
+

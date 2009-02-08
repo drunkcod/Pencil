@@ -26,7 +26,7 @@ let Tests() =
         
         Fact "Arguments should contain referenced assemby"(
             let args, fsc = GetCompiler()
-            fsc.References.Add(Path "MyAssembly.dll")
+            fsc.References.Add(Path("MyAssembly.dll"))
             fsc.Execute()
             !args |> Should Contain "-r MyAssembly.dll")
             
