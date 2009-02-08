@@ -73,7 +73,7 @@ public class PencilProject : Project
 	public void Test()
 	{
 		var test = new Path("Test");
-     		var nunitDir = new Path("Tools") + "NUnit-2.4.8-net-2.0" + "bin";
+     var nunitDir = new Path("Tools") + "NUnit-2.4.8-net-2.0" + "bin";
 		FileSystem.CopyFile(test + "SampleProject.xml", Outdir + "SampleProject.xml", true);
 
 		var nunit = New<NUnitTask>();
@@ -99,10 +99,11 @@ public class PencilProject : Project
 		fsc.Output = Outdir + "Pencil.Build.FSharpCompilerTask.dll";
         fsc.Compile();
 	}
-
+    [DependsOn("Core")]
 	public void Unit()
 	{
 		var fsc = NewFSharpCompiler();
+		fsc.Sources.Add(new Path("HelloWorld.fs"));
 		fsc.Sources.Add(source + "Unit" + "Syntax.fs");
 		fsc.Sources.Add(source + "Unit" + "Suite.fs");
 		fsc.Sources.Add(source + "Unit" + "TextWriterTestResults.fs");

@@ -108,3 +108,4 @@ module Syntax =
             member x.IsMatch = a |> Seq.exists e.Equals
             member x.Message = string (Format(a).AppendFormat(" doesn't contain {0}", box e))
             member x.MatchMessage = string (Format(a).AppendFormat(" contains {0}", box e))}
+            

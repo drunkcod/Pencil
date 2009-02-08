@@ -56,7 +56,7 @@ type FSharpCompilerTask(fileSystem:IFileSystem, platform:IExecutionEnvironment) 
             append(" -g")
 
         this.Sources |> Iter (appendFormat " {0}")
-        this.Sources |> Iter (appendFormat " -r {0}")
+        this.References |> Iter (appendFormat " -r {0}")
         args.AppendFormat(" -o {0} {1}", this.Output, this.ArgumentOutputType) 
         |> string
         
