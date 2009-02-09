@@ -18,7 +18,7 @@ type TestCompiler =
     class
         inherit CompilerBaseTask
         val mutable hasCompiled : bool
-        new(fileSystem:IFileSystem) = { 
+        new(fileSystem:IFileSystem) = {
             inherit CompilerBaseTask(fileSystem, NullEnvironment);
             hasCompiled = false }
 
@@ -27,7 +27,7 @@ type TestCompiler =
         override this.CompileCore() = this.hasCompiled <- true
         member this.HasCompiled = this.hasCompiled
     end
-    
+
 let Tests() =
     Suite [
         Fact "Execute should Compile if Sources have changed"(
@@ -36,33 +36,33 @@ let Tests() =
             compiler.Sources.Add(Path("MyThingy.fs"))
             compiler.Output <- Path("MyOutput.dll")
             let changeTime = DateTime.Now
-            fileSystem.GetLastWriteTimeHandler <- Converter(fun path -> 
+            fileSystem.GetLastWriteTimeHandler <- Converter(fun path ->
                 if path = compiler.Output then
                     changeTime.AddMinutes(-1.0)
                 else changeTime)
             compiler.Compile()
             compiler.HasCompiled |> Should Be true)
-            
+
         Fact "Execute shouldn't Compile if no changes to source"(
             let fileSystem = FileSystemStub()
             let compiler = TestCompiler(fileSystem)
             compiler.Sources.Add(Path("MyThingy.fs"))
             compiler.Output <- Path("MyOutput.dll")
             let changeTime = DateTime.Now
-            fileSystem.GetLastWriteTimeHandler <- Converter(fun path -> 
+            fileSystem.GetLastWriteTimeHandler <- Converter(fun path ->
                 if path = compiler.Output then
                     changeTime.AddMinutes(1.0)
                 else changeTime)
             compiler.Compile()
             compiler.HasCompiled |> Should Be false)
-            
+
         Fact "Execute should Compile if References have changed"(
             let fileSystem = FileSystemStub()
             let compiler = TestCompiler(fileSystem)
             compiler.References.Add(Path("Pencil.dll"))
             compiler.Output <- Path("MyOutput.dll")
             let changeTime = DateTime.Now
-            fileSystem.GetLastWriteTimeHandler <- Converter(fun path -> 
+            fileSystem.GetLastWriteTimeHandler <- Converter(fun path ->
                 if path = compiler.Output then
                     changeTime.AddMinutes(-1.0)
                 else changeTime)

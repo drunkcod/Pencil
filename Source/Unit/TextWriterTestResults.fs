@@ -39,5 +39,5 @@ type TextWriterTestResult (target:TextWriter, stopwatch : IStopwatch) =
             box failures.Count
             box (time.TotalSeconds.ToString("F3", CultureInfo.InvariantCulture))|]
         target.WriteLine("{0}Tests run: {1}, Failures: {2}, Time: {3} seconds", data)
-        failures |> Seq.iteri (fun n e -> target.WriteLine("    {0}) \"{1}\" failed with {2}", n + 1, e.Test, e.Message))
-
+        failures |> Seq.iteri (fun n e ->
+            target.WriteLine("    {0}) \"{1}\" failed with {2}", n + 1, e.Test, e.Message))

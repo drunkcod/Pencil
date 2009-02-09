@@ -103,6 +103,7 @@ public class PencilProject : Project
 	public void Unit()
 	{
 		var fsc = NewFSharpCompiler();
+		fsc.Sources.Add(source + "Core" + "Funky.fs");
 		fsc.Sources.Add(source + "Unit" + "Syntax.fs");
 		fsc.Sources.Add(source + "Unit" + "Suite.fs");
 		fsc.Sources.Add(source + "Unit" + "TextWriterTestResults.fs");
