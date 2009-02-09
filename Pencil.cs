@@ -81,12 +81,12 @@ public class PencilProject : Project
 		nunit.Target = Outdir + "Pencil.Test.dll";
 		nunit.ShadowCopy = false;
 		nunit.ShowLogo = false;
-		
-		if(FileSystem.GetLastWriteTime(new Path("TestResult.xml")) 
+
+		if(FileSystem.GetLastWriteTime(new Path("TestResult.xml"))
 		    < FileSystem.GetLastWriteTime(nunit.Target))
     		nunit.Execute();
 	}
-
+	[DependsOn("Build")]
 	public void FSharpCompilerTask()
 	{
 		var fsc = NewFSharpCompiler();
@@ -103,7 +103,6 @@ public class PencilProject : Project
 	public void Unit()
 	{
 		var fsc = NewFSharpCompiler();
-		fsc.Sources.Add(new Path("HelloWorld.fs"));
 		fsc.Sources.Add(source + "Unit" + "Syntax.fs");
 		fsc.Sources.Add(source + "Unit" + "Suite.fs");
 		fsc.Sources.Add(source + "Unit" + "TextWriterTestResults.fs");
