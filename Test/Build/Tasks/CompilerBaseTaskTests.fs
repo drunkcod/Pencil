@@ -30,10 +30,10 @@ type TestCompiler =
 
 let Tests() =
     Suite [
-        Fact "Execute should Compile if Sources have changed"(
+        Fact "Execute should Compile if Sources have changed"(fun () ->
             let fileSystem = FileSystemStub()
             let compiler = TestCompiler(fileSystem)
-            compiler.Sources.Add(Path("MyThingy.fs"))
+            compiler.Sources.Add(Path("MyThingy.fs")) |> ignore
             compiler.Output <- Path("MyOutput.dll")
             let changeTime = DateTime.Now
             fileSystem.GetLastWriteTimeHandler <- Converter(fun path ->
@@ -43,10 +43,10 @@ let Tests() =
             compiler.Compile()
             compiler.HasCompiled |> Should Be true)
 
-        Fact "Execute shouldn't Compile if no changes to source"(
+        Fact "Execute shouldn't Compile if no changes to source"(fun () ->
             let fileSystem = FileSystemStub()
             let compiler = TestCompiler(fileSystem)
-            compiler.Sources.Add(Path("MyThingy.fs"))
+            compiler.Sources.Add(Path("MyThingy.fs")) |> ignore
             compiler.Output <- Path("MyOutput.dll")
             let changeTime = DateTime.Now
             fileSystem.GetLastWriteTimeHandler <- Converter(fun path ->
@@ -56,10 +56,10 @@ let Tests() =
             compiler.Compile()
             compiler.HasCompiled |> Should Be false)
 
-        Fact "Execute should Compile if References have changed"(
+        Fact "Execute should Compile if References have changed"(fun () ->
             let fileSystem = FileSystemStub()
             let compiler = TestCompiler(fileSystem)
-            compiler.References.Add(Path("Pencil.dll"))
+            compiler.References.Add(Path("Pencil.dll")) |> ignore
             compiler.Output <- Path("MyOutput.dll")
             let changeTime = DateTime.Now
             fileSystem.GetLastWriteTimeHandler <- Converter(fun path ->
@@ -68,5 +68,4 @@ let Tests() =
                 else changeTime)
             compiler.Compile()
             compiler.HasCompiled |> Should Be true)
-
 ]

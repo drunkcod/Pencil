@@ -13,12 +13,12 @@ namespace Pencil.Build
         {
             this.fileSystem = fileSystem;
         }
-        
+
         public FileSet(): this(new FileSystem()){}
-        
-        public IEnumerable<Path> Items 
-        { 
-            get 
+
+        public IEnumerable<Path> Items
+        {
+            get
             {
                 foreach(var item in items)
                     if(item.ToString().Contains("*"))
@@ -27,12 +27,16 @@ namespace Pencil.Build
                         foreach(var file in files)
                             yield return file;
                     }
-                    else 
-                        yield return item;              
-            } 
+                    else
+                        yield return item;
+            }
         }
 
-		public void Add(Path path){ items.Add(path); }
+		public FileSet Add(Path path)
+		{
+			items.Add(path);
+			return this;
+		}
 
 		public void CopyTo(Path destination)
 		{
@@ -45,13 +49,18 @@ namespace Pencil.Build
                 fileSystem.CopyFile(file, target, true);
             }
 		}
-		
+
 		public bool ChangedAfter(DateTime timestamp)
 		{
 			foreach(var item in Items)
 				if(fileSystem.GetLastWriteTime(item) > timestamp)
 					return true;
 		    return false;
+		}
+
+		public bool ChangedAfter(Path path)
+		{
+			return ChangedAfter(fileSystem.GetLastWriteTime(path));
 		}
 
 		public IEnumerator<Path> GetEnumerator(){ return items.GetEnumerator(); }
