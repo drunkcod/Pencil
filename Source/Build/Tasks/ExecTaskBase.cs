@@ -22,6 +22,7 @@ namespace Pencil.Build.Tasks
 			{
 				while(!task.HasExited)
 					task.StandardOutput.CopyTo(platform.StandardOut);
+				task.WaitForExit();	
 				if(task.ExitCode != 0)
 					throw new Exception();
 			});

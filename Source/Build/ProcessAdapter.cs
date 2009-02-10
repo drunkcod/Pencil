@@ -19,5 +19,7 @@ namespace Pencil.Build
         {
             get { return process.StandardOutput; }
         }
+        
+        public void WaitForExit(){ process.WaitForExit(); }
     }
 }

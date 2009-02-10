@@ -7,5 +7,6 @@ namespace Pencil.Build
         bool HasExited { get; }
         int ExitCode { get; }
         TextReader StandardOutput { get; }
+        void WaitForExit();
     }
 }

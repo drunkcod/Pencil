@@ -7,13 +7,6 @@ namespace Pencil.Test.Build.Tasks
 	using Pencil.Test.Stubs;
 	using Pencil.IO;
 
-	class NullProcess : IProcess
-	{
-		public bool HasExited { get { return true; } }
-        public int ExitCode { get { return 0; } }
-        public System.IO.TextReader StandardOutput { get { return null; } }
-	}
-
 	[TestFixture]
 	public class NUnitTaskTests
 	{
