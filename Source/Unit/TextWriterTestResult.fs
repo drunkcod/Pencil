@@ -8,8 +8,6 @@ open System.Globalization
 open System.IO
 
 type private Error = {Test: string; Message: string}
-type IStopwatch =
-    abstract Elapsed : TimeSpan
 
 type TextWriterTestResult (target:TextWriter, stopwatch : IStopwatch) =
     let mutable test = ""

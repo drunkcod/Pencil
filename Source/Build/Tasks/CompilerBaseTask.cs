@@ -6,7 +6,6 @@ namespace Pencil.Build.Tasks
 
     public abstract class CompilerBaseTask : ExecTaskBase
     {
-        readonly IFileSystem fileSystem;
         readonly FileSet sources;
 		readonly FileSet references;
 		Path output = Path.Empty;
@@ -18,7 +17,6 @@ namespace Pencil.Build.Tasks
         protected CompilerBaseTask(IFileSystem fileSystem, IExecutionEnvironment platform):
 			base(platform)
         {
-            this.fileSystem = fileSystem;
 		    sources = new FileSet(fileSystem);
 		    references = new FileSet(fileSystem);
         }

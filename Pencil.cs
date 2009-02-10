@@ -92,9 +92,9 @@ public class PencilProject : Project
 		var fsc = NewFSharpCompiler();
 		fsc.Sources.Add(source + "Core" + "Funky.fs")
 			.Add(source + "Build" + "Tasks" + "FSharpCompilerTask.fs");
-		fsc.References.Add(fsc.BinPath + "FSharp.Core.dll");
-		fsc.References.Add(Outdir + "Pencil.dll");
-		fsc.References.Add(Outdir + "Pencil.Build.exe");
+		fsc.References.Add(fsc.BinPath + "FSharp.Core.dll")
+		    .Add(Outdir + "Pencil.dll")
+		    .Add(Outdir + "Pencil.Build.exe");
 		fsc.OutputType = OutputType.Library;
 		fsc.Output = Outdir + "Pencil.Build.FSharpCompilerTask.dll";
         fsc.Compile();
@@ -106,8 +106,9 @@ public class PencilProject : Project
 		fsc.Sources.Add(source + "Core" + "Funky.fs")
 			.Add(source + "Unit" + "Syntax.fs")
 			.Add(source + "Unit" + "Suite.fs")
-			.Add(source + "Unit" + "TextWriterTestResults.fs")
-			.Add(source + "Unit" + "TextWriterRunner.fs");
+			.Add(source + "Unit" + "TestRunner.fs")
+			.Add(source + "Unit" + "TextWriterTestResult.fs")
+			.Add(source + "Unit" + "AssemblyTestRunner.fs");
 		fsc.References.Add(fsc.BinPath + "FSharp.Core.dll")
 			.Add(Outdir + "Pencil.dll");
 		fsc.OutputType = OutputType.Library;
@@ -128,7 +129,8 @@ public class PencilProject : Project
 			.Add(test + "Unit" + "BeMatcherTests.fs")
 			.Add(test + "Unit" + "ContainMatcherTests.fs")
 			.Add(test + "Unit" + "SyntaxTests.fs")
-			.Add(test + "Unit" + "TextWriterRunnerTests.fs");
+			.Add(test + "Unit" + "TextWriterRunnerTests.fs")
+			.Add(test + "Unit" + "TextWriterTestResultTests.fs");
 
 		fsc.References.Add(Outdir + "Pencil.dll")
 			.Add(Outdir + "Pencil.Build.exe")
@@ -138,7 +140,11 @@ public class PencilProject : Project
 		fsc.OutputType = OutputType.Library;
 		fsc.Output = Outdir + "Pencil.Test.FSharp.dll";
     	fsc.Compile();
-        TextWriterRunner.Run(fsc.Output.ToString(), System.Console.Out);
+    	var results = new TextWriterTestResult(System.Console.Out,
+                TestRunner.NewDefaultStopwatch());
+        AssemblyTestRunner.Run(fsc.Output.ToString(), 
+            new TestRunner(results));
+        results.ShowReport();          
 	}
 
 	public void Clean()
@@ -165,7 +171,7 @@ public class PencilProject : Project
 	{
 		var fsc = New<FSharpCompilerTask>();
 		fsc.BinPath = new Path(Environment.GetEnvironmentVariable("FSharp"));
-		fsc.Debug = debugMode;
+		fsc.Debug = false;
 		fsc.Optimize = !debugMode;
 		return fsc;
 	}
