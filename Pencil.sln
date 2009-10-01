@@ -9,18 +9,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pencil.Test", "Test\Pencil.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pencil.Build", "Source\Pencil.Build.csproj", "{62B094FB-4868-4824-9B31-831B71254E2C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pencil.Build", "Source\NMeter\Console\NMeter.Console.csproj", "{27693021-9DFD-4D4A-ADD2-074661AD3778}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{27693021-9DFD-4D4A-ADD2-074661AD3778}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{27693021-9DFD-4D4A-ADD2-074661AD3778}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{27693021-9DFD-4D4A-ADD2-074661AD3778}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{27693021-9DFD-4D4A-ADD2-074661AD3778}.Release|Any CPU.Build.0 = Release|Any CPU
 		{62B094FB-4868-4824-9B31-831B71254E2C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{62B094FB-4868-4824-9B31-831B71254E2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{62B094FB-4868-4824-9B31-831B71254E2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -43,9 +37,9 @@ Global
 		{34E21258-9A89-4301-984C-652C1E5191BE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		name = Pencil
-		version = 0.1
 		StartupItem = Test\Pencil.Test.csproj
+		version = 0.1
+		name = Pencil
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

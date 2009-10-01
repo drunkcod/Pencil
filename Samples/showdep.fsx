@@ -7,8 +7,10 @@ open System.IO
 open Pencil.Core
 open Pencil.NMeter
 
+let SourceDirectory = Path.GetDirectoryName(fsi.CommandLineArgs.[0])
+
 let ignoreFilter =
-    let path = Path.Combine(__SOURCE_DIRECTORY__, "Ignore.xml")
+    let path = Path.Combine(SourceDirectory, "Ignore.xml")
     let configuration = XmlConfiguration.FromFile(path).Read<IgnoreFilterConfiguration>()
     IgnoreFilter.From(configuration)
 
