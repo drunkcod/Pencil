@@ -29,7 +29,7 @@ namespace Pencil.Core
         }
 
         public object ResolveField(int token) {
-            var field = module.ResolveField(token);
+            var field = module.ResolveField(token, typeArguments, methodArguments);
             return string.Format("{0} {1}::{2}", field.FieldType.FullName, field.DeclaringType.FullName, field.Name);
         }
 
