@@ -41,5 +41,18 @@
         }
 
         string resolveTokenResult;
+
+        #region ITokenResolver Members
+
+
+        IType ITokenResolver.ResolveType(int token) {
+            return new TypeStub(resolveTokenResult);
+        }
+
+        object ITokenResolver.ResolveField(int token) {
+            return resolveTokenResult;
+        }
+
+        #endregion
     }
 }

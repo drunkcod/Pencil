@@ -908,8 +908,7 @@
         [Test]
         public void Decode_ldtoken()
         {
-            SetResolveToken("<anytoken>");
-            CheckDecode("ldtoken <anytoken>", 0xD0, 0, 1, 2, 3);
+            CheckDecode("ldtoken <unsupported>", 0xD0, 0, 1, 2, 3);
         }
         [Test]
         public void Decode_conv_u2()

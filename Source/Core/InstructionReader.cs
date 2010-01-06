@@ -63,8 +63,8 @@ namespace Pencil.Core
 					case ParameterType.Single: return stream.ReadSingle();
 					case ParameterType.Double: return stream.ReadDouble();
 					case ParameterType.Method: return tokens.ResolveMethod(stream.ReadInt32());
-					case ParameterType.Type: goto case ParameterType.Token;
-					case ParameterType.Field: goto case ParameterType.Token;
+                    case ParameterType.Type: return tokens.ResolveType(stream.ReadInt32());
+                    case ParameterType.Field: return tokens.ResolveField(stream.ReadInt32());
 					case ParameterType.Token:
                         stream.ReadInt32();
                         return "<unsupported>";

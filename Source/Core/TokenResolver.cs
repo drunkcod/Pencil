@@ -24,6 +24,15 @@ namespace Pencil.Core
 		    return null;
 		}
 
+        public IType ResolveType(int token) {
+            return Type.Wrap(module.ResolveType(token, typeArguments, methodArguments));
+        }
+
+        public object ResolveField(int token) {
+            var field = module.ResolveField(token);
+            return string.Format("{0} {1}::{2}", field.FieldType.FullName, field.DeclaringType.FullName, field.Name);
+        }
+
         public string ResolveString(int token) {
             return module.ResolveString(token);
         }

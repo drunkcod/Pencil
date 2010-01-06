@@ -37,5 +37,9 @@ namespace Pencil.Test.Stubs
 		public bool IsGenericParameter { get { return GetIsGenericParameterHandler(); } }
 		public bool IsPublic { get { return GetIsPublicHandler(); } }
 		public bool IsA<T>(){ return IsAHandler(typeof(T)); }
+
+        public override string ToString() {
+            return name;
+        }
 	}
 }
