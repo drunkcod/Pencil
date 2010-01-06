@@ -73,7 +73,7 @@ namespace Pencil.Core
 
 		public override string ToString()
 		{
-			return "{0} {1}({2})".InvariantFormat(ReturnType, Name, FormatArguments());
+			return "{0} {1}.{2}({3})".InvariantFormat(ReturnType.FullName, DeclaringType.FullName, Name, FormatArguments());
 		}
 
 		string FormatArguments()
@@ -81,11 +81,11 @@ namespace Pencil.Core
 			if(Arguments.Count == 0)
 				return string.Empty;
 			var args = new StringBuilder();
-			string format = "{0} {1}";
+			string format = "{0}";
 			foreach(var item in Arguments)
 			{
-				args.AppendFormat(format, item.Type, item.Name);
-				format = ", {0} {1}";
+				args.AppendFormat(format, item.Type.FullName);
+				format = ", {0}";
 			}
 			return args.ToString();
 		}

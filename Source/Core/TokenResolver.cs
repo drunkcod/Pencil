@@ -5,7 +5,7 @@ namespace Pencil.Core
 	using MethodBase = System.Reflection.MethodBase;
 	using SystemType = System.Type;
 
-	class TokenResolver : ITokenResolver
+	public class TokenResolver : ITokenResolver
 	{
 		ReflectionModule module;
 		SystemType[] typeArguments;

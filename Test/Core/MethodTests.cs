@@ -68,7 +68,7 @@ namespace Pencil.Test.Core
 		[Test]
 		public void ToString_should_include_return_type_and_name()
 		{
-			GetMyMethod().ToString().ShouldEqual("Int32 MyMethod()");
+            GetMyMethod().ToString().ShouldEqual("System.Int32 Pencil.Test.Core.MethodTests.MyMethod()");
 		}
 
 		public void MyMethod2(string foo, object bar){}
@@ -76,7 +76,7 @@ namespace Pencil.Test.Core
 		public void ToString_should_include_arguments()
 		{
 			Method.Wrap(GetType().GetMethod("MyMethod2"))
-			.ToString().ShouldEqual("Void MyMethod2(String foo, Object bar)");
+			.ToString().ShouldEqual("System.Void Pencil.Test.Core.MethodTests.MyMethod2(System.String, System.Object)");
 		}
 
 		Method GetMyMethod()
