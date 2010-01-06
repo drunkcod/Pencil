@@ -65,8 +65,10 @@ namespace Pencil.Core
 					case ParameterType.Method: return tokens.ResolveMethod(stream.ReadInt32());
 					case ParameterType.Type: goto case ParameterType.Token;
 					case ParameterType.Field: goto case ParameterType.Token;
-					case ParameterType.Token: return tokens.Resolve(stream.ReadInt32());
-					case ParameterType.String: return "\"{0}\"".InvariantFormat(tokens.Resolve(stream.ReadInt32()));
+					case ParameterType.Token:
+                        stream.ReadInt32();
+                        return "<unsupported>";
+					case ParameterType.String: return "\"{0}\"".InvariantFormat(tokens.ResolveString(stream.ReadInt32()));
 					case ParameterType.Array:
 						var items = new int[stream.ReadInt32()];
 						for(int i = 0; i != items.Length; ++i)

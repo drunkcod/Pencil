@@ -2,7 +2,7 @@
 {
     public interface ITokenResolver
     {
-        object Resolve(int token);
+        string ResolveString(int token);
 		IMethod ResolveMethod(int token);
     }
 }

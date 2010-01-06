@@ -30,7 +30,7 @@
             resolveTokenResult = token;
         }
 
-        object ITokenResolver.Resolve(int token)
+        string ITokenResolver.ResolveString(int token)
         {
             return resolveTokenResult;
         }

@@ -24,6 +24,10 @@ namespace Pencil.Core
 		    return null;
 		}
 
+        public string ResolveString(int token) {
+            return module.ResolveString(token);
+        }
+
 		public IMethod ResolveMethod(int token)
 		{
 				var method = module.ResolveMethod(token, typeArguments, methodArguments);
