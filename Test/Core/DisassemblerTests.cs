@@ -5,6 +5,8 @@
     using System;
 	using System.Collections.Generic;
     using Pencil.Test.Stubs;
+    using System.Reflection.Emit;
+    using System.Reflection;
 
     [TestFixture]
     public partial class DisassemblerTests : ITokenResolver
@@ -22,6 +24,20 @@
         {
             var disassembler = new Disassembler(this);
             Assert.AreEqual(expected, disassembler.Decode(ilbytes)[0].ToString());
+        }
+
+        [Test]
+        public void decode_method() {
+            var assembly = AppDomain.CurrentDomain.DefineDynamicAssembly(new AssemblyName("Pencil.Generated"), AssemblyBuilderAccess.ReflectionOnly);
+            var module = assembly.DefineDynamicModule("Pencil.Generated");
+            var method = module.DefineGlobalMethod("Return42", MethodAttributes.Static | MethodAttributes.Public, typeof(int), System.Type.EmptyTypes);
+            var il = method.GetILGenerator();
+            il.Emit(OpCodes.Ldc_I4, 42);
+            il.Emit(OpCodes.Ret);
+            module.CreateGlobalFunctions();
+            var expected = new[] { "ldc.i4 42", "ret" };
+
+            Assert.That(Disassembler.Decode(module.GetMethod("Return42")).Map(x => x.ToString()).ToList(), Is.EquivalentTo(expected));
         }
 
         void SetResolveToken(string token)

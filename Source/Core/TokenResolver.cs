@@ -14,8 +14,9 @@ namespace Pencil.Core
 		public TokenResolver(ReflectionModule module, SystemType type, MethodBase method)
 		{
 			this.module = module;
-			this.typeArguments = type.GetGenericArguments();
-            if(!(method.IsConstructor || method.IsSpecialName))
+            if(type != null)
+                this.typeArguments = type.GetGenericArguments();
+            if(!(method.IsConstructor || method.IsSpecialName) && method.IsGenericMethod)
                 this.methodArguments = method.GetGenericArguments();
 		}
 
