@@ -13,7 +13,10 @@ namespace Pencil.Core
             signature.Append('(');
             var format = "{0}";
             foreach(var item in method.GetParameters()) {
-                signature.AppendFormat(format, Format(item.ParameterType));
+                if(item.ParameterType.IsGenericType)
+                    AppendGeneric(signature, item.ParameterType);
+                else
+                    signature.AppendFormat(format, Format(item.ParameterType));
                 format = ", {0}";
             }
             return signature.Append(')').ToString();
@@ -26,14 +29,25 @@ namespace Pencil.Core
             return fullName; 
         }
 
+        void AppendGeneric(StringBuilder signature, System.Type type) {
+            var format = type.Name.Substring(0, type.Name.IndexOf('`')) +  "<{0}";            
+            AppendTypes(signature, format, type.GetGenericArguments())
+                .Append('>');
+        }
+
+        StringBuilder AppendTypes(StringBuilder signature, string format, System.Type[] types) {
+            foreach(var item in types) {
+                signature.AppendFormat(format, Format(item));
+                format = ", {0}";
+            }
+            return signature;
+        }
+
         void AppenGenericArguments(StringBuilder signature, MethodInfo method) {
             if(method.IsGenericMethod) {
                 var format = "<{0}";
-                foreach(var item in method.GetGenericArguments()) {
-                    signature.AppendFormat(format, Format(item));
-                    format = ", {0}";
-                }
-                signature.Append('>');
+                AppendTypes(signature, format, method.GetGenericArguments())
+                    .Append('>');
             }
         }
     }
