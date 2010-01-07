@@ -10,11 +10,10 @@ using System.Reflection;
         public static IEnumerable<IInstruction> Decode(MethodInfo method) 
         {
             var tokens = new TokenResolver(method.Module, method.DeclaringType, method);
-			var il = method.GetMethodBody().GetILAsByteArray();
-            var stream = new ByteConverter(il, 0);
-			var ir = new InstructionReader(stream, tokens);
-			while(stream.Position < il.Length)
-				yield return ir.Next();
+            var body = method.GetMethodBody();
+            if(body == null)
+                return new IInstruction[0];
+            return Decode(tokens, body.GetILAsByteArray());
         }
 
         public Disassembler(ITokenResolver tokens)
@@ -24,12 +23,16 @@ using System.Reflection;
 
         public IInstruction[] Decode(params byte[] il)
         {
-			var result = new List<IInstruction>();
-			var stream = new ByteConverter(il, 0);
-			var ir = new InstructionReader(stream, tokens);
-			while(stream.Position < il.Length)
-				result.Add(ir.Next());
+			var result = new List<IInstruction>(Decode(tokens, il));
             return result.ToArray();
         }
+
+        static IEnumerable<IInstruction> Decode(ITokenResolver tokens, byte[] il) {
+            var stream = new ByteConverter(il, 0);
+            var ir = new InstructionReader(stream, tokens);
+            while(stream.Position < il.Length)
+                yield return ir.Next();
+        }
+
     }
 }
