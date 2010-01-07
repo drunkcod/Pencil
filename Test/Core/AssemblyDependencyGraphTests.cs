@@ -4,7 +4,6 @@ namespace Pencil.Test.Core
 	using System.Reflection;
     using System.Collections.Generic;
     using NUnit.Framework;
-    using NUnit.Framework.SyntaxHelpers;
     using Pencil.Core;
     using Pencil.Test.Stubs;
 

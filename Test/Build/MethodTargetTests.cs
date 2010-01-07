@@ -2,7 +2,6 @@ namespace Pencil.Test.Build
 {
     using System.Collections.Generic;
     using NUnit.Framework;
-    using NUnit.Framework.SyntaxHelpers;
     using Pencil.Build;
     using Pencil.Test.Stubs;
 

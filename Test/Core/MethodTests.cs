@@ -2,7 +2,6 @@ namespace Pencil.Test.Core
 {
 	using System;
 	using NUnit.Framework;
-	using NUnit.Framework.SyntaxHelpers;
 	using Pencil.Core;
 
 	[TestFixture]

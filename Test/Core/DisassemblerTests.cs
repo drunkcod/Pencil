@@ -2,7 +2,6 @@
 {
     using Pencil.Core;
     using NUnit.Framework;
-	using NUnit.Framework.SyntaxHelpers;
     using System;
 	using System.Collections.Generic;
     using Pencil.Test.Stubs;

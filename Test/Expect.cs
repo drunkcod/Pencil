@@ -4,7 +4,6 @@ namespace Pencil.Test
 	using System.Collections;
 	using System.Collections.Generic;
 	using NUnit.Framework;
-	using NUnit.Framework.SyntaxHelpers;
 	using Pencil.Core;
 
 	static class Expect

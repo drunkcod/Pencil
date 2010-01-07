@@ -1,7 +1,6 @@
 ﻿namespace Pencil.Test.Core
 {
     using NUnit.Framework;
-    using NUnit.Framework.SyntaxHelpers;
     using ReflectionAssembly = System.Reflection.Assembly;
     using Pencil.Core;
 

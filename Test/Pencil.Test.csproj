@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{DE33D780-BAD0-41C7-9327-A90B50EFC5F9}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -39,9 +39,9 @@
   </Target>
   -->
   <ItemGroup>
-    <Reference Include="nunit.framework, Version=2.4.8.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77">
+    <Reference Include="nunit.framework, Version=2.5.3.9345, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Tools\NUnit-2.4.8-net-2.0\bin\nunit.framework.dll</HintPath>
+      <HintPath>..\Tools\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -67,6 +67,7 @@
     <Compile Include="Core\DisassemblerTests.cs" />
     <Compile Include="Core\DisassemblerTests.DecodeExtended.cs" />
     <Compile Include="Core\DotBuilderTests.cs" />
+    <Compile Include="Core\MethodFormatterTests.cs" />
     <Compile Include="Core\MethodTests.cs" />
     <Compile Include="Core\ModuleTests.cs" />
     <Compile Include="Core\OpcodeTests.cs" />

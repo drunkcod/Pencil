@@ -1,7 +1,6 @@
 ﻿namespace Pencil.Test.NMeter
 {
     using NUnit.Framework;
-    using NUnit.Framework.SyntaxHelpers;
     using Pencil.NMeter;
     using Pencil.Core;
 

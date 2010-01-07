@@ -7,7 +7,6 @@ namespace Pencil.Test.Core
     using System.Collections.Generic;
     using System.Reflection;
     using Pencil.Core;
-    using NUnit.Framework.SyntaxHelpers;
 	using Type = Pencil.Core.Type;
 
     class SampleType
