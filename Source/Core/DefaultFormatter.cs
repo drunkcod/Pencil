@@ -7,47 +7,50 @@ namespace Pencil.Core
     public class DefaultFormatter
     {
         public string Format(MethodInfo method) {
-            var signature = new StringBuilder(Format(method.ReturnType));
-            signature.AppendFormat(" {0}::{1}", Format(method.DeclaringType), method.Name);
+            var signature = new StringBuilder();
+            AppendFormat(signature, method.ReturnType);
+            signature.Append(" ");
+            AppendFormat(signature, method.DeclaringType);
+            signature.AppendFormat("::{0}", method.Name);
             AppenGenericArguments(signature, method);
             signature.Append('(');
-            var format = "{0}";
+            var separator = "";
             foreach(var item in method.GetParameters()) {
-                if(item.ParameterType.IsGenericType)
-                    AppendGeneric(signature, format, item.ParameterType);
-                else
-                    signature.AppendFormat(format, Format(item.ParameterType));
-                format = ", {0}";
+                signature.Append(separator);
+                var parameter = item.ParameterType;
+                if(parameter.IsGenericType)
+                    AppendGeneric(signature, parameter);
+                else {
+                    AppendFormat(signature, parameter);
+                }
+                separator = ", ";
             }
             return signature.Append(')').ToString();
         }
 
-        string Format(System.Type type){
+        static void AppendFormat(StringBuilder signature, System.Type type){
             var fullName = type.FullName;
-            if(fullName == null)
-                return type.Name;
-            return fullName; 
+            signature.AppendFormat(fullName == null ? type.Name : fullName);
         }
 
-        void AppendGeneric(StringBuilder signature, string preFormat, System.Type type) {
-            var format = string.Format(preFormat, type.Name.Substring(0, type.Name.IndexOf('`')) +  "<{0}");            
-            AppendTypes(signature, format, type.GetGenericArguments())
-                .Append('>');
+        static void AppendGeneric(StringBuilder signature, System.Type type) {
+            var separator =  type.Name.Substring(0, type.Name.IndexOf('`'));
+            AppendGenericTypes(signature, separator, type.GetGenericArguments());
         }
 
-        StringBuilder AppendTypes(StringBuilder signature, string format, System.Type[] types) {
+        static StringBuilder AppendGenericTypes(StringBuilder signature, string separator, System.Type[] types) {
+            separator += '<';                
             foreach(var item in types) {
-                signature.AppendFormat(format, Format(item));
-                format = ", {0}";
+                signature.Append(separator);
+                AppendFormat(signature, item);
+                separator = ", ";
             }
-            return signature;
+            return signature.Append('>');
         }
 
-        void AppenGenericArguments(StringBuilder signature, MethodInfo method) {
+        static void AppenGenericArguments(StringBuilder signature, MethodInfo method) {
             if(method.IsGenericMethod) {
-                var format = "<{0}";
-                AppendTypes(signature, format, method.GetGenericArguments())
-                    .Append('>');
+                AppendGenericTypes(signature, "", method.GetGenericArguments());
             }
         }
     }
