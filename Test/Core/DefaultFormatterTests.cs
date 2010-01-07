@@ -12,6 +12,7 @@ namespace Pencil.Test.Core
     {
         public void Generic<T>() { }
         public void GenericFunc<T>(Func<T> func) { }
+        public void GenericFunc2<T0,T1>(Func<T0> func,Predicate<T1> predicate) { }
         public void Generic2<T0, T1>() { }
         public void Action() { }
         public void Action<T>(T item) { }
@@ -35,7 +36,8 @@ namespace Pencil.Test.Core
                 CheckFormat<MyClass>(x => x.Action(42, ""), "System.Void Pencil.Test.Core.MyClass::Action<System.Int32, System.String>(System.Int32, System.String)"),
                 CheckFormat(typeof(MyClass).GetMethod("Generic"), "System.Void Pencil.Test.Core.MyClass::Generic<T>()"),
                 CheckFormat(typeof(MyClass).GetMethod("Generic2"), "System.Void Pencil.Test.Core.MyClass::Generic2<T0, T1>()"),
-                CheckFormat(typeof(MyClass).GetMethod("GenericFunc"), "System.Void Pencil.Test.Core.MyClass::GenericFunc<T>(Func<T>)"));
+                CheckFormat(typeof(MyClass).GetMethod("GenericFunc"), "System.Void Pencil.Test.Core.MyClass::GenericFunc<T>(Func<T>)"),
+                CheckFormat(typeof(MyClass).GetMethod("GenericFunc2"), "System.Void Pencil.Test.Core.MyClass::GenericFunc2<T0, T1>(Func<T0>, Predicate<T1>)"));
         }
 
         T[] Tests<T>(params T[] tests) { return tests; }

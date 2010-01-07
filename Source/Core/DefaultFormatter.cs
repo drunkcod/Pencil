@@ -14,7 +14,7 @@ namespace Pencil.Core
             var format = "{0}";
             foreach(var item in method.GetParameters()) {
                 if(item.ParameterType.IsGenericType)
-                    AppendGeneric(signature, item.ParameterType);
+                    AppendGeneric(signature, format, item.ParameterType);
                 else
                     signature.AppendFormat(format, Format(item.ParameterType));
                 format = ", {0}";
@@ -29,8 +29,8 @@ namespace Pencil.Core
             return fullName; 
         }
 
-        void AppendGeneric(StringBuilder signature, System.Type type) {
-            var format = type.Name.Substring(0, type.Name.IndexOf('`')) +  "<{0}";            
+        void AppendGeneric(StringBuilder signature, string preFormat, System.Type type) {
+            var format = string.Format(preFormat, type.Name.Substring(0, type.Name.IndexOf('`')) +  "<{0}");            
             AppendTypes(signature, format, type.GetGenericArguments())
                 .Append('>');
         }
