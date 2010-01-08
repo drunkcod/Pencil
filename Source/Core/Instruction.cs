@@ -28,6 +28,6 @@ namespace Pencil.Core
             return "{0} {1}".InvariantFormat(name, operand);
         }
 
-        internal Opcode Opcode { get { return Opcode.FromOffset(offset); } }
+        public Opcode Opcode { get { return Opcode.FromOffset(offset); } }
     }
 }

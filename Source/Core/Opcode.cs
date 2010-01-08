@@ -57,10 +57,12 @@ namespace Pencil.Core
 
 		static Opcode Call(string name){ return new Opcode(name, ParameterType.Method, true); }
 
+        public static readonly Opcode Nop = new Opcode("nop"); 
+
 		#region Single Byte Opcodes
 		static readonly Opcode[] basic =
 		{
-			new Opcode("nop"),
+			Nop,
 			new Opcode("break"),
 			new Opcode("ldarg.0"),
 			new Opcode("ldarg.1"),
