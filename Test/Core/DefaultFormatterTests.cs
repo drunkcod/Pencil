@@ -5,9 +5,23 @@ using NUnit.Framework;
 using System.Linq.Expressions;
 using Pencil.Core;
 using System.Reflection;
+using System.Reflection.Emit;
 
 namespace Pencil.Test.Core
 {
+    class MethodFactory
+    {
+        static public MethodInfo CreateMethod(string name, System.Type returnType, System.Type[] arguments, Action<ILGenerator> createIL) {
+            const string moduleName = "NMeter.Generated";
+            var assembly = AppDomain.CurrentDomain.DefineDynamicAssembly(new AssemblyName(moduleName), AssemblyBuilderAccess.ReflectionOnly);
+            var module = assembly.DefineDynamicModule(moduleName);
+            var method = module.DefineGlobalMethod(name, MethodAttributes.Static | MethodAttributes.Public, returnType, arguments);
+            createIL(method.GetILGenerator());
+            module.CreateGlobalFunctions();
+            return module.GetMethod(method.Name, arguments);
+        }
+    }
+
     class MyClass
     {
         public void Generic<T>() { }
@@ -37,7 +51,12 @@ namespace Pencil.Test.Core
                 CheckFormat(typeof(MyClass).GetMethod("Generic"), "System.Void Pencil.Test.Core.MyClass::Generic<T>()"),
                 CheckFormat(typeof(MyClass).GetMethod("Generic2"), "System.Void Pencil.Test.Core.MyClass::Generic2<T0, T1>()"),
                 CheckFormat(typeof(MyClass).GetMethod("GenericFunc"), "System.Void Pencil.Test.Core.MyClass::GenericFunc<T>(Func<T>)"),
-                CheckFormat(typeof(MyClass).GetMethod("GenericFunc2"), "System.Void Pencil.Test.Core.MyClass::GenericFunc2<T0, T1>(Func<T0>, Predicate<T1>)"));
+                CheckFormat(typeof(MyClass).GetMethod("GenericFunc2"), "System.Void Pencil.Test.Core.MyClass::GenericFunc2<T0, T1>(Func<T0>, Predicate<T1>)"),
+                CheckFormat(MethodFactory.CreateMethod("GlobalMethod", typeof(int), System.Type.EmptyTypes, il =>
+                {
+                    il.Emit(OpCodes.Ldc_I4, 42);
+                    il.Emit(OpCodes.Ret);
+                }), "System.Int32 GlobalMethod()"));
         }
 
         T[] Tests<T>(params T[] tests) { return tests; }

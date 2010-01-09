@@ -10,8 +10,11 @@ namespace Pencil.Core
             var signature = new StringBuilder();
             AppendFormat(signature, method.ReturnType);
             signature.Append(" ");
-            AppendFormat(signature, method.DeclaringType);
-            signature.AppendFormat("::{0}", method.Name);
+            if(method.DeclaringType != null) {
+                AppendFormat(signature, method.DeclaringType);
+                signature.Append("::");
+            }
+            signature.Append(method.Name);
             AppenGenericArguments(signature, method);
             signature.Append('(');
             var separator = "";
