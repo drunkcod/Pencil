@@ -78,7 +78,7 @@ namespace Pencil.Test.Core
 		{
 			var digraph = new DirectedGraph();
 			var graph = new TypeDependencyGraph(digraph);
-			graph.Add(Type.Wrap(typeof(MyType)));
+			graph.Add(TypeLoader.FromNative(typeof(MyType)));
 			Assert.That(digraph.Nodes.Map(x => x.Label).ToList(), Is.EquivalentTo(new[]{ "MyType", "DateTime" }));
 		}
 
@@ -92,7 +92,7 @@ namespace Pencil.Test.Core
         {
             var digraph = new DirectedGraph();
             var graph = new TypeDependencyGraph(digraph);
-            graph.Add(Type.Wrap(typeof(TypeWithArray)));
+            graph.Add(TypeLoader.FromNative(typeof(TypeWithArray)));
             Assert.That(digraph.Edges.Map(x => x.ToString()).ToList(), Is.EquivalentTo(new[] { "0->1" }));
         }
 
@@ -110,7 +110,7 @@ namespace Pencil.Test.Core
 				e.Item.Equals(typeof(EmptyType)).ShouldBe(true);
 				nodeCreatedRaised = true;
 			};
-            graph.Add(Type.Wrap(typeof(EmptyType)));
+            graph.Add(TypeLoader.FromNative(typeof(EmptyType)));
 			nodeCreatedRaised.ShouldBe(true);
 		}
 

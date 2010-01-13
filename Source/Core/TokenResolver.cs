@@ -26,7 +26,7 @@ namespace Pencil.Core
 		}
 
         public IType ResolveType(int token) {
-            return Type.Wrap(module.ResolveType(token, typeArguments, methodArguments));
+            return TypeLoader.FromNative(module.ResolveType(token, typeArguments, methodArguments));
         }
 
         public object ResolveField(int token) {

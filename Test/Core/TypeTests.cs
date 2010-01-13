@@ -54,7 +54,9 @@ namespace Pencil.Test.Core
     [TestFixture]
     public class TypeTests
     {
-		IType DependentType = Type.Wrap(typeof(DependentType));
+        static IType Wrap(System.Type type) { return TypeLoader.FromNative(type); }
+
+		IType DependentType = Wrap(typeof(DependentType));
 
         [Test]
         public void Should_have_same_methods_as_reflection()
@@ -64,32 +66,32 @@ namespace Pencil.Test.Core
             typeof(SampleType).GetMethods(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static)
                 .ForEach(x => viaReflection.Add(x.Name));
 
-            Assert.That(Type.Wrap(typeof(SampleType)).Methods.Map(x => x.Name).ToList(), Is.EquivalentTo(viaReflection));
+            Assert.That(Wrap(typeof(SampleType)).Methods.Map(x => x.Name).ToList(), Is.EquivalentTo(viaReflection));
         }
 		[Test]
 		public void Should_have_readable_ToString()
 		{
-			Type.Wrap(typeof(SampleType)).ToString().ShouldEqual("SampleType");
+			Wrap(typeof(SampleType)).ToString().ShouldEqual("SampleType");
 		}
 		[Test]
 		public void IsGenerated_should_be_false_for_undecorated_Type()
 		{
-			Type.Wrap(typeof(SampleType)).IsGenerated.ShouldBe(false);
+			Wrap(typeof(SampleType)).IsGenerated.ShouldBe(false);
 		}
 		[Test]
 		public void IsGenerated_should_be_true_for_Type_with_CompilerGeneratedAttribute()
 		{
-			Type.Wrap(typeof(GeneratedType)).IsGenerated.ShouldBe(true);
+			Wrap(typeof(GeneratedType)).IsGenerated.ShouldBe(true);
 		}
 		[Test]
 		public void IsGenerated_should_be_true_for_class_nested_inside_generated_type()
 		{
-			Type.Wrap(GeneratedType.GetNestedType()).IsGenerated.ShouldBe(true);
+			Wrap(GeneratedType.GetNestedType()).IsGenerated.ShouldBe(true);
 		}
 		[Test]
 		public void DependsOn_should_be_empty_for_SampleType()
 		{
-			Type.Wrap(typeof(SampleType)).DependsOn.ShouldBeEmpty();
+			Wrap(typeof(SampleType)).DependsOn.ShouldBeEmpty();
 		}
 		[Test]
 		public void DependsOn_should_contain_method_argument_types()
@@ -129,7 +131,7 @@ namespace Pencil.Test.Core
 		[Test]
 		public void DependsOn_wont_contain_generic_parameters()
 		{
-			Type.Wrap(typeof(GenericSample)).DependsOn.Any(x => x.Name.StartsWith("T")).ShouldBe(false);
+			Wrap(typeof(GenericSample)).DependsOn.Any(x => x.Name.StartsWith("T")).ShouldBe(false);
 		}
 
         class WithInitializer
@@ -141,12 +143,12 @@ namespace Pencil.Test.Core
         [Test]
         public void DependsOn_should_handle_automaticliy_initilized_members()
         {
-            Assert.That(Type.Wrap(typeof(WithInitializer)).DependsOn.Map(x => x.Name).ToList(), Is.EquivalentTo(new[] { "IList`1", "List`1" }));
+            Assert.That(Wrap(typeof(WithInitializer)).DependsOn.Map(x => x.Name).ToList(), Is.EquivalentTo(new[] { "IList`1", "List`1" }));
         }
 		[Test]
 		public void Should_support_Equals_with_System_Type()
 		{
-			Type.Wrap(typeof(object)).Equals(typeof(object)).ShouldBe(true);
+			Wrap(typeof(object)).Equals(typeof(object)).ShouldBe(true);
 		}
 
 		enum MyEnum { None }
@@ -154,7 +156,7 @@ namespace Pencil.Test.Core
 		[Test]
 		public void DependsOn_should_be_empty_for_Enum_type()
 		{
-			Type.Wrap(typeof(MyEnum)).DependsOn.ShouldBeEmpty();
+			Wrap(typeof(MyEnum)).DependsOn.ShouldBeEmpty();
 		}
 
 		interface IBase {}
@@ -163,7 +165,7 @@ namespace Pencil.Test.Core
 		[Test]
 		public void DependsOn_should_not_return_interface_implemented_by_base()
 		{
-            Assert.That(Type.Wrap(typeof(Derived)).DependsOn.Map(x => x.Name).ToList(),
+            Assert.That(Wrap(typeof(Derived)).DependsOn.Map(x => x.Name).ToList(),
 				Is.EquivalentTo(new[] { "Base" }));
 		}
 
@@ -174,7 +176,7 @@ namespace Pencil.Test.Core
 		[Test]
 		public void DependsOn_should_handle_nested_generics()
 		{
-            Assert.That(Type.Wrap(typeof(Thing<>)).DependsOn.Map(x => x.FullName).ToList(),
+            Assert.That(Wrap(typeof(Thing<>)).DependsOn.Map(x => x.FullName).ToList(),
 				Is.EquivalentTo(new[] { "System.Collections.Generic.IEnumerable`1" }));
 		}
 
@@ -183,7 +185,7 @@ namespace Pencil.Test.Core
 		[Test]
 		public void EmptyAttribute_should_only_depend_on_Attribute()
 		{
-			Type.Wrap(typeof(EmptyAttribute)).DependsOn.All(x => x.Equals(typeof(Attribute))).ShouldBe(true);
+			Wrap(typeof(EmptyAttribute)).DependsOn.All(x => x.Equals(typeof(Attribute))).ShouldBe(true);
 		}
 		[Test]
 		public void ElementType_should_be_same_as_type_for_normal_type()
@@ -193,32 +195,32 @@ namespace Pencil.Test.Core
 		[Test]
 		public void ElementType_should_be_item_type_for_array()
 		{
-			Type.Wrap(typeof(object[])).ElementType.Equals(typeof(object)).ShouldBe(true);
+			Wrap(typeof(object[])).ElementType.Equals(typeof(object)).ShouldBe(true);
 		}
 
 		[Test]
 		public void IsA_should_be_true_if_assignable_from_other_type()
 		{
-			Type.Wrap(typeof(EmptyAttribute)).IsA<Attribute>().ShouldBe(true);
+			Wrap(typeof(EmptyAttribute)).IsA<Attribute>().ShouldBe(true);
 		}
 		[Test]
 		public void IsPublic_should_be_true_for_public_type()
 		{
-			Type.Wrap(GetType()).IsPublic.ShouldBe(true);
+			Wrap(GetType()).IsPublic.ShouldBe(true);
 		}
 
 		public class PublicType{}
 		[Test]
 		public void IsPublic_should_be_true_for_public_type_nested_in_public_type()
 		{
-			Type.Wrap(typeof(PublicType)).IsPublic.ShouldBe(true);
+			Wrap(typeof(PublicType)).IsPublic.ShouldBe(true);
 		}
 
 		class PrivateType{}
 		[Test]
 		public void IsPublic_should_be_false_for_non_public_type()
 		{
-			Type.Wrap(typeof(PrivateType)).IsPublic.ShouldBe(false);
+			Wrap(typeof(PrivateType)).IsPublic.ShouldBe(false);
 		}
 
 		class Outer
@@ -228,7 +230,7 @@ namespace Pencil.Test.Core
 		[Test]
 		public void NestedTypes_should_include_inner_classes()
 		{
-			Assert.That(Type.Wrap(typeof(Outer)).NestedTypes.Map(x => x.Name).ToList(),
+			Assert.That(Wrap(typeof(Outer)).NestedTypes.Map(x => x.Name).ToList(),
 				Is.EquivalentTo(new[]{ "Nested"}));
 		}
     }

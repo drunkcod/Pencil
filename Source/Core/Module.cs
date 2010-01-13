@@ -16,7 +16,7 @@
 
         public IEnumerable<IType> Types
         {
-            get { return module.GetTypes().Map<System.Type, IType>(Type.Wrap); }
+            get { return module.GetTypes().Map<System.Type, IType>(TypeLoader.FromNative); }
         }
     }
 }

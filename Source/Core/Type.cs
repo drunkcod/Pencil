@@ -37,11 +37,6 @@
 			public ICollection<IType> Types { get { return types.Values; } }
 		}
 
-		public static IType Wrap(SystemType type)
-        {
-            return TypeLoader.FromNative(type);
-        }
-
         internal Type(SystemType type)
         {
 			if(type == null)
@@ -56,7 +51,7 @@
 			get
 			{
 				var elementType = type.GetElementType();
-				return elementType == null ? this : Type.Wrap(elementType);
+				return elementType == null ? this : TypeLoader.FromNative(elementType);
 			}
 		}
         public IEnumerable<IMethod> Methods { get { return type.GetMethods(AllMethods).Map<MethodInfo, IMethod>(TypeLoader.FromNative); } }
@@ -69,13 +64,13 @@
 				var dependsOn = new DependencyCollection(this);
 				var baseType = type.BaseType;
 				if(baseType != null)
-					dependsOn.Add(Type.Wrap(baseType));
+					dependsOn.Add(TypeLoader.FromNative(baseType));
 				type.GetInterfaces().ForEach(x =>
 				{
 					if(Implements(x))
-						dependsOn.Add(Type.Wrap(x));
+						dependsOn.Add(TypeLoader.FromNative(x));
 				});
-                type.GetFields(AllMethods).ForEach(x => { if(x.DeclaringType == type) dependsOn.Add(Type.Wrap(x.FieldType)); });
+                type.GetFields(AllMethods).ForEach(x => { if(x.DeclaringType == type) dependsOn.Add(TypeLoader.FromNative(x.FieldType)); });
 				EachOwnMethod(m => m.Arguments.Map(a => a.Type).ForEach(dependsOn.Add));
 				EachOwnMethod(m => dependsOn.Add(m.ReturnType));
 				EachOwnMethod(m => m.Calls.ForEach(x =>{ dependsOn.Add(x.DeclaringType);}));
@@ -87,7 +82,7 @@
 			get
 			{
 				return type.GetNestedTypes(BindingFlags.Public | BindingFlags.NonPublic)
-				.Map(x => Wrap(x));
+				.Map(x => TypeLoader.FromNative(x));
 			}
 		}
 

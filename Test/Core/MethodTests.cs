@@ -32,7 +32,7 @@ using System.Reflection;
 		{
 			var method = GetMyMethod();
 
-			method.DeclaringType.ShouldEqual(Pencil.Core.Type.Wrap(GetType()));
+			method.DeclaringType.ShouldEqual(TypeLoader.FromNative(GetType()));
 		}
 		[Test]
 		public void IsGenerated_should_be_false_for_undecorated_method()
