@@ -19,11 +19,6 @@ namespace Pencil.Core
         MethodBase method;
 		IType returnType;
 
-        public static Method Wrap(ConstructorInfo ctor)
-		{
-            return new Method(TypeLoader.FromNative(ctor.DeclaringType), ctor, TypeLoader.FromNative(ctor.DeclaringType));
-		}
-
 		internal Method(IType declaringType, MethodBase method, IType returnType)
 		{
             this.declaringType = declaringType;
@@ -47,7 +42,7 @@ namespace Pencil.Core
 
         public ICollection<IMethodArgument> Arguments
         {
-            get { return method.GetParameters().Map<ParameterInfo, IMethodArgument>(MethodArgument.Wrap).ToList(); }
+            get { return method.GetParameters().Map<ParameterInfo, IMethodArgument>(TypeLoader.FromNative).ToList(); }
         }
 
 		public IType ReturnType { get { return returnType; } }

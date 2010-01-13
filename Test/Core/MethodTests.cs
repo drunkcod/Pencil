@@ -65,7 +65,13 @@ using System.Reflection;
 		{
 			GetMethod(GetType().GetConstructor(System.Type.EmptyTypes)).IsConstructor.ShouldBe(true);
 		}
-		[Test]
+        [Test]
+        public void Constructor_have_same_declaring_type_and_return_type() {
+            var ctor = GetMethod(GetType().GetConstructor(System.Type.EmptyTypes));
+
+            Assert.That(ctor.DeclaringType, Is.SameAs(ctor.ReturnType));
+        }
+        [Test]
 		public void ToString_should_include_return_type_and_name()
 		{
             GetMyMethod().ToString().ShouldEqual("System.Int32 Pencil.Test.Core.MethodTests.MyMethod()");

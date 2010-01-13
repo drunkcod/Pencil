@@ -103,7 +103,7 @@
 				if(method.DeclaringType.Equals(type))
 					action(method);
             foreach(var ctor in type.GetConstructors(AllMethods))
-                action(Method.Wrap(ctor));
+                action(TypeLoader.FromNative(ctor));
 		}
 
 		public bool IsGenerated

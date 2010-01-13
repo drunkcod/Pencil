@@ -43,7 +43,7 @@ namespace Pencil.Core
 				var method = module.ResolveMethod(token, typeArguments, methodArguments);
 				var ctor = method as System.Reflection.ConstructorInfo;
 				if(ctor != null)
-					return Method.Wrap(ctor);
+					return TypeLoader.FromNative(ctor);
 				var info = method as System.Reflection.MethodInfo;
 				if(info != null)
 					return TypeLoader.FromNative(info);

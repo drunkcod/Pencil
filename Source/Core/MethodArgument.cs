@@ -4,19 +4,16 @@
 
     class MethodArgument : IMethodArgument
     {
-        ParameterInfo parameter;
+        readonly string name;
+        readonly IType type;
 
-        public static IMethodArgument Wrap(ParameterInfo parameter)
+		public string Name { get { return name; } }
+        public IType Type { get { return type; } }
+
+        internal MethodArgument(string name, IType type)
         {
-            return new MethodArgument(parameter);
-        }
-
-		public string Name { get { return parameter.Name; } }
-        public IType Type { get { return Pencil.Core.Type.Wrap(parameter.ParameterType); } }
-
-        MethodArgument(ParameterInfo parameter)
-        {
-            this.parameter = parameter;
+            this.name = name;
+            this.type = type;
         }
     }
 }
