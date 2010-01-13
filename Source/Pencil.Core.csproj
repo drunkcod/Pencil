@@ -85,6 +85,7 @@
     <Compile Include="Core\TokenResolver.cs" />
     <Compile Include="Core\Type.cs" />
     <Compile Include="Core\TypeDependencyGraph.cs" />
+    <Compile Include="Core\TypeLoader.cs" />
     <Compile Include="Core\XmlConfiguration.cs" />
     <Compile Include="NMeter\ConfigurationItem.cs" />
     <Compile Include="NMeter\IgnoreFilter.cs" />

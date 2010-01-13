@@ -3,6 +3,7 @@ namespace Pencil.Test.Core
 	using System;
 	using NUnit.Framework;
 	using Pencil.Core;
+using System.Reflection;
 
 	[TestFixture]
 	public class MethodTests
@@ -17,7 +18,7 @@ namespace Pencil.Test.Core
         [Test]
         public void Arguments_should_contain_all_method_arguments()
         {
-            var method = Method.Wrap(GetType().GetMethod("DoStuff", new[]{ typeof(int), typeof(string)}));
+            var method = GetMethod(GetType().GetMethod("DoStuff", new[]{ typeof(int), typeof(string)}));
             Assert.That(method.Arguments.Map(x => x.Type.Name).ToList(),
                 Is.EquivalentTo(new[]{ "Int32", "String" }));
         }
@@ -41,7 +42,7 @@ namespace Pencil.Test.Core
 		[Test]
 		public void IsGenerated_should_be_true_if_method_has_CompilerGeneratedAttribute()
 		{
-			var method = Method.Wrap(GetType().GetMethod("CompilerGeneratedMethod"));
+			var method = GetMethod(GetType().GetMethod("CompilerGeneratedMethod"));
 			method.IsGenerated.ShouldBe(true);
 		}
 		[Test]
@@ -52,7 +53,7 @@ namespace Pencil.Test.Core
 		[Test]
 		public void IsSpecialName_should_be_true_for_property()
 		{
-			Method.Wrap(GetType().GetProperty("MyProperty").GetGetMethod()).IsSpecialName.ShouldBe(true);
+			GetMethod(GetType().GetProperty("MyProperty").GetGetMethod()).IsSpecialName.ShouldBe(true);
 		}
 		[Test]
 		public void IsConstructor_should_be_false_for_plain_method()
@@ -62,7 +63,7 @@ namespace Pencil.Test.Core
 		[Test]
 		public void IsConstructor_should_be_true_for_ctor()
 		{
-			Method.Wrap(GetType().GetConstructor(System.Type.EmptyTypes)).IsConstructor.ShouldBe(true);
+			GetMethod(GetType().GetConstructor(System.Type.EmptyTypes)).IsConstructor.ShouldBe(true);
 		}
 		[Test]
 		public void ToString_should_include_return_type_and_name()
@@ -74,13 +75,21 @@ namespace Pencil.Test.Core
 		[Test]
 		public void ToString_should_include_arguments()
 		{
-			Method.Wrap(GetType().GetMethod("MyMethod2"))
+			GetMethod(GetType().GetMethod("MyMethod2"))
 			.ToString().ShouldEqual("System.Void Pencil.Test.Core.MethodTests.MyMethod2(System.String, System.Object)");
 		}
 
-		Method GetMyMethod()
+        IMethod GetMethod(MethodInfo method) {
+            return TypeLoader.FromNative(method);
+        }
+
+        IMethod GetMethod(ConstructorInfo ctor) {
+            return TypeLoader.FromNative(ctor);
+        }
+
+		IMethod GetMyMethod()
 		{
-			return Method.Wrap(GetType().GetMethod("MyMethod"));
+			return GetMethod(GetType().GetMethod("MyMethod"));
 		}
 
 		public int MyMethod()

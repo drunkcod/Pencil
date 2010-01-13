@@ -15,28 +15,25 @@ namespace Pencil.Core
 
 	public class Method : IMethod
 	{
+        IType declaringType;
         MethodBase method;
 		IType returnType;
 
-        public static Method Wrap(MethodInfo method)
-		{
-			return new Method(method, method.ReturnType);
-		}
-
         public static Method Wrap(ConstructorInfo ctor)
 		{
-			return new Method(ctor, ctor.DeclaringType);
+            return new Method(TypeLoader.FromNative(ctor.DeclaringType), ctor, TypeLoader.FromNative(ctor.DeclaringType));
 		}
 
-		Method(MethodBase method, System.Type returnType)
+		internal Method(IType declaringType, MethodBase method, IType returnType)
 		{
-			this.method = method;
-			this.returnType = Type.Wrap(returnType);
+            this.declaringType = declaringType;
+            this.method = method;
+			this.returnType = returnType;
 		}
 
 		public string Name { get { return method.Name; } }
 
-		public IType DeclaringType { get { return Type.Wrap(method.DeclaringType); } }
+		public IType DeclaringType { get { return declaringType; } }
 
 		public IEnumerable<IMethod> Calls
 		{
@@ -59,10 +56,9 @@ namespace Pencil.Core
 		{
 			get
 			{
-				var dissassembler = new Disassembler(new TokenResolver(method.Module, method.DeclaringType, method));
 				try
 				{
-					return dissassembler.Decode(GetIL());
+					return Disassembler.Decode(method);
 				}
 				catch(ArgumentOutOfRangeException e)
 				{

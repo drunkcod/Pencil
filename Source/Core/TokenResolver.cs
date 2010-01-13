@@ -46,7 +46,7 @@ namespace Pencil.Core
 					return Method.Wrap(ctor);
 				var info = method as System.Reflection.MethodInfo;
 				if(info != null)
-					return Method.Wrap(info);
+					return TypeLoader.FromNative(info);
 				throw new NotSupportedException(method.GetType().Name + " not supported.");
 		}
 	}

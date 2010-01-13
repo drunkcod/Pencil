@@ -39,10 +39,10 @@
 
 		public static IType Wrap(SystemType type)
         {
-            return new Type(type);
+            return TypeLoader.FromNative(type);
         }
 
-        private Type(SystemType type)
+        internal Type(SystemType type)
         {
 			if(type == null)
 				throw new ArgumentNullException();
@@ -59,7 +59,7 @@
 				return elementType == null ? this : Type.Wrap(elementType);
 			}
 		}
-        public IEnumerable<IMethod> Methods { get { return type.GetMethods(AllMethods).Map<MethodInfo, IMethod>(Method.Wrap); } }
+        public IEnumerable<IMethod> Methods { get { return type.GetMethods(AllMethods).Map<MethodInfo, IMethod>(TypeLoader.FromNative); } }
 		public ICollection<IType> DependsOn
 		{
 			get

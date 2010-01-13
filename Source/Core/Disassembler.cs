@@ -7,7 +7,7 @@ using System.Reflection;
     {
         ITokenResolver tokens;
 
-        public static IEnumerable<IInstruction> Decode(MethodInfo method) 
+        public static IEnumerable<IInstruction> Decode(MethodBase method) 
         {
             var tokens = new TokenResolver(method.Module, method.DeclaringType, method);
             var body = method.GetMethodBody();
