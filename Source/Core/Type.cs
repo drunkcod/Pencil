@@ -8,7 +8,8 @@
     public class Type : IType
     {
         const BindingFlags AllMethods = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance;
-        SystemType type;
+        readonly ITypeLoader typeLoader;
+        readonly SystemType type;
 
 		class DependencyCollection
 		{
@@ -37,10 +38,11 @@
 			public ICollection<IType> Types { get { return types.Values; } }
 		}
 
-        internal Type(SystemType type)
+        internal Type(ITypeLoader typeLoader, SystemType type)
         {
 			if(type == null)
 				throw new ArgumentNullException();
+            this.typeLoader = typeLoader;
             this.type = type.IsGenericType ? type.GetGenericTypeDefinition() : type;
         }
 
@@ -51,10 +53,10 @@
 			get
 			{
 				var elementType = type.GetElementType();
-				return elementType == null ? this : TypeLoader.FromNative(elementType);
+				return elementType == null ? this : typeLoader.FromNative(elementType);
 			}
 		}
-        public IEnumerable<IMethod> Methods { get { return type.GetMethods(AllMethods).Map<MethodInfo, IMethod>(TypeLoader.FromNative); } }
+        public IEnumerable<IMethod> Methods { get { return type.GetMethods(AllMethods).Map<MethodInfo, IMethod>(typeLoader.FromNative); } }
 		public ICollection<IType> DependsOn
 		{
 			get
@@ -64,13 +66,13 @@
 				var dependsOn = new DependencyCollection(this);
 				var baseType = type.BaseType;
 				if(baseType != null)
-					dependsOn.Add(TypeLoader.FromNative(baseType));
+					dependsOn.Add(typeLoader.FromNative(baseType));
 				type.GetInterfaces().ForEach(x =>
 				{
 					if(Implements(x))
-						dependsOn.Add(TypeLoader.FromNative(x));
+						dependsOn.Add(typeLoader.FromNative(x));
 				});
-                type.GetFields(AllMethods).ForEach(x => { if(x.DeclaringType == type) dependsOn.Add(TypeLoader.FromNative(x.FieldType)); });
+                type.GetFields(AllMethods).ForEach(x => { if(x.DeclaringType == type) dependsOn.Add(typeLoader.FromNative(x.FieldType)); });
 				EachOwnMethod(m => m.Arguments.Map(a => a.Type).ForEach(dependsOn.Add));
 				EachOwnMethod(m => dependsOn.Add(m.ReturnType));
 				EachOwnMethod(m => m.Calls.ForEach(x =>{ dependsOn.Add(x.DeclaringType);}));
@@ -82,7 +84,7 @@
 			get
 			{
 				return type.GetNestedTypes(BindingFlags.Public | BindingFlags.NonPublic)
-				.Map(x => TypeLoader.FromNative(x));
+				.Map(x => typeLoader.FromNative(x));
 			}
 		}
 
@@ -98,7 +100,7 @@
 				if(method.DeclaringType.Equals(type))
 					action(method);
             foreach(var ctor in type.GetConstructors(AllMethods))
-                action(TypeLoader.FromNative(ctor));
+                action(typeLoader.FromNative(ctor));
 		}
 
 		public bool IsGenerated

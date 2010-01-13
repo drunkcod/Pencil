@@ -11,19 +11,19 @@
 
 		public static IAssembly LoadFrom(string path)
 		{
-			return new Assembly(ReflectionAssembly.LoadFrom(path));
+			return new Assembly(new DefaultTypeLoader(), ReflectionAssembly.LoadFrom(path));
 		}
 
 		public static IAssembly GetExecutingAssembly()
 		{
-            return new Assembly(ReflectionAssembly.GetCallingAssembly());
+            return new Assembly(new DefaultTypeLoader(), ReflectionAssembly.GetCallingAssembly());
         }
 
 		public IAssembly Load(AssemblyName assembly)
 		{
 			try
 			{
-				return new Assembly(ReflectionAssembly.Load(assembly));
+				return new Assembly(new DefaultTypeLoader(), ReflectionAssembly.Load(assembly));
 			}
 			catch(FileLoadException)
 			{

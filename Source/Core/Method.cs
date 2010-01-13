@@ -15,15 +15,19 @@ namespace Pencil.Core
 
 	public class Method : IMethod
 	{
+        ITypeLoader typeLoader;
         IType declaringType;
         MethodBase method;
 		IType returnType;
+        Func<IInstruction[]> body;
 
-		internal Method(IType declaringType, MethodBase method, IType returnType)
+		internal Method(ITypeLoader typeLoader, IType declaringType, MethodBase method, IType returnType, Func<IInstruction[]> body)
 		{
+            this.typeLoader = typeLoader;
             this.declaringType = declaringType;
             this.method = method;
 			this.returnType = returnType;
+            this.body = body;
 		}
 
 		public string Name { get { return method.Name; } }
@@ -42,25 +46,12 @@ namespace Pencil.Core
 
         public ICollection<IMethodArgument> Arguments
         {
-            get { return method.GetParameters().Map<ParameterInfo, IMethodArgument>(TypeLoader.FromNative).ToList(); }
+            get { return method.GetParameters().Map<ParameterInfo, IMethodArgument>(typeLoader.FromNative).ToList(); }
         }
 
 		public IType ReturnType { get { return returnType; } }
 
-		public IEnumerable<IInstruction> Body
-		{
-			get
-			{
-				try
-				{
-					return Disassembler.Decode(method);
-				}
-				catch(ArgumentOutOfRangeException e)
-				{
-					throw new MethodDecodeException(this, e);
-				}
-			}
-		}
+		public IEnumerable<IInstruction> Body { get { return body(); } }
 
 		public override string ToString()
 		{

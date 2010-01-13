@@ -1,15 +1,15 @@
-﻿namespace Pencil.Core
-{
-	using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Reflection;
 
+namespace Pencil.Core
+{
     public class Disassembler
     {
         ITokenResolver tokens;
 
         public static IEnumerable<IInstruction> Decode(MethodBase method) 
         {
-            var tokens = new TokenResolver(method.Module, method.DeclaringType, method);
+            var tokens = new TokenResolver(new DefaultTypeLoader(), method.Module, method.DeclaringType, method);
             var body = method.GetMethodBody();
             if(body == null)
                 return new IInstruction[0];

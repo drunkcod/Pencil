@@ -7,12 +7,14 @@ namespace Pencil.Core
 
 	public class TokenResolver : ITokenResolver
 	{
-		ReflectionModule module;
-		SystemType[] typeArguments;
-		SystemType[] methodArguments;
+        readonly ITypeLoader typeLoader;
+		readonly ReflectionModule module;
+		readonly SystemType[] typeArguments;
+		readonly SystemType[] methodArguments;
 
-		public TokenResolver(ReflectionModule module, SystemType type, MethodBase method)
+		public TokenResolver(ITypeLoader typeLoader, ReflectionModule module, SystemType type, MethodBase method)
 		{
+            this.typeLoader = typeLoader;
 			this.module = module;
             if(type != null)
                 this.typeArguments = type.GetGenericArguments();
@@ -26,7 +28,7 @@ namespace Pencil.Core
 		}
 
         public IType ResolveType(int token) {
-            return TypeLoader.FromNative(module.ResolveType(token, typeArguments, methodArguments));
+            return typeLoader.FromNative(module.ResolveType(token, typeArguments, methodArguments));
         }
 
         public object ResolveField(int token) {
@@ -43,10 +45,10 @@ namespace Pencil.Core
 				var method = module.ResolveMethod(token, typeArguments, methodArguments);
 				var ctor = method as System.Reflection.ConstructorInfo;
 				if(ctor != null)
-					return TypeLoader.FromNative(ctor);
+					return typeLoader.FromNative(ctor);
 				var info = method as System.Reflection.MethodInfo;
 				if(info != null)
-					return TypeLoader.FromNative(info);
+					return typeLoader.FromNative(info);
 				throw new NotSupportedException(method.GetType().Name + " not supported.");
 		}
 	}

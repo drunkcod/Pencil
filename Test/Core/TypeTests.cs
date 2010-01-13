@@ -54,7 +54,8 @@ namespace Pencil.Test.Core
     [TestFixture]
     public class TypeTests
     {
-        static IType Wrap(System.Type type) { return TypeLoader.FromNative(type); }
+        static ITypeLoader typeLoader = new DefaultTypeLoader();
+        static IType Wrap(System.Type type) { return typeLoader.FromNative(type); }
 
 		IType DependentType = Wrap(typeof(DependentType));
 

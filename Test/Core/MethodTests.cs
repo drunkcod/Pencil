@@ -8,6 +8,8 @@ using System.Reflection;
 	[TestFixture]
 	public class MethodTests
 	{
+        ITypeLoader TypeLoader = new DefaultTypeLoader();
+
 		[Test]
 		public void Calls_should_contain_called_methods()
 		{

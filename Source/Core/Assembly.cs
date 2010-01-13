@@ -6,6 +6,7 @@
 
     public class Assembly : IAssembly
     {
+        ITypeLoader typeLoader;
         ReflectionAssembly assembly;
 
 		public AssemblyName Name { get { return assembly.GetName(); } }
@@ -20,14 +21,15 @@
             get 
             {
                 foreach(var module in assembly.GetModules())
-                    yield return new Module(module);
+                    yield return new Module(typeLoader, module);
             }
         }
 
 		public bool IsMissing { get { return false; } }
 
-        internal Assembly(ReflectionAssembly assembly)
+        internal Assembly(ITypeLoader typeLoader, ReflectionAssembly assembly)
         {
+            this.typeLoader = typeLoader;
             this.assembly = assembly;
         }
     }

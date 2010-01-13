@@ -6,9 +6,12 @@
 
     class Module : IModule
     {
+        ITypeLoader typeLoader;
         ReflectionModule module;
-        public Module(ReflectionModule module)
+
+        public Module(ITypeLoader typeLoader, ReflectionModule module)
         {
+            this.typeLoader = typeLoader;
             this.module = module;
         }
 
@@ -16,7 +19,7 @@
 
         public IEnumerable<IType> Types
         {
-            get { return module.GetTypes().Map<System.Type, IType>(TypeLoader.FromNative); }
+            get { return module.GetTypes().Map<System.Type, IType>(typeLoader.FromNative); }
         }
     }
 }

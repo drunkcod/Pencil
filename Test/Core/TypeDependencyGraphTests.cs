@@ -7,6 +7,8 @@ namespace Pencil.Test.Core
 	[TestFixture]
 	public class TypeDependencyGraphTests
 	{
+        ITypeLoader TypeLoader = new DefaultTypeLoader();
+
 		[Test]
 		public void Add_should_create_node_for_type()
 		{
