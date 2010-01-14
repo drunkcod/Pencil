@@ -1,21 +1,24 @@
+using System.IO;
+using NUnit.Framework;
+using Pencil.Core;
+using Pencil.Dot;
+
 namespace Pencil.Test.Core
 {
-	using System.IO;
-	using NUnit.Framework;
-	using Pencil.Core;
-
 	[TestFixture]
 	public class DotBuilderTests
 	{
+        static DirectedGraph EmptyGraph() { return new DirectedGraph(new DotNodeFactory()); }
+
 		[Test]
 		public void ToString_should_be_valid_if_empty()
 		{
-			ToDot(new DirectedGraph()).ShouldEqual("digraph{}");
+			ToDot(EmptyGraph()).ShouldEqual("digraph{}");
 		}
 		[Test]
 		public void Should_support_connecting_nodes()
 		{
-			var builder = new DirectedGraph();
+			var builder = EmptyGraph();
 			builder.AddNode().ConnectTo(builder.AddNode());
 
 			ToDot(builder).ShouldEqual("digraph{0->1}");
@@ -23,7 +26,7 @@ namespace Pencil.Test.Core
         [Test]
         public void Should_render_multiple_edges_correctly()
         {
-            var builder = new DirectedGraph();
+            var builder = EmptyGraph();
             var n0 = builder.AddNode();
             n0.ConnectTo(builder.AddNode());
             n0.ConnectTo(builder.AddNode());
@@ -33,7 +36,7 @@ namespace Pencil.Test.Core
         [Test]
         public void Should_render_node_labels_correctly()
         {
-            var builder = new DirectedGraph();
+            var builder = EmptyGraph();
             builder.AddNode().Label = "Pencil.Core.dll";
             ToDot(builder).ShouldEqual("digraph{0[label=\"Pencil.Core.dll\"]}");
         }
@@ -84,7 +87,7 @@ namespace Pencil.Test.Core
 
         static string WriteEmpty(DotBuilder dot)
         {
-            return dot.Write(new DirectedGraph()).Target.ToString();
+            return dot.Write(EmptyGraph()).Target.ToString();
         }
 	}
 }

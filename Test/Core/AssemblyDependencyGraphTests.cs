@@ -6,6 +6,7 @@ namespace Pencil.Test.Core
     using NUnit.Framework;
     using Pencil.Core;
     using Pencil.Test.Stubs;
+    using Pencil.Dot;
 
 	[TestFixture]
 	public class AssemblyDependencyGraphTests
@@ -15,10 +16,12 @@ namespace Pencil.Test.Core
 			return new AssemblyDependencyGraph(target, new AssemblyLoaderStub());
 		}
 
+        DirectedGraph EmptyGraph() { return new DirectedGraph(new DotNodeFactory()); }
+
 		[Test]
 		public void Should_support_filter_function()
 		{
-			var digraph = new DirectedGraph();
+			var digraph = EmptyGraph();
 			var graph = new AssemblyDependencyGraph(digraph, new AssemblyLoaderStub(), x => x.Name != "System");
 			var assembly = GetAssemblyDependingOnSystem();
 
@@ -29,7 +32,7 @@ namespace Pencil.Test.Core
 		[Test]
 		public void Should_support_filter()
 		{
-			var digraph = new DirectedGraph();
+			var digraph = EmptyGraph();
 			var filter = Filter.From<AssemblyName>(x => x.Name != "System");
 			var graph = new AssemblyDependencyGraph(digraph, new AssemblyLoaderStub(), filter);
 			var assembly = GetAssemblyDependingOnSystem();
@@ -49,7 +52,7 @@ namespace Pencil.Test.Core
         [Test]
         public void Add_should_obey_filtering()
         {
-            var digraph = new DirectedGraph();
+            var digraph = EmptyGraph();
             var graph = new AssemblyDependencyGraph(digraph, new AssemblyLoaderStub(), x => false);
             var assembly = new AssemblyStub("MyAssembly");
             graph.Add(assembly);
@@ -60,7 +63,7 @@ namespace Pencil.Test.Core
 		[Test]
 		public void Should_add_node_with_assembly_name_as_label()
 		{
-			var digraph = new DirectedGraph();
+			var digraph = EmptyGraph();
 			var graph = NewDependencyGraph(digraph);
 			var assembly = new AssemblyStub("MyAssembly");
 			graph.Add(assembly);
@@ -70,7 +73,7 @@ namespace Pencil.Test.Core
 		[Test]
 		public void Should_add_referenced_assemblies()
 		{
-            var digraph = new DirectedGraph();
+            var digraph = EmptyGraph();
             var graph = NewDependencyGraph(digraph);
 			var root = new AssemblyStub("RootAssembly");
 			var child1 = new AssemblyName("System");
@@ -85,7 +88,7 @@ namespace Pencil.Test.Core
         [Test]
         public void Should_add_edges_from_dependant_to_dependee()
         {
-            var digraph = new DirectedGraph();
+            var digraph = EmptyGraph();
             var graph = NewDependencyGraph(digraph);
             var root = new AssemblyStub("RootAssembly");
             var child1 = new AssemblyName("System");
@@ -100,7 +103,7 @@ namespace Pencil.Test.Core
 		[Test]
         public void Wont_add_children_twice()
         {
-            var digraph = new DirectedGraph();
+            var digraph = EmptyGraph();
             var graph = NewDependencyGraph(digraph);
             var parent = new AssemblyStub("RootAssembly");
             var child = new AssemblyName("System");
@@ -115,7 +118,7 @@ namespace Pencil.Test.Core
         [Test]
         public void Should_not_add_same_assembly_twice()
         {
-            var digraph = new DirectedGraph();
+            var digraph = EmptyGraph();
             var graph = NewDependencyGraph(digraph);
             var root1 = new AssemblyStub("Pencil.Build");
             var root2 = new AssemblyStub("Pencil.Test");
@@ -132,7 +135,7 @@ namespace Pencil.Test.Core
 		[Test]
 		public void Should_load_referenced_assemblies()
 		{
-			var digraph = new DirectedGraph();
+			var digraph = EmptyGraph();
 			var loader = new AssemblyLoaderStub();
             var graph = new AssemblyDependencyGraph(digraph, loader);
 			var root = new AssemblyStub("RootAssembly");
@@ -149,7 +152,7 @@ namespace Pencil.Test.Core
 		[Test]
 		public void Should_follow_dependency_chain()
 		{
-			var digraph = new DirectedGraph();
+			var digraph = EmptyGraph();
 			var loader = new AssemblyLoaderStub();
             var graph = new AssemblyDependencyGraph(digraph, loader);
 			var root = new AssemblyStub("RootAssembly");
@@ -170,7 +173,7 @@ namespace Pencil.Test.Core
 		[Test]
         public void Should_handle_circular_dependencies()
         {
-            var digraph = new DirectedGraph();
+            var digraph = EmptyGraph();
 			var loader = new AssemblyLoaderStub();
             var graph = new AssemblyDependencyGraph(digraph, loader);
             var system = new AssemblyStub("System");

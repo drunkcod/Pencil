@@ -1,7 +1,8 @@
-namespace Pencil.Core
-{
-	using System;
+using System;
+using Pencil.Core;
 
+namespace Pencil.Dot
+{
 	public class DotNodeFactory : INodeFactory
 	{
         int nextNodeId;

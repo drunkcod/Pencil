@@ -1,9 +1,9 @@
-namespace Pencil.Core
-{
-	using System.Drawing;
-	using System.Text;
-	using System.Globalization;
+using System.Drawing;
+using System.Text;
+using System.Globalization;
 
+namespace Pencil.Dot
+{
 	class DotStyleWriter
 	{
 		StringBuilder target;

@@ -1,10 +1,11 @@
-namespace Pencil.Core
-{
-	using System.Collections.Generic;
-	using System.IO;
-    using System.Globalization;
-    using System.Text;
+using System.Collections.Generic;
+using System.IO;
+using System.Globalization;
+using System.Text;
+using Pencil.Core;
 
+namespace Pencil.Dot
+{
 	public class DotBuilder
 	{
         string format;

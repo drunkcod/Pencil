@@ -1,7 +1,8 @@
-namespace Pencil.Core
-{
-	using System.Text;
+using System.Text;
+using Pencil.Core;
 
+namespace Pencil.Dot
+{
 	public class DotNode : Node
 	{
 		readonly int id;

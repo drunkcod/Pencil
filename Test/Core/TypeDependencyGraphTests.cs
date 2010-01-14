@@ -3,16 +3,19 @@ namespace Pencil.Test.Core
 	using NUnit.Framework;
 	using Pencil.Core;
 	using Pencil.Test.Stubs;
+    using Pencil.Dot;
 
 	[TestFixture]
 	public class TypeDependencyGraphTests
 	{
         ITypeLoader TypeLoader = new DefaultTypeLoader();
+        DirectedGraph EmptyGraph() { return new DirectedGraph(new DotNodeFactory()); }
+
 
 		[Test]
 		public void Add_should_create_node_for_type()
 		{
-			var digraph = new DirectedGraph();
+			var digraph = EmptyGraph();
 			var graph = new TypeDependencyGraph(digraph);
 			graph.Add(new TypeStub("MyType"));
 
@@ -21,7 +24,7 @@ namespace Pencil.Test.Core
 		[Test]
 		public void Add_should_create_nodes_for_dependencies()
 		{
-			var digraph = new DirectedGraph();
+			var digraph = EmptyGraph();
 			var graph = new TypeDependencyGraph(digraph);
 			graph.Add(new TypeStub("MyType"){ GetDependsOnHandler = () => new[]{new TypeStub("DateTime") } });
 
@@ -30,7 +33,7 @@ namespace Pencil.Test.Core
 		[Test]
 		public void Add_should_create_edges_between_dependencies()
 		{
-			var digraph = new DirectedGraph();
+			var digraph = EmptyGraph();
 			var graph = new TypeDependencyGraph(digraph);
 			graph.Add(new TypeStub("MyType"){ GetDependsOnHandler = () => new[]
 			{
@@ -42,7 +45,7 @@ namespace Pencil.Test.Core
 		[Test]
 		public void Should_ignore_generated_types()
 		{
-			var digraph = new DirectedGraph();
+			var digraph = EmptyGraph();
 			var graph = new TypeDependencyGraph(digraph);
 			graph.Add(new TypeStub("Generated"){ GetIsGeneratedHandler = () => true });
 
@@ -51,7 +54,7 @@ namespace Pencil.Test.Core
 		[Test]
 		public void Should_ignore_generated_dependent_on_types()
 		{
-			var digraph = new DirectedGraph();
+			var digraph = EmptyGraph();
 			var graph = new TypeDependencyGraph(digraph);
 			graph.Add(new TypeStub("MyType"){ GetDependsOnHandler = () => new[]
 			{
@@ -63,7 +66,7 @@ namespace Pencil.Test.Core
 		[Test]
 		public void Should_support_filtering()
 		{
-			var digraph = new DirectedGraph();
+			var digraph = EmptyGraph();
 			var graph = new TypeDependencyGraph(digraph, Filter.From<IType>(x => false));
 			graph.Add(new TypeStub("MyType"));
 
@@ -78,7 +81,7 @@ namespace Pencil.Test.Core
 		[Test]
 		public void Should_use_element_type_for_arrays()
 		{
-			var digraph = new DirectedGraph();
+			var digraph = EmptyGraph();
 			var graph = new TypeDependencyGraph(digraph);
 			graph.Add(TypeLoader.FromNative(typeof(MyType)));
 			Assert.That(digraph.Nodes.Map(x => x.Label).ToList(), Is.EquivalentTo(new[]{ "MyType", "DateTime" }));
@@ -92,7 +95,7 @@ namespace Pencil.Test.Core
         [Test]
         public void Wont_add_duplicate_edge_for_type_and_type_array()
         {
-            var digraph = new DirectedGraph();
+            var digraph = EmptyGraph();
             var graph = new TypeDependencyGraph(digraph);
             graph.Add(TypeLoader.FromNative(typeof(TypeWithArray)));
             Assert.That(digraph.Edges.Map(x => x.ToString()).ToList(), Is.EquivalentTo(new[] { "0->1" }));
@@ -103,7 +106,7 @@ namespace Pencil.Test.Core
 		[Test]
 		public void Should_raise_NodeCreated_when_adding_node()
 		{
-            var digraph = new DirectedGraph();
+            var digraph = EmptyGraph();
             var graph = new TypeDependencyGraph(digraph);
 			var nodeCreatedRaised = false;
 			graph.NodeCreated += (sender, e) =>
@@ -119,7 +122,7 @@ namespace Pencil.Test.Core
 		[Test]
 		public void Should_create_distinct_nodes_for_types_with_same_name()
 		{
-			var digraph = new DirectedGraph();
+			var digraph = EmptyGraph();
             var graph = new TypeDependencyGraph(digraph);
 			graph.Add(new TypeStub("NamespaceOne", "Foo"));
 			graph.Add(new TypeStub("NamespaceTwo", "Foo"));

@@ -1,9 +1,9 @@
-namespace Pencil.Test.Core
-{
-	using NUnit.Framework;
-	using System.Drawing;
-	using Pencil.Core;
+using NUnit.Framework;
+using System.Drawing;
+using Pencil.Dot;
 
+namespace Pencil.Test.Dot
+{
 	[TestFixture]
 	public class DotNodeTests
 	{

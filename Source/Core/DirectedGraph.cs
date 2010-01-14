@@ -1,13 +1,13 @@
-﻿namespace Pencil.Core
-{
-    using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Pencil.Dot;
 
+namespace Pencil.Core
+{
     public class DirectedGraph
     {
         readonly List<Node> nodes = new List<Node>();
 		readonly INodeFactory nodeFactory;
 
-		public DirectedGraph(): this(new DotNodeFactory()){}
 		public DirectedGraph(INodeFactory nodeFactory)
 		{
 			this.nodeFactory = nodeFactory;

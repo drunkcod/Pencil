@@ -1,8 +1,8 @@
-namespace Pencil.Test.Core
-{
-	using NUnit.Framework;
-	using Pencil.Core;
+using NUnit.Framework;
+using Pencil.Dot;
 
+namespace Pencil.Test.Dot
+{
 	[TestFixture]
 	public class DotNodeFactoryTests
 	{

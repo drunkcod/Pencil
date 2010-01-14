@@ -1,4 +1,4 @@
-﻿namespace Pencil.Core
+﻿namespace Pencil.Dot
 {
     public enum NodeShape
     {
