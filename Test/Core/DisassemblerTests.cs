@@ -37,7 +37,7 @@
             module.CreateGlobalFunctions();
             var expected = new[] { "ldc.i4 42", "ret" };
 
-            Assert.That(Disassembler.Decode(module.GetMethod("Return42")).Map(x => x.ToString()).ToList(), Is.EquivalentTo(expected));
+            Assert.That(Disassembler.Decode(new DefaultTypeLoader(), module.GetMethod("Return42")).Map(x => x.ToString()).ToList(), Is.EquivalentTo(expected));
         }
 
         void SetResolveToken(string token)
