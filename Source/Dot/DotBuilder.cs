@@ -3,6 +3,7 @@ using System.IO;
 using System.Globalization;
 using System.Text;
 using Pencil.Core;
+using Xlnt.Stuff;
 
 namespace Pencil.Dot
 {

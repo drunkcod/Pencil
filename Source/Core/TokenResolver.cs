@@ -22,11 +22,6 @@ namespace Pencil.Core
                 this.methodArguments = method.GetGenericArguments();
 		}
 
-		public object Resolve(int token)
-		{
-		    return null;
-		}
-
         public IType ResolveType(int token) {
             return typeLoader.FromNative(module.ResolveType(token, typeArguments, methodArguments));
         }

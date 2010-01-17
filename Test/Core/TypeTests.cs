@@ -1,14 +1,15 @@
+using System;
+using System.IO;
+using System.Text;
+using NUnit.Framework;
+using System.Collections.Generic;
+using System.Reflection;
+using Pencil.Core;
+using Xlnt.Stuff;
+using Type = Pencil.Core.Type;
+
 namespace Pencil.Test.Core
 {
-	using System;
-	using System.IO;
-	using System.Text;
-    using NUnit.Framework;
-    using System.Collections.Generic;
-    using System.Reflection;
-    using Pencil.Core;
-	using Type = Pencil.Core.Type;
-
     class SampleType
     {
         public void PublicMethod() { ProtectedMethod();}

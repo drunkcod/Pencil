@@ -1,10 +1,11 @@
-﻿namespace Pencil.Core
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Reflection;
-    using SystemType = System.Type;
+﻿using System;
+using System.Collections.Generic;
+using System.Reflection;
+using Xlnt.Stuff;
+using SystemType = System.Type;
 
+namespace Pencil.Core
+{
     public class Type : IType
     {
         const BindingFlags AllMethods = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance;

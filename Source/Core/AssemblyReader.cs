@@ -1,4 +1,6 @@
-﻿namespace Pencil.Core
+﻿using Xlnt.Stuff;
+
+namespace Pencil.Core
 {
     public class AssemblyReader
     {

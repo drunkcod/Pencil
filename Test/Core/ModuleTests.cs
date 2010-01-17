@@ -1,9 +1,10 @@
-﻿namespace Pencil.Test.Core
-{
-    using System.Collections.Generic;
-    using NUnit.Framework;
-    using Pencil.Core;
+﻿using System.Collections.Generic;
+using NUnit.Framework;
+using Pencil.Core;
+using Xlnt.Stuff;
 
+namespace Pencil.Test.Core
+{
     [TestFixture]
     public class ModuleTests
     {
