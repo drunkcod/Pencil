@@ -7,15 +7,6 @@ namespace Pencil.Core
     {
         ITokenResolver tokens;
 
-        public static IEnumerable<IInstruction> Decode(ITypeLoader typeLoader, MethodBase method) 
-        {
-            var tokens = new TokenResolver(typeLoader, method.Module, method.DeclaringType, method);
-            var body = method.GetMethodBody();
-            if(body == null)
-                return new IInstruction[0];
-            return Decode(tokens, body.GetILAsByteArray());
-        }
-
         public Disassembler(ITokenResolver tokens)
         {
             this.tokens = tokens;

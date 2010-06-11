@@ -14,12 +14,12 @@ namespace Pencil.Core
 		{}
 	}
 
-    class MethodBody
+    public class PencilMethodBody
     {
         readonly ITypeLoader typeLoader;
         readonly MethodBase method;
 
-        public MethodBody(ITypeLoader typeLoader, MethodBase method) {
+        public PencilMethodBody(ITypeLoader typeLoader, MethodBase method) {
             this.typeLoader = typeLoader;
             this.method = method;
         }
@@ -30,12 +30,12 @@ namespace Pencil.Core
             }
         }
 
-        public IInstruction[] DecodeBody() {
-            var tokens = new TokenResolver(typeLoader, method.Module, method.DeclaringType, method);
+        public IEnumerable<IInstruction> DecodeBody() {
             var body = method.GetMethodBody();
             if (body == null)
                 return new IInstruction[0];
-            return new Disassembler(tokens).Decode(body.GetILAsByteArray()).ToArray();
+            var tokens = new TokenResolver(typeLoader, method.Module, method.DeclaringType, method);
+            return tokens.Decode(body.GetILAsByteArray());
         }
     }
 
@@ -43,10 +43,10 @@ namespace Pencil.Core
 	{
         readonly ITypeLoader typeLoader;
         readonly MethodBase method;
-        readonly MethodBody body;
+        readonly PencilMethodBody body;
         readonly IType returnType;
 
-		internal PencilMethod(ITypeLoader typeLoader, MethodBase method, IType returnType, MethodBody body)
+		internal PencilMethod(ITypeLoader typeLoader, MethodBase method, IType returnType, PencilMethodBody body)
 		{
             this.typeLoader = typeLoader;
             this.method = method;
@@ -67,7 +67,7 @@ namespace Pencil.Core
 
 		public IType ReturnType { get { return returnType; } }
 
-		public IEnumerable<IInstruction> Body { get { return body.DecodeBody(); } }
+		public IEnumerable<IInstruction> Body { get { return body.DecodeBody().ToArray(); } }
 
 		public override string ToString()
 		{

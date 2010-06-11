@@ -37,7 +37,10 @@
             module.CreateGlobalFunctions();
             var expected = new[] { "ldc.i4 42", "ret" };
 
-            Assert.That(Disassembler.Decode(new DefaultTypeLoader(), module.GetMethod("Return42")).Map(x => x.ToString()).ToList(), Is.EquivalentTo(expected));
+            var body = new PencilMethodBody(new DefaultTypeLoader(), module.GetMethod("Return42"));
+            var actual = body.DecodeBody();
+
+            Assert.That(actual.Map(x => x.ToString()).ToList(), Is.EquivalentTo(expected));
         }
 
         void SetResolveToken(string token)
