@@ -16,10 +16,11 @@ namespace Pencil.Core
 		readonly Type[] typeArguments;
 		readonly Type[] methodArguments;
 
-		public TokenResolver(ITypeLoader typeLoader, Module module, Type type, MethodBase method)
+		public TokenResolver(ITypeLoader typeLoader, MethodBase method)
 		{
             this.typeLoader = typeLoader;
-			this.module = module;
+			this.module = method.Module;
+            var type = method.DeclaringType;
             if(type != null)
                 this.typeArguments = type.GetGenericArguments();
             if(!(method.IsConstructor || method.IsSpecialName) && method.IsGenericMethod)
@@ -41,14 +42,13 @@ namespace Pencil.Core
 
 		public IMethod ResolveMethod(int token)
 		{
-				var method = module.ResolveMethod(token, typeArguments, methodArguments);
-				var ctor = method as System.Reflection.ConstructorInfo;
-				if(ctor != null)
-					return typeLoader.FromNative(ctor);
-				var info = method as System.Reflection.MethodInfo;
-				if(info != null)
-					return typeLoader.FromNative(info);
-				throw new NotSupportedException(method.GetType().Name + " not supported.");
+			var method = module.ResolveMethod(token, typeArguments, methodArguments);
+            if (method.IsConstructor)
+				return typeLoader.FromNative((ConstructorInfo)method);
+			var info = method as System.Reflection.MethodInfo;
+			if(info != null)
+				return typeLoader.FromNative(info);
+			throw new NotSupportedException(method.GetType().Name + " not supported.");
 		}
 	}
 }

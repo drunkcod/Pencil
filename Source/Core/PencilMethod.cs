@@ -16,6 +16,8 @@ namespace Pencil.Core
 
     public class PencilMethodBody
     {
+        static readonly IInstruction[] Empty = new IInstruction[0];
+
         readonly ITypeLoader typeLoader;
         readonly MethodBase method;
 
@@ -33,8 +35,8 @@ namespace Pencil.Core
         public IEnumerable<IInstruction> DecodeBody() {
             var body = method.GetMethodBody();
             if (body == null)
-                return new IInstruction[0];
-            var tokens = new TokenResolver(typeLoader, method.Module, method.DeclaringType, method);
+                return Empty;
+            var tokens = new TokenResolver(typeLoader, method);
             var ir = new InstructionReader(tokens, body.GetILAsByteArray());
             return ir.ReadToEnd();
         }
