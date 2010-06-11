@@ -31,14 +31,7 @@ namespace Pencil.Core
             this.body = body;
 		}
 
-		public string Name 
-        { 
-            get { 
-                if(method.IsGenericMethod)
-                    return string.Format("{0}<{1}>", method.Name, string.Join(" ,", method.GetGenericArguments().Select(x => x.ToString()).ToArray()));
-                return method.Name;
-            } 
-        }
+		public string Name { get { return method.Name; } }
 
 		public IType DeclaringType { get { return declaringType; } }
 
