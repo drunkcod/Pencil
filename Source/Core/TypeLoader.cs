@@ -19,25 +19,6 @@ namespace Pencil.Core
     {
         static Dictionary<System.Type, IType> typeCache = new Dictionary<System.Type, IType>();
 
-        class MethodBody
-        {
-            readonly ITypeLoader typeLoader;
-            readonly MethodBase method;
-
-            public MethodBody(ITypeLoader typeLoader, MethodBase method) {
-                this.typeLoader = typeLoader;
-                this.method = method;
-            }
-
-            public IInstruction[] DecodeBody() {
-                var tokens = new TokenResolver(typeLoader, method.Module, method.DeclaringType, method);
-                var body = method.GetMethodBody();
-                if (body == null)
-                    return new IInstruction[0];
-                return new Disassembler(tokens).Decode(body.GetILAsByteArray()).ToArray();
-            }
-        }
-
         public IType FromNative(System.Type type) {
             IType cached;
             if(typeCache.TryGetValue(type, out cached))
@@ -49,12 +30,12 @@ namespace Pencil.Core
 
         public IMethod FromNative(MethodInfo method) {
             var body = new MethodBody(this, method);
-            return new PencilMethod(this, FromNative(method.DeclaringType), method, FromNative(method.ReturnType), body.DecodeBody);
+            return new PencilMethod(this, FromNative(method.DeclaringType), method, FromNative(method.ReturnType), body);
         }
 
         public IMethod FromNative(ConstructorInfo ctor) {
             var body = new MethodBody(this, ctor);
-            return new PencilMethod(this, FromNative(ctor.DeclaringType), ctor, FromNative(ctor.DeclaringType), body.DecodeBody);
+            return new PencilMethod(this, FromNative(ctor.DeclaringType), ctor, FromNative(ctor.DeclaringType), body);
         }
 
         public IMethodArgument FromNative(ParameterInfo parameter) {

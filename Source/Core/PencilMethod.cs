@@ -14,15 +14,41 @@ namespace Pencil.Core
 		{}
 	}
 
+    class MethodBody
+    {
+        readonly ITypeLoader typeLoader;
+        readonly MethodBase method;
+
+        public MethodBody(ITypeLoader typeLoader, MethodBase method) {
+            this.typeLoader = typeLoader;
+            this.method = method;
+        }
+
+        public IEnumerable<IMethod> Calls {
+            get {
+                return DecodeBody().Where(x => x.IsCall).Select(x => x.Operand as IMethod);
+            }
+        }
+
+        public IInstruction[] DecodeBody() {
+            var tokens = new TokenResolver(typeLoader, method.Module, method.DeclaringType, method);
+            var body = method.GetMethodBody();
+            if (body == null)
+                return new IInstruction[0];
+            return new Disassembler(tokens).Decode(body.GetILAsByteArray()).ToArray();
+        }
+    }
+
+
 	public class PencilMethod : IMethod
 	{
         ITypeLoader typeLoader;
         IType declaringType;
         MethodBase method;
-		IType returnType;
-        Func<IInstruction[]> body;
+        MethodBody body;
+        IType returnType;
 
-		internal PencilMethod(ITypeLoader typeLoader, IType declaringType, MethodBase method, IType returnType, Func<IInstruction[]> body)
+		internal PencilMethod(ITypeLoader typeLoader, IType declaringType, MethodBase method, IType returnType, MethodBody body)
 		{
             this.typeLoader = typeLoader;
             this.declaringType = declaringType;
@@ -35,15 +61,7 @@ namespace Pencil.Core
 
 		public IType DeclaringType { get { return declaringType; } }
 
-		public IEnumerable<IMethod> Calls
-		{
-			get
-			{
-				foreach(var instruction in Body)
-					if(instruction.IsCall)
-						yield return instruction.Operand as IMethod;
-			}
-		}
+		public IEnumerable<IMethod> Calls { get { return body.Calls; } }
 
         public ICollection<IMethodArgument> Arguments
         {
@@ -52,7 +70,7 @@ namespace Pencil.Core
 
 		public IType ReturnType { get { return returnType; } }
 
-		public IEnumerable<IInstruction> Body { get { return body(); } }
+		public IEnumerable<IInstruction> Body { get { return body.DecodeBody(); } }
 
 		public override string ToString()
 		{
@@ -71,14 +89,6 @@ namespace Pencil.Core
 				format = ", {0}";
 			}
 			return args.ToString();
-		}
-
-		byte[] GetIL()
-		{
-			var body = method.GetMethodBody();
-			if(body == null)
-				return new byte[0];
-			return body.GetILAsByteArray();
 		}
 
 		public bool IsGenerated { get { return method.IsGenerated(); } }
