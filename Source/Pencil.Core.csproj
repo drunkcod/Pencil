@@ -91,7 +91,7 @@
     <Compile Include="Core\ITokenResolver.cs" />
     <Compile Include="Core\IType.cs" />
     <Compile Include="Core\MemberInfoExtensions.cs" />
-    <Compile Include="Core\Method.cs" />
+    <Compile Include="Core\PencilMethod.cs" />
     <Compile Include="Core\MethodArgument.cs" />
     <Compile Include="Core\MissingAssembly.cs" />
     <Compile Include="Core\Module.cs" />

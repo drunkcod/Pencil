@@ -29,11 +29,11 @@ namespace Pencil.Core
         }
 
         public IMethod FromNative(MethodInfo method) {
-            return new Method(this, FromNative(method.DeclaringType), method, FromNative(method.ReturnType), () => DecodeBody(method));
+            return new PencilMethod(this, FromNative(method.DeclaringType), method, FromNative(method.ReturnType), () => DecodeBody(method));
         }
 
         public IMethod FromNative(ConstructorInfo ctor) {
-            return new Method(this, FromNative(ctor.DeclaringType), ctor, FromNative(ctor.DeclaringType), () => DecodeBody(ctor));
+            return new PencilMethod(this, FromNative(ctor.DeclaringType), ctor, FromNative(ctor.DeclaringType), () => DecodeBody(ctor));
         }
 
         public IMethodArgument FromNative(ParameterInfo parameter) {

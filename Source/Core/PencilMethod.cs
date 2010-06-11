@@ -13,7 +13,7 @@ namespace Pencil.Core
 		{}
 	}
 
-	public class Method : IMethod
+	public class PencilMethod : IMethod
 	{
         ITypeLoader typeLoader;
         IType declaringType;
@@ -21,7 +21,7 @@ namespace Pencil.Core
 		IType returnType;
         Func<IInstruction[]> body;
 
-		internal Method(ITypeLoader typeLoader, IType declaringType, MethodBase method, IType returnType, Func<IInstruction[]> body)
+		internal PencilMethod(ITypeLoader typeLoader, IType declaringType, MethodBase method, IType returnType, Func<IInstruction[]> body)
 		{
             this.typeLoader = typeLoader;
             this.declaringType = declaringType;
