@@ -12,6 +12,7 @@ namespace Pencil.Core
         IMethod FromNative(MethodInfo method);
         IMethod FromNative(ConstructorInfo method);
         IMethodArgument FromNative(ParameterInfo parameter);
+        IField FromNative(FieldInfo field);
     }
 
     public class DefaultTypeLoader : ITypeLoader
@@ -38,6 +39,8 @@ namespace Pencil.Core
         public IMethodArgument FromNative(ParameterInfo parameter) {
             return new MethodArgument(parameter.Name, FromNative(parameter.ParameterType));
         }
+
+        public IField FromNative(FieldInfo field) { return new PencilField(field); }
 
         IInstruction[] DecodeBody(MethodBase method) {
             var tokens = new TokenResolver(this, method.Module, method.DeclaringType, method);

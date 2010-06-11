@@ -7,7 +7,7 @@ namespace Pencil.Core
 {
     public class PencilType : IType
     {
-        const BindingFlags AllMethods = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance;
+        const BindingFlags AnyBinding = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance;
         readonly ITypeLoader typeLoader;
         readonly SystemType type;
 
@@ -56,7 +56,8 @@ namespace Pencil.Core
 				return elementType == null ? this : typeLoader.FromNative(elementType);
 			}
 		}
-        public IEnumerable<IMethod> Methods { get { return type.GetMethods(AllMethods).Map<MethodInfo, IMethod>(typeLoader.FromNative); } }
+        public IEnumerable<IMethod> Methods { get { return type.GetMethods(AnyBinding).Map<MethodInfo, IMethod>(typeLoader.FromNative); } }
+        public IEnumerable<IField> Fields { get { return type.GetFields(AnyBinding).Map<FieldInfo, IField>(typeLoader.FromNative); } }
 		public ICollection<IType> DependsOn
 		{
 			get
@@ -72,7 +73,7 @@ namespace Pencil.Core
 					if(Implements(x))
 						dependsOn.Add(typeLoader.FromNative(x));
 				});
-                type.GetFields(AllMethods).ForEach(x => { if(x.DeclaringType == type) dependsOn.Add(typeLoader.FromNative(x.FieldType)); });
+                type.GetFields(AnyBinding).ForEach(x => { if(x.DeclaringType == type) dependsOn.Add(typeLoader.FromNative(x.FieldType)); });
 				EachOwnMethod(m => m.Arguments.Map(a => a.Type).ForEach(dependsOn.Add));
 				EachOwnMethod(m => dependsOn.Add(m.ReturnType));
 				EachOwnMethod(m => m.Calls.ForEach(x =>{ dependsOn.Add(x.DeclaringType);}));
@@ -99,7 +100,7 @@ namespace Pencil.Core
 			foreach(var method in Methods)
 				if(method.DeclaringType.Equals(type))
 					action(method);
-            foreach(var ctor in type.GetConstructors(AllMethods))
+            foreach(var ctor in type.GetConstructors(AnyBinding))
                 action(typeLoader.FromNative(ctor));
 		}
 

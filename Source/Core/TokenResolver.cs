@@ -1,18 +1,35 @@
+using System;
+using System.Reflection;
+
 namespace Pencil.Core
 {
-	using System;
-	using ReflectionModule = System.Reflection.Module;
-	using MethodBase = System.Reflection.MethodBase;
-	using SystemType = System.Type;
+    public interface IField
+    {
+        string Name { get; }
+    }
+
+    class PencilField : IField
+    {
+        readonly FieldInfo field;
+        public PencilField(FieldInfo field) {
+            this.field = field;
+        }
+
+        public string Name { get { return field.Name; } }
+
+        public override string ToString() {
+            return string.Format("{0} {1}::{2}", field.FieldType.FullName, field.DeclaringType.FullName, field.Name);
+        }
+    }
 
 	public class TokenResolver : ITokenResolver
 	{
         readonly ITypeLoader typeLoader;
-		readonly ReflectionModule module;
-		readonly SystemType[] typeArguments;
-		readonly SystemType[] methodArguments;
+		readonly Module module;
+		readonly Type[] typeArguments;
+		readonly Type[] methodArguments;
 
-		public TokenResolver(ITypeLoader typeLoader, ReflectionModule module, SystemType type, MethodBase method)
+		public TokenResolver(ITypeLoader typeLoader, Module module, Type type, MethodBase method)
 		{
             this.typeLoader = typeLoader;
 			this.module = module;
@@ -28,7 +45,7 @@ namespace Pencil.Core
 
         public object ResolveField(int token) {
             var field = module.ResolveField(token, typeArguments, methodArguments);
-            return string.Format("{0} {1}::{2}", field.FieldType.FullName, field.DeclaringType.FullName, field.Name);
+            return new PencilField(field);
         }
 
         public string ResolveString(int token) {

@@ -45,6 +45,10 @@ namespace Pencil.Core
 			this.isCall = isCall;
 		}
 
+        public override string ToString() {
+            return Name;
+        }
+
 		internal static int NormalizeOffset(int offset)
 		{
 			var fudge = new[] { 0xA5, 0xBA, 0xC3, 0xC6, 0xFF };

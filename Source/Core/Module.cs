@@ -1,16 +1,15 @@
-﻿namespace Pencil.Core
+﻿using System;
+using System.Collections.Generic;
+using System.Reflection;
+
+namespace Pencil.Core
 {
-	using System;
-    using System.Collections.Generic;
-    using ReflectionModule = System.Reflection.Module;
-
-    class Module : IModule
+    class PencilModule : IModule
     {
-        ITypeLoader typeLoader;
-        ReflectionModule module;
+        readonly ITypeLoader typeLoader;
+        readonly Module module;
 
-        public Module(ITypeLoader typeLoader, ReflectionModule module)
-        {
+        public PencilModule(ITypeLoader typeLoader, Module module){
             this.typeLoader = typeLoader;
             this.module = module;
         }

@@ -12,7 +12,8 @@ namespace Pencil.Test.Stubs
 		public Func<bool> GetIsPublicHandler = () => false;
 		public Func<IType> GetElementTypeHandler;
 		public Func<IEnumerable<IMethod>> GetMethodsHandler = () => new IMethod[0];
-		public Func<IEnumerable<IType>> GetNestedTypesHandler = () => new IType[0];
+        public Func<IEnumerable<IField>> GetFieldsHandler = () => new IField[0];
+        public Func<IEnumerable<IType>> GetNestedTypesHandler = () => new IType[0];
 		public Converter<System.Type, bool> IsAHandler = x => false;
 
         string name;
@@ -31,7 +32,8 @@ namespace Pencil.Test.Stubs
 		public string FullName { get { return fullName; } }
 		public IType ElementType { get { return GetElementTypeHandler(); } }
 		public IEnumerable<IMethod> Methods { get { return GetMethodsHandler(); } }
-		public ICollection<IType> DependsOn { get { return GetDependsOnHandler(); } }
+        public IEnumerable<IField> Fields { get { return GetFieldsHandler(); } }
+        public ICollection<IType> DependsOn { get { return GetDependsOnHandler(); } }
 		public IEnumerable<IType> NestedTypes { get { return GetNestedTypesHandler(); } }
 		public bool IsGenerated { get { return GetIsGeneratedHandler(); } }
 		public bool IsGenericParameter { get { return GetIsGenericParameterHandler(); } }

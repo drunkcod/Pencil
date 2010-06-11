@@ -21,7 +21,7 @@
             get 
             {
                 foreach(var module in assembly.GetModules())
-                    yield return new Module(typeLoader, module);
+                    yield return new PencilModule(typeLoader, module);
             }
         }
 
