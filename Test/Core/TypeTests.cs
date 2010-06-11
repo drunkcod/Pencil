@@ -5,7 +5,6 @@ using NUnit.Framework;
 using System.Collections.Generic;
 using System.Reflection;
 using Pencil.Core;
-using Xlnt.Stuff;
 using Type = Pencil.Core.PencilType;
 
 namespace Pencil.Test.Core
