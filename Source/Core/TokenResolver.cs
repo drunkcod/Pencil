@@ -50,12 +50,5 @@ namespace Pencil.Core
 					return typeLoader.FromNative(info);
 				throw new NotSupportedException(method.GetType().Name + " not supported.");
 		}
-
-        public IEnumerable<IInstruction> Decode(byte[] il) {
-            var stream = new ByteConverter(il, 0);
-            var ir = new InstructionReader(stream, this);
-            while (stream.Position < il.Length)
-                yield return ir.Next();
-        }
 	}
 }

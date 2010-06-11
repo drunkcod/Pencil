@@ -35,7 +35,8 @@ namespace Pencil.Core
             if (body == null)
                 return new IInstruction[0];
             var tokens = new TokenResolver(typeLoader, method.Module, method.DeclaringType, method);
-            return tokens.Decode(body.GetILAsByteArray());
+            var ir = new InstructionReader(tokens, body.GetILAsByteArray());
+            return ir.ReadToEnd();
         }
     }
 

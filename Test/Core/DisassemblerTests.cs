@@ -14,16 +14,18 @@
 		[Test]
 		public void Decode_should_parse_whole_stream()
 		{
-			var disassembler = new Disassembler(this);
-			var ilbytes = new byte[]{ 0, 1, 20 };
+			var il = new byte[]{ 0, 1, 20 };
 			var expected = new[]{ "nop", "break", "ldnull" };
-			Assert.That(disassembler.Decode(ilbytes).Map(x => x.ToString()).ToList(), Is.EquivalentTo(expected));
+            var ir = new InstructionReader(this, il);
+            var result = new List<IInstruction>(ir.ReadToEnd());
+            Assert.That(result.Map(x => x.ToString()).ToList(), Is.EquivalentTo(expected));
 		}
 
-		void CheckDecode(string expected, params byte[] ilbytes)
+		void CheckDecode(string expected, params byte[] il)
         {
-            var disassembler = new Disassembler(this);
-            Assert.AreEqual(expected, disassembler.Decode(ilbytes)[0].ToString());
+            var ir = new InstructionReader(this, il);
+            var result = new List<IInstruction>(ir.ReadToEnd());
+            Assert.AreEqual(expected, result[0].ToString());
         }
 
         [Test]

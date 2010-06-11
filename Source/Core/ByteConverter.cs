@@ -15,6 +15,8 @@ namespace Pencil.Core
 
 		public int Position { get { return position; } }
 
+        public bool HasData { get { return Position < data.Length; } }
+
         public byte ReadByte()
         {
             var value = data[position];

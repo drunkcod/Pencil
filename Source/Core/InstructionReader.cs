@@ -1,24 +1,31 @@
+using System;
+using System.Text;
+using System.Collections.Generic;
+
 namespace Pencil.Core
 {
-	using System;
-	using System.Text;
-
-	class InstructionReader
+	public class InstructionReader
 	{
-		ByteConverter stream;
-		ITokenResolver tokens;
+        readonly ITokenResolver tokens;
+        readonly ByteConverter stream;
 
-		public InstructionReader(ByteConverter stream, ITokenResolver tokens)
-		{
-			this.stream = stream;
-			this.tokens = tokens;
+        public InstructionReader(ITokenResolver tokens, byte[] bytes):
+            this(tokens, new ByteConverter(bytes, 0)){}
+
+        public InstructionReader(ITokenResolver tokens, ByteConverter stream) {
+            this.tokens = tokens;
+            this.stream = stream;
 		}
 
-		public Instruction Next()
-		{
+		internal Instruction Next() {
 			var offset = ReadOffset();
 			return new Instruction(offset, ReadOperand(offset));
 		}
+
+        public IEnumerable<IInstruction> ReadToEnd() {
+            while (stream.HasData)
+                yield return Next();
+        }
 
 		int ReadOffset()
 		{

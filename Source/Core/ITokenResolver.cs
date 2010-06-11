@@ -1,4 +1,6 @@
-﻿namespace Pencil.Core
+﻿using System.Collections.Generic;
+
+namespace Pencil.Core
 {
     public interface ITokenResolver
     {

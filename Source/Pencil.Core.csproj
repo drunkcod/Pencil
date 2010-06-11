@@ -75,7 +75,6 @@
     <Compile Include="Core\DefaultHandler.cs" />
     <Compile Include="Core\DependencyGraph.cs" />
     <Compile Include="Core\DirectedGraph.cs" />
-    <Compile Include="Core\Disassembler.cs" />
     <Compile Include="Core\Edge.cs" />
     <Compile Include="Core\Filter.cs" />
     <Compile Include="Core\IAssembly.cs" />
