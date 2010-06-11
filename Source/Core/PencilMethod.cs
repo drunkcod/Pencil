@@ -39,27 +39,24 @@ namespace Pencil.Core
         }
     }
 
-
 	public class PencilMethod : IMethod
 	{
-        ITypeLoader typeLoader;
-        IType declaringType;
-        MethodBase method;
-        MethodBody body;
-        IType returnType;
+        readonly ITypeLoader typeLoader;
+        readonly MethodBase method;
+        readonly MethodBody body;
+        readonly IType returnType;
 
-		internal PencilMethod(ITypeLoader typeLoader, IType declaringType, MethodBase method, IType returnType, MethodBody body)
+		internal PencilMethod(ITypeLoader typeLoader, MethodBase method, IType returnType, MethodBody body)
 		{
             this.typeLoader = typeLoader;
-            this.declaringType = declaringType;
             this.method = method;
-			this.returnType = returnType;
             this.body = body;
+            this.returnType = returnType;
 		}
 
 		public string Name { get { return method.Name; } }
 
-		public IType DeclaringType { get { return declaringType; } }
+		public IType DeclaringType { get { return typeLoader.FromNative(method.DeclaringType); } }
 
 		public IEnumerable<IMethod> Calls { get { return body.Calls; } }
 
