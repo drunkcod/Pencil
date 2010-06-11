@@ -2,4 +2,5 @@ Build
 *.suo
 *.pidb
 *.userprefs
+*.user
 obj/

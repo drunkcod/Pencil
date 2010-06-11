@@ -22,7 +22,7 @@ namespace Pencil.Core
             IType cached;
             if(typeCache.TryGetValue(type, out cached))
                 return cached;
-            cached = new Type(this, type);
+            cached = new PencilType(this, type);
             typeCache.Add(type, cached);
             return cached;
         }
