@@ -1,11 +1,12 @@
+using System;
+using System.Collections.Generic;
+using System.Reflection;
+using System.Text;
+using System.Linq;
+using ReflectionModule = System.Reflection.Module;
+
 namespace Pencil.Core
 {
-	using System;
-	using System.Collections.Generic;
-	using System.Reflection;
-	using System.Text;
-    using ReflectionModule = System.Reflection.Module;
-
 	public class MethodDecodeException : Exception
 	{
 		public MethodDecodeException(IMethod method, Exception inner):
@@ -30,7 +31,14 @@ namespace Pencil.Core
             this.body = body;
 		}
 
-		public string Name { get { return method.Name; } }
+		public string Name 
+        { 
+            get { 
+                if(method.IsGenericMethod)
+                    return string.Format("{0}<{1}>", method.Name, string.Join(" ,", method.GetGenericArguments().Select(x => x.ToString()).ToArray()));
+                return method.Name;
+            } 
+        }
 
 		public IType DeclaringType { get { return declaringType; } }
 
