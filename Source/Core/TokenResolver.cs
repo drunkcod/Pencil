@@ -16,8 +16,7 @@ namespace Pencil.Core
 		readonly Type[] typeArguments;
 		readonly Type[] methodArguments;
 
-		public TokenResolver(ITypeLoader typeLoader, MethodBase method)
-		{
+		public TokenResolver(ITypeLoader typeLoader, MethodBase method) {
             this.typeLoader = typeLoader;
 			this.module = method.Module;
             var type = method.DeclaringType;

@@ -17,9 +17,9 @@ namespace Pencil.Core
 
     public class DefaultTypeLoader : ITypeLoader
     {
-        static Dictionary<System.Type, IType> typeCache = new Dictionary<System.Type, IType>();
+        readonly Dictionary<Type, IType> typeCache = new Dictionary<Type, IType>();
 
-        public IType FromNative(System.Type type) {
+        public IType FromNative(Type type) {
             IType cached;
             if(typeCache.TryGetValue(type, out cached))
                 return cached;

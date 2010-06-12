@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 using System.Linq;
-using ReflectionModule = System.Reflection.Module;
 
 namespace Pencil.Core
 {
@@ -61,16 +60,15 @@ namespace Pencil.Core
 
 		public IType DeclaringType { get { return typeLoader.FromNative(method.DeclaringType); } }
 
-		public IEnumerable<IMethod> Calls { get { return body.Calls; } }
-
-        public ICollection<IMethodArgument> Arguments
-        {
+        public ICollection<IMethodArgument> Arguments {
             get { return method.GetParameters().Map<ParameterInfo, IMethodArgument>(typeLoader.FromNative).ToList(); }
         }
 
-		public IType ReturnType { get { return returnType; } }
+        public IEnumerable<IInstruction> Body { get { return body.DecodeBody(); } }
+        
+        public IEnumerable<IMethod> Calls { get { return body.Calls; } }
 
-		public IEnumerable<IInstruction> Body { get { return body.DecodeBody().ToArray(); } }
+		public IType ReturnType { get { return returnType; } }
 
 		public override string ToString()
 		{
