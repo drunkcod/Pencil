@@ -80,8 +80,10 @@
     <Compile Include="Core\IAssembly.cs" />
     <Compile Include="Core\IAssemblyLoader.cs" />
     <Compile Include="Core\IEnumerableExtensions.cs" />
+    <Compile Include="Core\IField.cs" />
     <Compile Include="Core\IHandler.cs" />
     <Compile Include="Core\IInstruction.cs" />
+    <Compile Include="Core\IMember.cs" />
     <Compile Include="Core\IMethod.cs" />
     <Compile Include="Core\IMethodArgument.cs" />
     <Compile Include="Core\IModule.cs" />

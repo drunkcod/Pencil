@@ -4,10 +4,15 @@ namespace Pencil.Core
 {
     class PencilField : IField
     {
+        readonly ITypeLoader typeLoader;
         readonly FieldInfo field;
-        public PencilField(FieldInfo field) {
+
+        public PencilField(ITypeLoader typeLoader, FieldInfo field) {
+            this.typeLoader = typeLoader;
             this.field = field;
         }
+
+        public IType DeclaringType { get { return typeLoader.FromNative(field.DeclaringType); } }
 
         public string Name { get { return field.Name; } }
 

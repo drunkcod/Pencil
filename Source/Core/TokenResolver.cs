@@ -4,11 +4,6 @@ using System.Collections.Generic;
 
 namespace Pencil.Core
 {
-    public interface IField
-    {
-        string Name { get; }
-    }
-
 	public class TokenResolver : ITokenResolver
 	{
         readonly ITypeLoader typeLoader;
@@ -32,7 +27,7 @@ namespace Pencil.Core
 
         public object ResolveField(int token) {
             var field = module.ResolveField(token, typeArguments, methodArguments);
-            return new PencilField(field);
+            return typeLoader.FromNative(field);
         }
 
         public string ResolveString(int token) {

@@ -97,5 +97,13 @@ namespace Pencil.Core
 		{
 		    return method.Invoke(target, args);
 		}
+
+        public override bool Equals(object obj) {
+            var other = obj as PencilMethod;
+            return other != null && method.Equals(other.method);
+        }
+        public override int GetHashCode() {
+            return method.GetHashCode();
+        }
 	}
 }

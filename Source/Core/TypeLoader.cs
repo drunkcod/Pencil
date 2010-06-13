@@ -42,6 +42,6 @@ namespace Pencil.Core
             return new MethodArgument(parameter.Name, FromNative(parameter.ParameterType));
         }
 
-        public IField FromNative(FieldInfo field) { return new PencilField(field); }
+        public IField FromNative(FieldInfo field) { return new PencilField(this, field); }
     }
 }
