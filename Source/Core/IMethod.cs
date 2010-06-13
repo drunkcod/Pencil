@@ -6,7 +6,7 @@ namespace Pencil.Core
     {
         ICollection<IMethodArgument> Arguments { get; }
 		IType ReturnType { get; }
-        IEnumerable<IInstruction> Body { get; }
+        IEnumerable<Instruction> Body { get; }
 		IEnumerable<IMethod> Calls { get; }
 		bool IsGenerated { get; }
 		bool IsSpecialName { get; }

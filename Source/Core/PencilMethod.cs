@@ -15,7 +15,7 @@ namespace Pencil.Core
 
     public class PencilMethodBody
     {
-        static readonly IInstruction[] Empty = new IInstruction[0];
+        static readonly Instruction[] Empty = new Instruction[0];
 
         readonly ITypeLoader typeLoader;
         readonly MethodBase method;
@@ -31,7 +31,7 @@ namespace Pencil.Core
             }
         }
 
-        public IEnumerable<IInstruction> DecodeBody() {
+        public IEnumerable<Instruction> DecodeBody() {
             var body = method.GetMethodBody();
             if (body == null)
                 return Empty;
@@ -64,7 +64,7 @@ namespace Pencil.Core
             get { return method.GetParameters().Map<ParameterInfo, IMethodArgument>(typeLoader.FromNative).ToList(); }
         }
 
-        public IEnumerable<IInstruction> Body { get { return body.DecodeBody(); } }
+        public IEnumerable<Instruction> Body { get { return body.DecodeBody(); } }
         
         public IEnumerable<IMethod> Calls { get { return body.Calls; } }
 

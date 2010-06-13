@@ -2,7 +2,7 @@ namespace Pencil.Core
 {
     using System;
 
-    struct Instruction : IInstruction
+    public struct Instruction
     {
         int offset;
         object operand;

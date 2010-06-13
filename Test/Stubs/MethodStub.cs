@@ -8,7 +8,7 @@ namespace Pencil.Test.Stubs
 	{
 		string name;
 
-		public Func<IEnumerable<IInstruction>> GetBodyHandler = () => new IInstruction[0];
+		public Func<IEnumerable<Instruction>> GetBodyHandler = () => new Instruction[0];
 		public Func<IType> GetDeclaringTypeHandler = () => null;
 		public Func<bool> GetIsGeneratedHandler = () => false;
 		public Func<bool> GetIsSpecialNameHandler = () => false;
@@ -25,7 +25,7 @@ namespace Pencil.Test.Stubs
 		public string Name { get {return name; } }
         public ICollection<IMethodArgument> Arguments { get { return new IMethodArgument[0]; } }
 		public IType ReturnType { get { return GetReturnTypeHandler(); } }
-		public IEnumerable<IInstruction> Body { get { return GetBodyHandler(); } }
+		public IEnumerable<Instruction> Body { get { return GetBodyHandler(); } }
 		public IEnumerable<IMethod> Calls { get { return GetCallsHandler(); } }
 		public IType DeclaringType { get { return GetDeclaringTypeHandler(); } }
 		public bool IsGenerated { get { return GetIsGeneratedHandler(); } }

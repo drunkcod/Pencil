@@ -17,14 +17,14 @@
 			var il = new byte[]{ 0, 1, 20 };
 			var expected = new[]{ "nop", "break", "ldnull" };
             var ir = new InstructionReader(this, il);
-            var result = new List<IInstruction>(ir.ReadToEnd());
+            var result = new List<Instruction>(ir.ReadToEnd());
             Assert.That(result.Map(x => x.ToString()).ToList(), Is.EquivalentTo(expected));
 		}
 
 		void CheckDecode(string expected, params byte[] il)
         {
             var ir = new InstructionReader(this, il);
-            var result = new List<IInstruction>(ir.ReadToEnd());
+            var result = new List<Instruction>(ir.ReadToEnd());
             Assert.AreEqual(expected, result[0].ToString());
         }
 

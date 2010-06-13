@@ -22,7 +22,7 @@ namespace Pencil.Core
 			return new Instruction(offset, ReadOperand(offset));
 		}
 
-        public IEnumerable<IInstruction> ReadToEnd() {
+        public IEnumerable<Instruction> ReadToEnd() {
             while (stream.HasData)
                 yield return Next();
         }
