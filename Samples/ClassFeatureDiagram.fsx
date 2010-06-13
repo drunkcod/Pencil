@@ -19,7 +19,7 @@ let dependencies : obj -> IMember seq = function
 let format : obj -> string= function
     | :? IField as x-> x.Name
     | :? IMethod as x -> 
-        let args = String.Format("({0})", String.Join(", ", Seq.toArray ))
+        let args = String.Format("({0})", String.Join(", ", x.Arguments |> Seq.map (fun x -> x.Name) |> Seq.toArray))
         x.Name + args
     | x -> x.ToString()
 
