@@ -2,9 +2,22 @@ namespace Pencil.Core
 {
 	using System;
 
-	internal enum ParameterType
+    [Flags]
+	internal enum ParameterType : short
 	{
-		None, SByte, Int32, Int64, Single, Double, Method, Type, String, Field, Token, Array
+		None    = 0,
+        SByte   = 1,
+        Int32   = 1 << 2, 
+        Int64   = 1 << 3,
+        Single  = 1 << 4,
+        Double  = 1 << 5,
+        Method  = 1 << 6,
+        Type    = 1 << 7,
+        String  = 1 << 8,
+        Field   = 1 << 9,
+        Token   = 1 << 10,
+        Array   = 1 << 11,
+        Member = Method | Field
 	}
 
 	public struct Opcode

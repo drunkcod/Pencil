@@ -11,6 +11,7 @@ namespace Pencil.Core
 		}
 
         public bool IsCall { get { return Opcode.IsCall; } }
+        public bool IsMember { get { return (Opcode.Parameter & ParameterType.Member) != 0; } }
 
         public object Operand {
 			get { return operand; }

@@ -17,14 +17,14 @@ namespace Pencil.Core
             this.stream = stream;
 		}
 
-		internal Instruction Next() {
+		internal Instruction Read() {
 			var offset = ReadOffset();
 			return new Instruction(offset, ReadOperand(offset));
 		}
 
         public IEnumerable<Instruction> ReadToEnd() {
             while (stream.HasData)
-                yield return Next();
+                yield return Read();
         }
 
 		int ReadOffset()
