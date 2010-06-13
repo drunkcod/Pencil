@@ -6,7 +6,7 @@ namespace Pencil.Core
     {
         string ResolveString(int token);
         IType ResolveType(int token);
-        object ResolveField(int token);
+        IField ResolveField(int token);
 		IMethod ResolveMethod(int token);
     }
 }

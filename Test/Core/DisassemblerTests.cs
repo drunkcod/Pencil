@@ -69,8 +69,33 @@
             return new TypeStub(resolveTokenResult);
         }
 
-        object ITokenResolver.ResolveField(int token) {
-            return resolveTokenResult;
+        class FieldStub : IField
+        {
+            readonly string name;
+
+            public FieldStub(string name) {
+                this.name = name;
+            }
+
+            public override string ToString() {
+                return Name;
+            }
+
+            #region IMember Members
+
+            public IType DeclaringType {
+                get { throw new NotImplementedException(); }
+            }
+
+            public string Name {
+                get { return name; }
+            }
+
+            #endregion
+        }
+
+        IField ITokenResolver.ResolveField(int token) {
+            return new FieldStub(resolveTokenResult);
         }
 
         #endregion

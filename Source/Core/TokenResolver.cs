@@ -25,7 +25,7 @@ namespace Pencil.Core
             return typeLoader.FromNative(module.ResolveType(token, typeArguments, methodArguments));
         }
 
-        public object ResolveField(int token) {
+        public IField ResolveField(int token) {
             var field = module.ResolveField(token, typeArguments, methodArguments);
             return typeLoader.FromNative(field);
         }
