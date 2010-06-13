@@ -39,8 +39,8 @@
             module.CreateGlobalFunctions();
             var expected = new[] { "ldc.i4 42", "ret" };
 
-            var body = new PencilMethodBody(new DefaultTypeLoader(), module.GetMethod("Return42"));
-            var actual = body.DecodeBody();
+            var body = new PencilMethodBody(module.GetMethod("Return42"));
+            var actual = body.DecodeBody(new DefaultTypeLoader());
 
             Assert.That(actual.Map(x => x.ToString()).ToList(), Is.EquivalentTo(expected));
         }

@@ -29,12 +29,12 @@ namespace Pencil.Core
         }
 
         public IMethod FromNative(MethodInfo method) {
-            var body = new PencilMethodBody(this, method);
+            var body = new PencilMethodBody(method);
             return new PencilMethod(this, method, FromNative(method.ReturnType), body);
         }
 
         public IMethod FromNative(ConstructorInfo ctor) {
-            var body = new PencilMethodBody(this, ctor);
+            var body = new PencilMethodBody(ctor);
             return new PencilMethod(this, ctor, FromNative(ctor.DeclaringType), body);
         }
 

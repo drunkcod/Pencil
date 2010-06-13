@@ -17,21 +17,17 @@ namespace Pencil.Core
     {
         static readonly Instruction[] Empty = new Instruction[0];
 
-        readonly ITypeLoader typeLoader;
         readonly MethodBase method;
 
-        public PencilMethodBody(ITypeLoader typeLoader, MethodBase method) {
-            this.typeLoader = typeLoader;
+        public PencilMethodBody(MethodBase method) {
             this.method = method;
         }
 
-        public IEnumerable<IMethod> Calls {
-            get {
-                return DecodeBody().Where(x => x.IsCall).Select(x => x.Operand as IMethod);
-            }
+        public IEnumerable<IMethod> Calls(ITypeLoader typeLoader) {
+            return DecodeBody(typeLoader).Where(x => x.IsCall).Select(x => x.Operand as IMethod);
         }
 
-        public IEnumerable<Instruction> DecodeBody() {
+        public IEnumerable<Instruction> DecodeBody(ITypeLoader typeLoader) {
             var body = method.GetMethodBody();
             if (body == null)
                 return Empty;
@@ -64,9 +60,9 @@ namespace Pencil.Core
             get { return method.GetParameters().Map<ParameterInfo, IMethodArgument>(typeLoader.FromNative).ToList(); }
         }
 
-        public IEnumerable<Instruction> Body { get { return body.DecodeBody(); } }
+        public IEnumerable<Instruction> Body { get { return body.DecodeBody(typeLoader); } }
         
-        public IEnumerable<IMethod> Calls { get { return body.Calls; } }
+        public IEnumerable<IMethod> Calls { get { return body.Calls(typeLoader); } }
 
 		public IType ReturnType { get { return returnType; } }
 
