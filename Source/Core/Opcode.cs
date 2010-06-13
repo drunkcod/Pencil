@@ -30,9 +30,8 @@ namespace Pencil.Core
 
 
 		public readonly string Name;
-
 		internal readonly ParameterType Parameter;
-		bool isCall;
+        readonly bool isCall;
 
 		public bool IsCall { get { return isCall; } }
 
