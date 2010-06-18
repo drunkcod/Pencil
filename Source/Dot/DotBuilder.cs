@@ -63,7 +63,7 @@ namespace Pencil.Dot
 
         void Append(Edge edge)
         {
-            Append(edge.ToString());
+            Append("{0}->{1}".InvariantFormat(edge.From, edge.To));
         }
 
         void Append(Node node)

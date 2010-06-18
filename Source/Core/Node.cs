@@ -1,7 +1,5 @@
 ﻿namespace Pencil.Core
 {
-    using System.Collections.Generic;
-
     public class Node
     {
         public string Label { get; set; }

@@ -1,18 +1,16 @@
 ﻿namespace Pencil.Core
 {
-    public class Edge
+    public struct Edge
     {
-        string from, to;
+        public readonly string From, To;
 
-        internal Edge(string from, string to)
-        {
-            this.from = from;
-            this.to = to;
+        internal Edge(string from, string to) {
+            this.From = from;
+            this.To = to;
         }
 
-        public override string ToString()
-        {
-            return "{0}->{1}".InvariantFormat(from, to);
+        public override string ToString() {
+            return "{0}->{1}".InvariantFormat(From, To);
         }
     }
 }
