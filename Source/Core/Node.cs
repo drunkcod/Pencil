@@ -11,7 +11,7 @@
             get
             {
                 foreach(var to in edges)
-                    yield return new Edge(this, to);
+                    yield return new Edge(Id, to.Id);
             }
         }
 
