@@ -28,8 +28,8 @@ namespace Pencil.Core
 				if(ShouldAdd(item))
 				{
 					var node = CreateNode(item);
-					current.ConnectTo(node.Item);
-					if(node.Created && Recursive)
+                    graph.Connect(current, node.Item);
+                    if(node.Created && Recursive)
 						AddChildren(node.Item, item);
 				}
 		}

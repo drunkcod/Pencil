@@ -18,20 +18,21 @@ namespace Pencil.Test.Core
 		[Test]
 		public void Should_support_connecting_nodes()
 		{
-			var builder = EmptyGraph();
-			builder.AddNode().ConnectTo(builder.AddNode());
+			var graph = EmptyGraph();
 
-			ToDot(builder).ShouldEqual("digraph{0->1}");
+            graph.Connect(graph.AddNode(), graph.AddNode());
+
+			ToDot(graph).ShouldEqual("digraph{0->1}");
 		}
         [Test]
         public void Should_render_multiple_edges_correctly()
         {
-            var builder = EmptyGraph();
-            var n0 = builder.AddNode();
-            n0.ConnectTo(builder.AddNode());
-            n0.ConnectTo(builder.AddNode());
+            var graph = EmptyGraph();
+            var n0 = graph.AddNode();
+            graph.Connect(n0, graph.AddNode());
+            graph.Connect(n0, graph.AddNode());
 
-            ToDot(builder).ShouldEqual("digraph{0->1 0->2}");
+            ToDot(graph).ShouldEqual("digraph{0->1 0->2}");
         }
         [Test]
         public void Should_render_node_labels_correctly()
