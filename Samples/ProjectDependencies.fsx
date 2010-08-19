@@ -12,7 +12,6 @@ open Pencil.Dot
 
 let MakeList (collection:IEnumerable<'a>) = List<'a>(collection) 
 
-
 let tryMap f error =
     fun x ->
         try
@@ -21,41 +20,45 @@ let tryMap f error =
             error x
             None
 
-type VisualStudioProject =
-    val mutable fileName : string
-    val mutable assemblyName : string
-    val mutable id : Guid
-    val mutable assemblyReferences : List<string>
-    val mutable projectReferences : List<VisualStudioProject>
-       
+type VisualStudioProject(fileName) =
+    static let loadedProjects = Dictionary<string, VisualStudioProject>(StringComparer.InvariantCultureIgnoreCase)
+    
+    let xpath = XPathDocument(fileName : string).CreateNavigator()
+    let ns =  XmlNamespaceManager(xpath.NameTable)
+    do ns.AddNamespace("x", "http://schemas.microsoft.com/developer/msbuild/2003")
+    
     static member Load (fileName:string) =
-        let ResolvePath (x:string) = Path.Combine(Path.GetDirectoryName(fileName), x.Replace('\\', Path.DirectorySeparatorChar))
-        VisualStudioProject(fileName, XPathDocument(fileName).CreateNavigator(), ResolvePath)
+        let fileName = Path.GetFullPath(fileName)
+        let found, project = loadedProjects.TryGetValue(fileName)
+        if found then
+            project
+        else
+            let project = VisualStudioProject(fileName)
+            loadedProjects.Add(fileName, project)
+            project
    
-    member this.AssemblyName = this.assemblyName
-    member this.Name = this.fileName
-    member this.Id = this.id
-    member this.AssemblyReferences = this.assemblyReferences
-    member this.ProjectReferences = this.projectReferences
-        
-    private new(fileName, (xpath:XPathNavigator), resolve) =
-        let ns = XmlNamespaceManager(xpath.NameTable)
-        ns.AddNamespace("x", "http://schemas.microsoft.com/developer/msbuild/2003")
-        let SelectSingleValue query = xpath.SelectSingleNode(query, ns).Value
-        let SelectList query f =
-            let items = xpath.Select(query, ns)
-            let tryMap = tryMap f (fun x -> Console.Error.WriteLine("WARNING: {0} references missing project {1}", fileName, x))
-            seq { 
-                while items.MoveNext() do 
-                    match tryMap items.Current.Value with
-                    | None -> ()
-                    | Some(x) -> yield x }
-            |> MakeList
-        { assemblyName = SelectSingleValue "//x:AssemblyName"
-          fileName = fileName
-          id = Guid(SelectSingleValue "//x:ProjectGuid")
-          assemblyReferences = SelectList "//x:ItemGroup/x:Reference/@Include" (fun x -> AssemblyName(x).Name)
-          projectReferences = SelectList "//x:ItemGroup/x:ProjectReference/@Include" (fun x -> VisualStudioProject.Load (resolve x))}
+    member this.AssemblyName = this.SelectSingleValue "//x:AssemblyName"
+    member this.Name = fileName
+    member this.Id = Guid(this.SelectSingleValue "//x:ProjectGuid" : string)
+    member this.AssemblyReferences =
+        this.Select "//x:ItemGroup/x:Reference/@Include"
+        |> Seq.map (fun x -> AssemblyName(x).Name)
+
+
+    member this.ProjectReferences = 
+        let tryMap = tryMap (fun x -> VisualStudioProject.Load(this.Resolve x)) (fun x -> Console.Error.WriteLine("WARNING: {0} references missing project {1}", fileName, x))
+        this.Select "//x:ItemGroup/x:ProjectReference/@Include"
+        |> Seq.choose tryMap
+
+    member private this.Select query =
+        let items = xpath.Select(query, ns)
+        seq {
+            while items.MoveNext() do 
+                yield items.Current.Value }
+
+    member private this.SelectSingleValue query = xpath.SelectSingleNode(query, ns).Value
+
+    member private this.Resolve path = Path.Combine(Path.GetDirectoryName(fileName), path.Replace('\\', Path.DirectorySeparatorChar))
 
 let root = fsi.CommandLineArgs.[1]
 
@@ -64,7 +67,7 @@ let projects =
     |> Seq.filter (fun x -> x.EndsWith("csproj") || x.EndsWith("vbproj"))
     |> Seq.map VisualStudioProject.Load
 
-let projectLookup = Dictionary<string, VisualStudioProject>()
+let projectLookup = Dictionary<string, VisualStudioProject>(StringComparer.InvariantCultureIgnoreCase)
 
 projects |> Seq.iter (fun x -> projectLookup.Add(x.AssemblyName, x))
 
@@ -88,5 +91,5 @@ projects |> Seq.iter dependencies.Add
 let dot = DotBuilder(Console.Out)
 dot.RankDirection <- RankDirection.LeftRight
 dot.NodeStyle <- DotNodeStyle(FontSize = 9, Shape = NodeShape.Box)
-//dot.EmitDigraphDefinition <- false
+dot.EmitDigraphDefinition <- false
 dot.Write(digraph)
