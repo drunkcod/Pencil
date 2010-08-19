@@ -14,8 +14,7 @@ let MakeList (collection:IEnumerable<'a>) = List<'a>(collection)
 
 let tryMap f error =
     fun x ->
-        try
-            Some(f x)
+        try Some(f x)
         with ex ->
             error x
             None
@@ -29,32 +28,27 @@ type VisualStudioProject(fileName) =
     
     static member Load (fileName:string) =
         let fileName = Path.GetFullPath(fileName)
-        let found, project = loadedProjects.TryGetValue(fileName)
-        if found then
-            project
-        else
+        match loadedProjects.TryGetValue(fileName) with
+        | (true, project) -> project
+        | (false, _) ->
             let project = VisualStudioProject(fileName)
             loadedProjects.Add(fileName, project)
             project
+
+    member private this.Select query map =
+        let items = xpath.Select(query, ns)
+        seq { while items.MoveNext() do 
+                yield map items.Current.Value }
    
     member this.AssemblyName = this.SelectSingleValue "//x:AssemblyName"
     member this.Name = fileName
     member this.Id = Guid(this.SelectSingleValue "//x:ProjectGuid" : string)
-    member this.AssemblyReferences =
-        this.Select "//x:ItemGroup/x:Reference/@Include"
-        |> Seq.map (fun x -> AssemblyName(x).Name)
-
+    member this.AssemblyReferences = this.Select "//x:ItemGroup/x:Reference/@Include" (fun x -> AssemblyName(x).Name)
 
     member this.ProjectReferences = 
-        let tryMap = tryMap (fun x -> VisualStudioProject.Load(this.Resolve x)) (fun x -> Console.Error.WriteLine("WARNING: {0} references missing project {1}", fileName, x))
-        this.Select "//x:ItemGroup/x:ProjectReference/@Include"
-        |> Seq.choose tryMap
-
-    member private this.Select query =
-        let items = xpath.Select(query, ns)
-        seq {
-            while items.MoveNext() do 
-                yield items.Current.Value }
+        let tryLoad = tryMap (fun x -> VisualStudioProject.Load(this.Resolve x)) (fun x -> Console.Error.WriteLine("WARNING: {0} references missing project {1}", fileName, x))
+        this.Select "//x:ItemGroup/x:ProjectReference/@Include" tryLoad
+        |> Seq.choose id
 
     member private this.SelectSingleValue query = xpath.SelectSingleNode(query, ns).Value
 
@@ -63,7 +57,7 @@ type VisualStudioProject(fileName) =
 let root = fsi.CommandLineArgs.[1]
 
 let projects =
-    Directory.GetFiles(root, "*.*proj", SearchOption.AllDirectories)
+    Directory.GetFiles(root, "*.??proj", SearchOption.AllDirectories)
     |> Seq.filter (fun x -> x.EndsWith("csproj") || x.EndsWith("vbproj"))
     |> Seq.map VisualStudioProject.Load
 
@@ -81,8 +75,7 @@ type ProjectDependencyGraph =
             |> Seq.map snd
             |> Seq.append item.ProjectReferences            
         override this.ShouldAddCore x = projectLookup.ContainsKey(x.AssemblyName)
-    new(graph) = 
-        {inherit DependencyGraph<VisualStudioProject>(graph)}
+    new(graph) = {inherit DependencyGraph<VisualStudioProject>(graph)}
 
 let digraph = DirectedGraph(DotNodeFactory())
 let dependencies = ProjectDependencyGraph(digraph)      
