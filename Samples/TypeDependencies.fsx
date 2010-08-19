@@ -6,6 +6,7 @@ open System
 open System.Drawing
 open System.IO
 open Pencil.Core
+open Pencil.Dot
 open Pencil.NMeter
 
 open System.ComponentModel

@@ -16,6 +16,7 @@ namespace Pencil.Dot
 		public DotBuilder(TextWriter target)
 		{
 			this.target = target;
+            EmitDigraphDefinition = true;
 		}
 
 		public TextWriter Target { get { return target; } }
@@ -24,6 +25,7 @@ namespace Pencil.Dot
 		public RankDirection RankDirection { get; set; }
 		public DotNodeStyle NodeStyle { get { return nodeStyle; } set { nodeStyle = value; } }
 		public DotEdgeStyle EdgeStyle { get { return edgeStyle; } set { edgeStyle = value; } }
+        public bool EmitDigraphDefinition { get; set; }
 		
 		public DotBuilder Write(DirectedGraph graph)
 		{
@@ -36,7 +38,8 @@ namespace Pencil.Dot
 
         void Begin()
         {
-			target.Write("digraph{");
+            if(EmitDigraphDefinition)
+			    target.Write("digraph{");
             format = "{0}";
             var nodeStyle = NodeStyle.AppendTo(new StringBuilder());;
             if(nodeStyle.Length != 0)
@@ -86,7 +89,8 @@ namespace Pencil.Dot
 
         void End()
         {
-            target.Write('}');
+            if(EmitDigraphDefinition)
+                target.Write('}');
         }
 	}
 }

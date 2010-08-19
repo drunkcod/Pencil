@@ -1,38 +1,44 @@
-﻿namespace Pencil.Core
-{
-	using System.Collections.Generic;
-	using System.IO;
-	using ReflectionAssembly = System.Reflection.Assembly;
-	using AssemblyName = System.Reflection.AssemblyName;
+﻿using System;
+using System.IO;
+using AssemblyName = System.Reflection.AssemblyName;
+using ReflectionAssembly = System.Reflection.Assembly;
 
+namespace Pencil.Core
+{
 	public class AssemblyLoader : IAssemblyLoader
     {
-        public static IAssembly Load(string assemblyPath) { return null; }
+        string binPath;
 
-		public static IAssembly LoadFrom(string path)
-		{
-			return new Assembly(new DefaultTypeLoader(), ReflectionAssembly.LoadFrom(path));
-		}
+        public IAssembly LoadFrom(string path) {
+            binPath = Path.GetDirectoryName(path);
+            return new Assembly(new DefaultTypeLoader(), ReflectionAssembly.LoadFrom(path));
+        }
 
-		public static IAssembly GetExecutingAssembly()
-		{
+        public IAssembly Load(string assemblyPath) { return null; }
+
+		public static IAssembly GetExecutingAssembly() {
             return new Assembly(new DefaultTypeLoader(), ReflectionAssembly.GetCallingAssembly());
         }
 
-		public IAssembly Load(AssemblyName assembly)
-		{
-			try
-			{
-				return new Assembly(new DefaultTypeLoader(), ReflectionAssembly.Load(assembly));
-			}
-			catch(FileLoadException)
-			{
-				return new MissingAssembly();
-			}
-			catch(FileNotFoundException)
-			{
-				return new MissingAssembly();
+		IAssembly IAssemblyLoader.Load(AssemblyName assembly) {
+			try {
+				return new Assembly(new DefaultTypeLoader(), Load(assembly));
+			} catch(FileLoadException) {
+				return new MissingAssembly(assembly);
+			} catch(FileNotFoundException) {
+                return new MissingAssembly(assembly);
 			}
 		}
+
+        ReflectionAssembly Load(AssemblyName assembly) {
+            try {
+                return ReflectionAssembly.Load(assembly);
+            } catch (FileLoadException) {
+                var altPath = Path.Combine(binPath, assembly.Name + ".dll");
+                if (File.Exists(altPath))
+                    return ReflectionAssembly.LoadFrom(altPath);
+                throw;
+            }
+        }
     }
 }
