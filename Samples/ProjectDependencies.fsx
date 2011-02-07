@@ -5,6 +5,7 @@ open System
 open System.Reflection
 open System.Collections.Generic
 open System.IO
+open System.Text.RegularExpressions
 open System.Xml
 open System.Xml.XPath
 open Pencil.Core
@@ -56,9 +57,15 @@ type VisualStudioProject(fileName) =
 
 let root = fsi.CommandLineArgs.[1]
 
+let filter = 
+    if fsi.CommandLineArgs.Length = 3 then
+        let r = Regex(fsi.CommandLineArgs.[2])
+        fun x -> r.IsMatch(x)
+    else fun x-> true
+
 let projects =
     Directory.GetFiles(root, "*.??proj", SearchOption.AllDirectories)
-    |> Seq.filter (fun x -> x.EndsWith("csproj") || x.EndsWith("vbproj"))
+    |> Seq.filter (fun x -> (x.EndsWith("csproj") || x.EndsWith("vbproj")) && filter(Path.GetFileName(x)))
     |> Seq.map VisualStudioProject.Load
 
 let projectLookup = Dictionary<string, VisualStudioProject>(StringComparer.InvariantCultureIgnoreCase)
@@ -81,8 +88,11 @@ let digraph = DirectedGraph(DotNodeFactory())
 let dependencies = ProjectDependencyGraph(digraph)      
 projects |> Seq.iter dependencies.Add
 
+Console.WriteLine("digraph {")
 let dot = DotBuilder(Console.Out)
 dot.RankDirection <- RankDirection.LeftRight
 dot.NodeStyle <- DotNodeStyle(FontSize = 9, Shape = NodeShape.Box)
 dot.EmitDigraphDefinition <- false
 dot.Write(digraph)
+
+Console.WriteLine("}")
