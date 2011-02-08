@@ -6,6 +6,7 @@ namespace Pencil.Dot
 {
 	class DotStyleWriter
 	{
+        const string KeyValueFormat = "{0}={1} ";
 		StringBuilder target;
 
 		public DotStyleWriter(StringBuilder target)
@@ -16,16 +17,22 @@ namespace Pencil.Dot
 		public DotStyleWriter Append(string name, int value)
 		{
 			if(value != 0)
-				target.AppendFormat("{0}={1} ", name, value);
+				target.AppendFormat(KeyValueFormat, name, value);
 			return this;
 		}
 
 		public DotStyleWriter Append(string name, double value)
 		{
 			if(value != 0)
-				target.AppendFormat(CultureInfo.InvariantCulture, "{0}={1} ", name, value);
+				target.AppendFormat(CultureInfo.InvariantCulture, KeyValueFormat, name, value);
 			return this;
 		}
+
+        public DotStyleWriter Append(string name, string value) {
+            if(!string.IsNullOrEmpty(value))
+               target.AppendFormat(KeyValueFormat, name, value);
+            return this;
+        }
 
 		public DotStyleWriter Append(string name, Color color)
 		{

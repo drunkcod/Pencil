@@ -91,7 +91,7 @@ projects |> Seq.iter dependencies.Add
 Console.WriteLine("digraph {")
 let dot = DotBuilder(Console.Out)
 dot.RankDirection <- RankDirection.LeftRight
-dot.NodeStyle <- DotNodeStyle(FontSize = 9, Shape = NodeShape.Box)
+dot.NodeStyle <- DotNodeStyle(FontSize = 9, FontName = "Consolas", Shape = NodeShape.Box)
 dot.EmitDigraphDefinition <- false
 dot.Write(digraph)
 

@@ -42,6 +42,7 @@ namespace Pencil.Dot
 		}
 
 		public int FontSize { get; set; }
+        public string FontName { get; set; }
         public NodeShape Shape { get; set; }
         public double Height { get; set; }
 

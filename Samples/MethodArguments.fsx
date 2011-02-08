@@ -25,7 +25,8 @@ let IsAssembly fileName =
 
 let read = AssemblyLoader.LoadFrom >> AssemblyReader(CustomHandler(4)).Read
 
-Directory.GetFiles(".", "SaabSystems.*.*")
+Directory.GetFiles(".", "Cint.*.dll")
+|> Seq.filter (fun x -> not(x.Contains("Test")))
 |> Seq.filter IsAssembly
 |> Seq.filter (fun x -> not (x.Contains("Test")))
 |> Seq.iter read
