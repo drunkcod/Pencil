@@ -1,4 +1,6 @@
 ﻿#r "..\Build\Pencil.dll"
+#r @"R:\Cint\main\build\bin\Cint.dll"
+#r @"R:\Cint\main\build\bin\Cint.Tests.dll"
 
 open System
 open System.Text
@@ -13,22 +15,24 @@ type MyType() =
 
 let loader = DefaultTypeLoader()
 
-let shouldFollowMethod (m:IMethod) = not(m.DeclaringType.FullName.StartsWith("System."))
+let shouldFollowMethod (m:IMethod) = 
+    let fullName = m.DeclaringType.FullName
+    not (["System."; "Rhino."] |> Seq.exists (fun x -> fullName.StartsWith(x)))
 
 let printTrace (m:IMethod) =
     Console.WriteLine("{0}", m)
     let rec loop (prefix:string) (m:IMethod) =
-        System.Threading.Thread.Sleep(250)
         let prefix' = prefix + "\t"
         m.Body |> Seq.iter (fun il -> 
             if il.IsCall then
                 let next = il.Operand :?> IMethod
-                Console.WriteLine("{0}{1}", prefix', il)
+                if il.Opcode = Opcode.FromName("newobj") && next.DeclaringType.FullName.StartsWith("Cint.") then
+                    Console.WriteLine("{0}{1}", prefix', il)
                 if shouldFollowMethod next then
                     loop prefix' next)
     loop "" m 
 
-let x = typeof<MyType>.GetConstructors().[0]
+let x = typeof<Cint.Sites.Cpx.Controllers.OrderControllerBuilder>.GetConstructors().[0]
 
 loader.FromNative(x)
 |> printTrace
