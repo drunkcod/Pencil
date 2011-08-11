@@ -7,6 +7,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pencil.Test", "Test\Pencil.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pencil.Build", "Source\Pencil.Build.csproj", "{62B094FB-4868-4824-9B31-831B71254E2C}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{5FBAB951-A4CA-4AEA-A099-944736B038AC}"
+	ProjectSection(SolutionItems) = preProject
+		Samples\ClassFeatureDiagram.fsx = Samples\ClassFeatureDiagram.fsx
+		Samples\MethodDependencies.fsx = Samples\MethodDependencies.fsx
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

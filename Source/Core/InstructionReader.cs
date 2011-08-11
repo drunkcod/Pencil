@@ -1,6 +1,6 @@
 using System;
-using System.Text;
 using System.Collections.Generic;
+using System.Text;
 
 namespace Pencil.Core
 {
@@ -65,6 +65,7 @@ namespace Pencil.Core
 				switch(opcode.Parameter)
 				{
 					case ParameterType.SByte: return stream.ReadSByte();
+                    case ParameterType.UInt16: return stream.ReadInt16();
 					case ParameterType.Int32: return stream.ReadInt32();
 					case ParameterType.Int64: return stream.ReadInt64();
 					case ParameterType.Single: return stream.ReadSingle();

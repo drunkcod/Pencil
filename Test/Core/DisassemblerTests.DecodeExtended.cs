@@ -1,6 +1,5 @@
 ﻿namespace Pencil.Test.Core
 {
-    using System;
     using NUnit.Framework;
 
     public partial class DisassemblerTests
@@ -50,7 +49,7 @@
         [Test]
         public void Decode_ldarg()
         {
-            CheckDecode("ldarg 5", 0xFE, 0x09, 5, 0, 0, 0);
+            CheckDecode("ldarg 5", 0xFE, 0x09, 5, 0);
         }
         [Test]
         public void Decode_ldarg_a()
