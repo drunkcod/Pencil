@@ -18,8 +18,17 @@ namespace Pencil.Core
         Field   = 1 << 10,
         Token   = 1 << 11,
         Array   = 1 << 12,
+        Max = Array,
+        Mask = (Max << 1) - 1, 
         Member = Method | Field
 	}
+
+    [Flags]
+    enum OpFlags : short
+    {
+        None = 0,
+        Call = ParameterType.Max << 1
+    }
 
 	public struct Opcode
 	{
@@ -42,44 +51,31 @@ namespace Pencil.Core
 			return Opcode.extended[offset & 0xFF];
 		}
 
-
 		public readonly string Name;
-		internal readonly ParameterType Parameter;
-        readonly bool isCall;
+        readonly short flags;
 
-		public bool IsCall { get { return isCall; } }
+        internal ParameterType Parameter { get { return (ParameterType)(flags & (short)ParameterType.Mask); } }
+        public bool IsCall { get { return (flags & (short)OpFlags.Call) != 0; } }
 
-		Opcode(string name): this(name, ParameterType.None){}
-		Opcode(string name, ParameterType parameter): this(name, parameter, false){}
-		Opcode(string name, ParameterType parameter, bool isCall)
-		{
+		Opcode(string name): this(name, ParameterType.None){ }
+		Opcode(string name, ParameterType parameter): this(name, parameter, false){ }
+		Opcode(string name, ParameterType parameter, bool isCall) {
 			Name = name;
-			Parameter = parameter;
-			this.isCall = isCall;
+            flags = (short)((short)parameter | (short)(isCall ? OpFlags.Call : OpFlags.None));
 		}
 
         public override string ToString() {
             return Name;
         }
 
-		internal static int NormalizeOffset(int offset)
-		{
-			var fudge = new[] { 0xA5, 0xBA, 0xC3, 0xC6, 0xFF };
-			var sugar = new[] { 0xB3 - 0xA5 - 1, 0xC2 - 0xBA - 1, 0xC6 - 0xC3 - 1, 0xD0 - 0xC6 - 1, 0 };
-			var x = 0;
-			for(int i = 0; offset > fudge[i]; ++i)
-				x += sugar[i];
-			return offset - x;
-		}
-
 		static Opcode Call(string name){ return new Opcode(name, ParameterType.Method, true); }
 
-        public static readonly Opcode Nop = new Opcode("nop"); 
+        public static Opcode Nop { get { return basic[0]; } }
 
 		#region Single Byte Opcodes
 		static readonly Opcode[] basic =
 		{
-			Nop,
+			new Opcode("nop"),
 			new Opcode("break"),
 			new Opcode("ldarg.0"),
 			new Opcode("ldarg.1"),
@@ -244,19 +240,50 @@ namespace Pencil.Core
 			new Opcode("stelem.ref"),
 			new Opcode("ldelem", ParameterType.Type),
 			new Opcode("stelem", ParameterType.Type),
-			new Opcode("unbox.any", ParameterType.Type),
-			new Opcode("conv.ovf.i1"),
+/*0xA5*/	new Opcode("unbox.any", ParameterType.Type),
+/*0xA6*/    Opcode.Reserved,
+/*0xA7*/    Opcode.Reserved,
+/*0xA8*/    Opcode.Reserved,
+/*0xA9*/    Opcode.Reserved,
+/*0xAA*/    Opcode.Reserved,
+/*0xAB*/    Opcode.Reserved,
+/*0xAC*/    Opcode.Reserved,
+/*0xAD*/    Opcode.Reserved,
+/*0xAE*/    Opcode.Reserved,
+/*0xAF*/    Opcode.Reserved,
+/*0xB0*/    Opcode.Reserved,
+/*0xB1*/    Opcode.Reserved,
+/*0xB2*/    Opcode.Reserved,
+/*0xB3*/	new Opcode("conv.ovf.i1"),
 			new Opcode("conv.ovf.u1"),
 			new Opcode("conv.ovf.i2"),
 			new Opcode("conv.ovf.u2"),
 			new Opcode("conv.ovf.i4"),
 			new Opcode("conv.ovf.u4"),
 			new Opcode("conv.ovf.i8"),
-			new Opcode("conv.ovf.u8"),
-			new Opcode("refanyval", ParameterType.Type),
-			new Opcode("ckfinite"),
-			new Opcode("mkrefany", ParameterType.Type),
-			new Opcode("ldtoken", ParameterType.Token),
+/*0xBA*/	new Opcode("conv.ovf.u8"),
+/*0xBB*/    Opcode.Reserved,
+/*0xBC*/    Opcode.Reserved,
+/*0xBD*/    Opcode.Reserved,
+/*0xBE*/    Opcode.Reserved,
+/*0xBF*/    Opcode.Reserved,
+/*0xC0*/    Opcode.Reserved,
+/*0xC1*/    Opcode.Reserved,
+/*0xC2*/	new Opcode("refanyval", ParameterType.Type),
+/*0xC3*/    new Opcode("ckfinite"),
+/*0xC4*/    Opcode.Reserved,
+/*0xC5*/    Opcode.Reserved,
+/*0xC6*/	new Opcode("mkrefany", ParameterType.Type),
+/*0xC7*/    Opcode.Reserved,
+/*0xC8*/    Opcode.Reserved,
+/*0xC9*/    Opcode.Reserved,
+/*0xCA*/    Opcode.Reserved,
+/*0xCB*/    Opcode.Reserved,
+/*0xCC*/    Opcode.Reserved,
+/*0xCD*/    Opcode.Reserved,
+/*0xCE*/    Opcode.Reserved,
+/*0xCF*/    Opcode.Reserved,
+/*0xD0*/	new Opcode("ldtoken", ParameterType.Token),
 			new Opcode("conv.u2"),
 			new Opcode("conv.u1"),
 			new Opcode("conv.i"),

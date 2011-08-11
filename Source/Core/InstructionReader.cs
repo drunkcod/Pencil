@@ -31,9 +31,8 @@ namespace Pencil.Core
 		{
 			int offset = stream.ReadByte();
 			if(offset < Opcode.MultiByteTag)
-				return Opcode.NormalizeOffset(offset);
-			else
-				return offset << 8 | stream.ReadSByte();
+				return offset;
+            return offset << 8 | stream.ReadSByte();
 		}
 
 		class SwitchTable
