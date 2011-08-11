@@ -19,20 +19,23 @@ let shouldFollowMethod (m:IMethod) =
     let fullName = m.DeclaringType.FullName
     not (["System."; "Rhino."] |> Seq.exists (fun x -> fullName.StartsWith(x)))
 
-let printTrace (m:IMethod) =
+let trace (m:IMethod) =
     Console.WriteLine("{0}", m)
     let rec loop (prefix:string) (m:IMethod) =
         let prefix' = prefix + "\t"
-        m.Body |> Seq.iter (fun il -> 
+        m.Body |> Seq.collect (fun il -> seq {
             if il.IsCall then
                 let next = il.Operand :?> IMethod
                 if il.Opcode = Opcode.FromName("newobj") && next.DeclaringType.FullName.StartsWith("Cint.") then
-                    Console.WriteLine("{0}{1}", prefix', il)
+                    yield il
                 if shouldFollowMethod next then
-                    loop prefix' next)
+                    yield! loop prefix' next })
     loop "" m 
 
 let x = typeof<Cint.Sites.Cpx.Controllers.OrderControllerBuilder>.GetConstructors().[0]
 
 loader.FromNative(x)
-|> printTrace
+|> trace
+|> Seq.countBy string
+|> Seq.sortBy snd
+|> Seq.iter (fun (il, count) -> Console.WriteLine("#{0} {1}", count, il))
